@@ -50,8 +50,9 @@ const Dashboard: React.FC = () => {
       .maybeSingle();
 
     if (error) return toast.error(error.message);
+    if (!inserted) return;
 
-    const caseId = inserted?.id;
+    const caseId = inserted.id;
 
     if (files && files.length && caseId) {
       for (const file of Array.from(files)) {

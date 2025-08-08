@@ -18,9 +18,14 @@ export const Header: React.FC = () => {
   return (
     <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
-        <NavLink to="/" className="font-semibold">Case Manager</NavLink>
+        <NavLink to="/" className="font-semibold">Money Recovery</NavLink>
         <nav className="flex items-center gap-4">
           <NavLink to="/" className={linkCls} end>Home</NavLink>
+          <NavLink to="/how-it-works" className={linkCls}>How it works</NavLink>
+          <NavLink to="/services" className={linkCls}>Services</NavLink>
+          <NavLink to="/pricing" className={linkCls}>Pricing</NavLink>
+          <NavLink to="/start" className={linkCls}>Start</NavLink>
+          <NavLink to="/contact" className={linkCls}>Contact</NavLink>
           {user && <NavLink to="/dashboard" className={linkCls}>Dashboard</NavLink>}
           {isAdmin && <NavLink to="/admin" className={linkCls}>Admin</NavLink>}
           {!user ? (
