@@ -4,8 +4,8 @@ const Services = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>Services | Money Recovery</title>
-        <meta name="description" content="Chargebacks, crypto scam recovery, wire recalls, and dispute assistance." />
+        <title>Services | Lixington Capital Recovery</title>
+        <meta name="description" content="Expert chargebacks, crypto scam assistance, wire recalls, and dispute services." />
         <link rel="canonical" href={window.location.origin + "/services"} />
       </Helmet>
       <div className="mx-auto max-w-5xl px-4 py-12 space-y-8">

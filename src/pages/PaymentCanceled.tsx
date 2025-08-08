@@ -5,7 +5,7 @@ const PaymentCanceled = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>Payment Canceled | Money Recovery</title>
+        <title>Payment Canceled | Lixington Capital Recovery</title>
         <meta name="description" content="Your payment was canceled." />
         <link rel="canonical" href={window.location.origin + "/payment-canceled"} />
       </Helmet>

@@ -6,8 +6,8 @@ const Pricing = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>Pricing | Money Recovery</title>
-        <meta name="description" content="Transparent fees for case evaluation and recovery services." />
+        <title>Pricing | Lixington Capital Recovery</title>
+        <meta name="description" content="Transparent fees for evaluation and recovery services." />
         <link rel="canonical" href={window.location.origin + "/pricing"} />
       </Helmet>
       <div className="mx-auto max-w-5xl px-4 py-12 space-y-8">

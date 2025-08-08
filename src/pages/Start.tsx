@@ -6,8 +6,8 @@ const Start = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>Free Case Evaluation | Money Recovery</title>
-        <meta name="description" content="Start your free case evaluation to begin your fund recovery." />
+        <title>Free Case Evaluation | Lixington Capital Recovery</title>
+        <meta name="description" content="Start your free evaluation to begin your fund recovery." />
         <link rel="canonical" href={window.location.origin + "/start"} />
       </Helmet>
       <div className="mx-auto max-w-2xl px-4 py-12 space-y-6">

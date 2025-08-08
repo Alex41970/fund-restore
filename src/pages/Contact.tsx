@@ -4,8 +4,8 @@ const Contact = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>Contact | Money Recovery</title>
-        <meta name="description" content="Get in touch with the Money Recovery team for assistance." />
+        <title>Contact | Lixington Capital Recovery</title>
+        <meta name="description" content="Get in touch with the Lixington Capital Recovery team for assistance." />
         <link rel="canonical" href={window.location.origin + "/contact"} />
       </Helmet>
       <div className="mx-auto max-w-3xl px-4 py-12 space-y-6">

@@ -4,8 +4,8 @@ const HowItWorks = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>How It Works | Money Recovery</title>
-        <meta name="description" content="Understand our fund recovery process from evaluation to resolution." />
+        <title>How It Works | Lixington Capital Recovery</title>
+        <meta name="description" content="See our transparent, step-by-step fund recovery process." />
         <link rel="canonical" href={window.location.origin + "/how-it-works"} />
       </Helmet>
       <div className="mx-auto max-w-5xl px-4 py-12 space-y-8">

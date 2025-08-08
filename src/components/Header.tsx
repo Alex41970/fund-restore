@@ -18,7 +18,7 @@ export const Header: React.FC = () => {
   return (
     <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
-        <NavLink to="/" className="font-semibold">Money Recovery</NavLink>
+        <NavLink to="/" className="font-semibold">Lixington Capital Recovery</NavLink>
         <nav className="flex items-center gap-4">
           <NavLink to="/" className={linkCls} end>Home</NavLink>
           <NavLink to="/how-it-works" className={linkCls}>How it works</NavLink>
