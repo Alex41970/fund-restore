@@ -49,7 +49,12 @@ const Dashboard: React.FC = () => {
   const { data: userCase, isLoading } = useQuery({
     queryKey: ["user-case", user?.id],
     queryFn: async (): Promise<CaseDetails | null> => {
-      if (!user) return null;
+      if (!user?.id) {
+        console.log("No user ID available:", user);
+        return null;
+      }
+      
+      console.log("Querying cases for user:", user.id);
       
       const { data, error } = await supabase
         .from("cases")
@@ -57,7 +62,10 @@ const Dashboard: React.FC = () => {
         .eq("user_id", user.id)
         .maybeSingle();
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error querying cases:", error);
+        throw error;
+      }
       if (!data) return null;
 
       // Calculate progress percentage based on completed steps
