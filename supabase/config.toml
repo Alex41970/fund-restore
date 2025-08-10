@@ -1,1 +1,4 @@
 project_id = "fgnurcnjqjbqnbdtjirv"
+
+[functions.cleanup-old-attachments]
+verify_jwt = false
