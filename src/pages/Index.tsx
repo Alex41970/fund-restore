@@ -121,7 +121,7 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: "400ms" }}>
               <Button asChild size="xl" variant="premium">
-                <Link to="/start">Get Free Consultation</Link>
+                <Link to="/auth">Get Free Consultation</Link>
               </Button>
               <Button asChild size="xl" variant="outline-premium">
                 <Link to="/case-studies">View Success Stories</Link>
@@ -328,7 +328,7 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button asChild size="xl" variant="premium">
-              <Link to="/start">Get Free Consultation</Link>
+              <Link to="/auth">Get Free Consultation</Link>
             </Button>
             <Button asChild size="xl" variant="outline-premium">
               <Link to="/contact">Speak with an Expert</Link>
