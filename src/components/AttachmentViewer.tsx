@@ -54,8 +54,13 @@ const AttachmentViewer: React.FC<AttachmentViewerProps> = ({ attachments }) => {
   const [previewType, setPreviewType] = useState<'image' | 'pdf' | 'text' | null>(null);
   const [previewContent, setPreviewContent] = useState<string>('');
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
 
   const handleDownload = async (attachment: Attachment) => {
+    if (downloadingIds.has(attachment.id)) return;
+    
+    setDownloadingIds(prev => new Set(prev).add(attachment.id));
+    
     try {
       const { data, error } = await supabase.storage
         .from('case-attachments')
@@ -63,13 +68,23 @@ const AttachmentViewer: React.FC<AttachmentViewerProps> = ({ attachments }) => {
 
       if (error) throw error;
 
+      // Fetch the file as a blob to force download
+      const response = await fetch(data.signedUrl);
+      if (!response.ok) throw new Error('Failed to fetch file');
+      
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      
       // Create a temporary link and trigger download
       const link = document.createElement('a');
-      link.href = data.signedUrl;
+      link.href = url;
       link.download = attachment.file_name || 'download';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      
+      // Clean up the object URL
+      URL.revokeObjectURL(url);
 
       toast({
         title: "Download started",
@@ -81,6 +96,12 @@ const AttachmentViewer: React.FC<AttachmentViewerProps> = ({ attachments }) => {
         title: "Download failed",
         description: "Unable to download the file. Please try again.",
         variant: "destructive",
+      });
+    } finally {
+      setDownloadingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(attachment.id);
+        return newSet;
       });
     }
   };
@@ -181,10 +202,11 @@ const AttachmentViewer: React.FC<AttachmentViewerProps> = ({ attachments }) => {
               variant="outline"
               size="sm"
               onClick={() => handleDownload(attachment)}
+              disabled={downloadingIds.has(attachment.id)}
               className="flex items-center gap-1"
             >
               <Download className="h-3 w-3" />
-              Download
+              {downloadingIds.has(attachment.id) ? 'Downloading...' : 'Download'}
             </Button>
           </div>
         </div>
