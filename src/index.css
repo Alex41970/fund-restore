@@ -17,8 +17,9 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Premium brand colors for money recovery */
+    --primary: 220 70% 15%;
+    --primary-foreground: 0 0% 98%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -34,9 +35,38 @@ All colors MUST be HSL.
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 220 70% 15%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Premium brand color palette */
+    --trust-blue: 220 70% 15%;
+    --trust-blue-light: 220 70% 25%;
+    --trust-blue-foreground: 0 0% 98%;
+    
+    --success-green: 142 76% 36%;
+    --success-green-light: 142 76% 46%;
+    --success-green-foreground: 0 0% 98%;
+    
+    --premium-gold: 45 86% 62%;
+    --premium-gold-light: 45 86% 72%;
+    --premium-gold-foreground: 222.2 84% 4.9%;
+    
+    --warning-amber: 25 95% 53%;
+    --warning-amber-light: 25 95% 63%;
+    --warning-amber-foreground: 222.2 84% 4.9%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--trust-blue)), hsl(var(--trust-blue-light)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success-green)), hsl(var(--success-green-light)));
+    --gradient-premium: linear-gradient(135deg, hsl(var(--premium-gold)), hsl(var(--premium-gold-light)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--trust-blue)) 0%, hsl(var(--trust-blue-light)) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 4px 6px -1px hsl(220 70% 15% / 0.1);
+    --shadow-medium: 0 10px 15px -3px hsl(220 70% 15% / 0.1);
+    --shadow-large: 0 25px 50px -12px hsl(220 70% 15% / 0.25);
+    --shadow-glow: 0 0 40px hsl(var(--premium-gold) / 0.3);
 
     --sidebar-background: 0 0% 98%;
 
@@ -65,8 +95,8 @@ All colors MUST be HSL.
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 220 70% 25%;
+    --primary-foreground: 210 40% 98%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -82,7 +112,36 @@ All colors MUST be HSL.
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 220 70% 25%;
+
+    /* Dark mode brand colors */
+    --trust-blue: 220 70% 25%;
+    --trust-blue-light: 220 70% 35%;
+    --trust-blue-foreground: 210 40% 98%;
+    
+    --success-green: 142 76% 46%;
+    --success-green-light: 142 76% 56%;
+    --success-green-foreground: 210 40% 98%;
+    
+    --premium-gold: 45 86% 72%;
+    --premium-gold-light: 45 86% 82%;
+    --premium-gold-foreground: 222.2 84% 4.9%;
+    
+    --warning-amber: 25 95% 63%;
+    --warning-amber-light: 25 95% 73%;
+    --warning-amber-foreground: 222.2 84% 4.9%;
+
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--trust-blue)), hsl(var(--trust-blue-light)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success-green)), hsl(var(--success-green-light)));
+    --gradient-premium: linear-gradient(135deg, hsl(var(--premium-gold)), hsl(var(--premium-gold-light)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--trust-blue)) 0%, hsl(var(--trust-blue-light)) 100%);
+
+    /* Dark mode shadows */
+    --shadow-soft: 0 4px 6px -1px hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 10px 15px -3px hsl(0 0% 0% / 0.3);
+    --shadow-large: 0 25px 50px -12px hsl(0 0% 0% / 0.5);
+    --shadow-glow: 0 0 40px hsl(var(--premium-gold) / 0.2);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -101,5 +160,63 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .gradient-success {
+    background: var(--gradient-success);
+  }
+  
+  .gradient-premium {
+    background: var(--gradient-premium);
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+  
+  .shadow-large {
+    box-shadow: var(--shadow-large);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .text-trust-blue {
+    color: hsl(var(--trust-blue));
+  }
+  
+  .text-success-green {
+    color: hsl(var(--success-green));
+  }
+  
+  .text-premium-gold {
+    color: hsl(var(--premium-gold));
+  }
+  
+  .bg-trust-blue {
+    background-color: hsl(var(--trust-blue));
+  }
+  
+  .bg-success-green {
+    background-color: hsl(var(--success-green));
+  }
+  
+  .bg-premium-gold {
+    background-color: hsl(var(--premium-gold));
   }
 }
