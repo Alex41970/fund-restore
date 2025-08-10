@@ -101,7 +101,7 @@ const AdminDashboard: React.FC = () => {
     queryFn: async (): Promise<CaseStats> => {
       const { data: allCases, error } = await supabase
         .from("cases")
-        .select("status, case_progress(calculated_percentage)");
+        .select("status, progress_percentage");
       
       if (error) throw error;
 
@@ -112,7 +112,7 @@ const AdminDashboard: React.FC = () => {
       const resolved = allCases.filter(c => c.status === "resolved").length;
       
       const progressValues = allCases
-        .map(c => c.case_progress?.[0]?.calculated_percentage || 0)
+        .map(c => c.progress_percentage || 0)
         .filter(p => p > 0);
       const avg_progress = progressValues.length > 0 
         ? progressValues.reduce((a, b) => a + b, 0) / progressValues.length 
@@ -176,7 +176,7 @@ const AdminDashboard: React.FC = () => {
       if (!selectedCase) return [];
       
       const { data, error } = await supabase
-        .from("case_attachments")
+        .from("attachments")
         .select("*")
         .eq("case_id", selectedCase)
         .order("created_at", { ascending: false });
@@ -209,38 +209,41 @@ const AdminDashboard: React.FC = () => {
   const { data: users, isLoading: usersLoading } = useQuery({
     queryKey: ["admin-users"],
     queryFn: async (): Promise<UserWithRoles[]> => {
-      const { data, error } = await supabase
+      // First get all user_roles
+      const { data: userRoles, error: rolesError } = await supabase
+        .from("user_roles")
+        .select("user_id, role");
+      
+      if (rolesError) throw rolesError;
+
+      // Then get all profiles
+      const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
-        .select(`
-          id,
-          display_name,
-          first_name,
-          last_name,
-          user_roles(role)
-        `)
+        .select("id, display_name, first_name, last_name")
         .order("display_name", { ascending: true });
       
-      if (error) throw error;
+      if (profilesError) throw profilesError;
       
-      // Also get emails from auth.users metadata if available
-      const usersWithEmails = await Promise.all(
-        (data || []).map(async (user) => {
-          // Since we can't query auth.users directly, we'll use the user ID as fallback
-          return {
-            id: user.id,
-            email: `User ${user.id.slice(0, 8)}`, // Fallback display
-            created_at: new Date().toISOString(),
-            profiles: {
-              display_name: user.display_name,
-              first_name: user.first_name,
-              last_name: user.last_name,
-            },
-            user_roles: user.user_roles || [],
-          };
-        })
-      );
+      // Combine the data
+      const usersWithRoles = (profiles || []).map(profile => {
+        const roles = (userRoles || [])
+          .filter(role => role.user_id === profile.id)
+          .map(role => ({ role: role.role }));
+        
+        return {
+          id: profile.id,
+          email: `User ${profile.id.slice(0, 8)}`, // Fallback display
+          created_at: new Date().toISOString(),
+          profiles: {
+            display_name: profile.display_name,
+            first_name: profile.first_name,
+            last_name: profile.last_name,
+          },
+          user_roles: roles,
+        };
+      });
       
-      return usersWithEmails;
+      return usersWithRoles;
     },
   });
 
