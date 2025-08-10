@@ -13,6 +13,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { CaseProgress } from "@/components/CaseProgress";
 import { CaseMessages } from "@/components/CaseMessages";
+import AttachmentViewer from "@/components/AttachmentViewer";
 
 import { CaseStatusBadge } from "@/components/CaseStatusBadge";
 import { StatCard } from "@/components/StatCard";
@@ -714,25 +715,7 @@ const AdminDashboard: React.FC = () => {
                                 <Paperclip className="h-4 w-4" />
                                 Attachments
                               </h4>
-                              <div className="space-y-2">
-                                {selectedCaseAttachments.map((attachment: any) => (
-                                  <div 
-                                    key={attachment.id} 
-                                    className="flex items-center justify-between p-3 border rounded-lg bg-muted/30"
-                                  >
-                                    <div className="flex items-center gap-3">
-                                      <Paperclip className="h-4 w-4 text-muted-foreground" />
-                                      <div>
-                                        <p className="text-sm font-medium">{attachment.file_name}</p>
-                                        <p className="text-xs text-muted-foreground">
-                                          {attachment.file_size && `${(attachment.file_size / 1024).toFixed(1)} KB • `}
-                                          {new Date(attachment.created_at).toLocaleDateString()}
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
+                              <AttachmentViewer attachments={selectedCaseAttachments} />
                             </div>
                           )}
                         </AccordionContent>
