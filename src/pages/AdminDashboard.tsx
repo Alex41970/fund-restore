@@ -539,25 +539,25 @@ const AdminDashboard: React.FC = () => {
                   </p>
                 </CardContent>
               </Card>
-            ) : selectedCaseData ? (
+            ) : selectedCaseData && selectedCaseData.case ? (
               <div className="space-y-6">
                 {/* Case Header */}
                 <Card>
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0 space-y-2">
-                        <CardTitle className="break-words">{selectedCaseData.case.title}</CardTitle>
-                        <CardDescription className="break-words">
-                          {selectedCaseData.case.description 
-                            ? (selectedCaseData.case.description.length > 20 
-                              ? `${selectedCaseData.case.description.substring(0, 20)}...` 
-                              : selectedCaseData.case.description)
-                            : "No description provided"
-                          }
+                         <CardTitle className="break-words">{selectedCaseData.case?.title || 'Unknown Case'}</CardTitle>
+                         <CardDescription className="break-words">
+                           {selectedCaseData.case?.description 
+                             ? (selectedCaseData.case.description.length > 20 
+                               ? `${selectedCaseData.case.description.substring(0, 20)}...` 
+                               : selectedCaseData.case.description)
+                             : "No description provided"
+                           }
                         </CardDescription>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <CaseStatusBadge status={selectedCaseData.case.status} />
+                         <CaseStatusBadge status={selectedCaseData.case?.status || 'unknown'} />
                         <Button variant="outline" onClick={() => setSelectedCase(null)}>
                           Close
                         </Button>
@@ -576,7 +576,7 @@ const AdminDashboard: React.FC = () => {
                             <h4 className="font-medium text-foreground">Description</h4>
                             <Textarea 
                               readOnly 
-                              value={selectedCaseData.case.description || "No description provided for this case."}
+                              value={selectedCaseData.case?.description || "No description provided for this case."}
                               className="min-h-[120px] resize-none bg-muted/30 text-foreground"
                               rows={6}
                             />
@@ -590,28 +590,28 @@ const AdminDashboard: React.FC = () => {
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                               <div className="space-y-2">
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Case ID:</span>
-                                  <span className="font-mono text-xs">{selectedCaseData.case.id}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Status:</span>
-                                  <CaseStatusBadge status={selectedCaseData.case.status} />
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Progress:</span>
-                                  <span className="font-medium">{selectedCaseData.case.progress_percentage || 0}%</span>
-                                </div>
+                                 <div className="flex justify-between">
+                                   <span className="text-muted-foreground">Case ID:</span>
+                                   <span className="font-mono text-xs">{selectedCaseData.case?.id || 'Unknown'}</span>
+                                 </div>
+                                 <div className="flex justify-between">
+                                   <span className="text-muted-foreground">Status:</span>
+                                   <CaseStatusBadge status={selectedCaseData.case?.status || 'unknown'} />
+                                 </div>
+                                 <div className="flex justify-between">
+                                   <span className="text-muted-foreground">Progress:</span>
+                                   <span className="font-medium">{selectedCaseData.case?.progress_percentage || 0}%</span>
+                                 </div>
                               </div>
                               <div className="space-y-2">
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Created:</span>
-                                  <span>{new Date(selectedCaseData.case.created_at).toLocaleDateString()}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Last Update:</span>
-                                  <span>{new Date(selectedCaseData.case.updated_at).toLocaleDateString()}</span>
-                                </div>
+                                 <div className="flex justify-between">
+                                   <span className="text-muted-foreground">Created:</span>
+                                   <span>{selectedCaseData.case?.created_at ? new Date(selectedCaseData.case.created_at).toLocaleDateString() : 'Unknown'}</span>
+                                 </div>
+                                 <div className="flex justify-between">
+                                   <span className="text-muted-foreground">Last Update:</span>
+                                   <span>{selectedCaseData.case?.updated_at ? new Date(selectedCaseData.case.updated_at).toLocaleDateString() : 'Unknown'}</span>
+                                 </div>
                               </div>
                             </div>
                           </div>
@@ -627,22 +627,22 @@ const AdminDashboard: React.FC = () => {
                                 <div className="flex justify-between">
                                   <span className="text-muted-foreground">Name:</span>
                                   <span className="font-medium">
-                                    {selectedCaseData.case.profiles?.display_name || 
-                                     `${selectedCaseData.case.profiles?.first_name || ''} ${selectedCaseData.case.profiles?.last_name || ''}`.trim() || 
+                                    {selectedCaseData.case?.profiles?.display_name || 
+                                     `${selectedCaseData.case?.profiles?.first_name || ''} ${selectedCaseData.case?.profiles?.last_name || ''}`.trim() || 
                                      'Not provided'}
                                   </span>
                                 </div>
                                 <div className="flex justify-between">
                                   <span className="text-muted-foreground">Phone:</span>
                                   <span className="font-medium">
-                                    {selectedCaseData.case.profiles?.phone_number || 'Not provided'}
+                                    {selectedCaseData.case?.profiles?.phone_number || 'Not provided'}
                                   </span>
                                 </div>
                               </div>
                               <div className="space-y-2">
                                 <div className="flex justify-between">
                                   <span className="text-muted-foreground">Client ID:</span>
-                                  <span className="font-mono text-xs">{selectedCaseData.case.user_id}</span>
+                                  <span className="font-mono text-xs">{selectedCaseData.case?.user_id}</span>
                                 </div>
                               </div>
                             </div>
@@ -723,9 +723,9 @@ const AdminDashboard: React.FC = () => {
                     <TabsContent value="progress">
                       <CaseProgress 
                         caseId={selectedCase}
-                        steps={selectedCaseData.progress} 
-                        progressPercentage={selectedCaseData.case?.progress_percentage || 0}
-                        progressUpdates={selectedCaseData.progressUpdates || []}
+                        steps={selectedCaseData?.progress || []} 
+                        progressPercentage={selectedCaseData?.case?.progress_percentage || 0}
+                        progressUpdates={selectedCaseData?.progressUpdates || []}
                         isAdmin={true}
                       />
                     </TabsContent>
