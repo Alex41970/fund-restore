@@ -57,24 +57,30 @@ export type Database = {
       }
       case_messages: {
         Row: {
-          body: string
           case_id: string
+          content: string
           created_at: string
           id: string
+          is_internal: boolean
+          sender_type: Database["public"]["Enums"]["sender_type"]
           user_id: string
         }
         Insert: {
-          body: string
           case_id: string
+          content: string
           created_at?: string
           id?: string
+          is_internal?: boolean
+          sender_type?: Database["public"]["Enums"]["sender_type"]
           user_id: string
         }
         Update: {
-          body?: string
           case_id?: string
+          content?: string
           created_at?: string
           id?: string
+          is_internal?: boolean
+          sender_type?: Database["public"]["Enums"]["sender_type"]
           user_id?: string
         }
         Relationships: []
@@ -285,6 +291,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "moderator" | "user"
       case_status: "open" | "in_review" | "resolved" | "closed"
+      sender_type: "client" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -414,6 +421,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "moderator", "user"],
       case_status: ["open", "in_review", "resolved", "closed"],
+      sender_type: ["client", "admin"],
     },
   },
 } as const

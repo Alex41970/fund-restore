@@ -348,6 +348,7 @@ const Dashboard: React.FC = () => {
                 <CaseMessages 
                   caseId={userCase.id} 
                   messages={messages || []} 
+                  isAdmin={false}
                 />
               </TabsContent>
 
@@ -355,6 +356,7 @@ const Dashboard: React.FC = () => {
                 <CaseRequirements 
                   caseId={userCase.id} 
                   requirements={requirements || []} 
+                  isAdmin={false}
                 />
               </TabsContent>
             </Tabs>
