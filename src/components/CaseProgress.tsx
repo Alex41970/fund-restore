@@ -85,6 +85,8 @@ export const CaseProgress: React.FC<CaseProgressProps> = ({
       queryClient.invalidateQueries({ queryKey: ["case-details", caseId] });
       queryClient.invalidateQueries({ queryKey: ["progress-updates", caseId] });
       queryClient.invalidateQueries({ queryKey: ["admin-cases"] });
+      // Also invalidate user-case queries to update client dashboards immediately
+      queryClient.invalidateQueries({ queryKey: ["user-case"] });
 
       toast({
         title: "Success",

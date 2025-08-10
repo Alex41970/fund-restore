@@ -68,20 +68,10 @@ const Dashboard: React.FC = () => {
       }
       if (!data) return null;
 
-      // Calculate progress percentage based on completed steps
-      const { data: progressData } = await supabase
-        .from("case_progress")
-        .select("status")
-        .eq("case_id", data.id);
-
-      const totalSteps = progressData?.length || 0;
-      const completedSteps = progressData?.filter(step => step.status === "completed").length || 0;
-      const progressPercentage = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
-
+      // Use progress_percentage from database (set by admin) 
       // Format the response
       return {
         ...data,
-        progress_percentage: progressPercentage,
         last_update: data.updated_at
       };
     },
