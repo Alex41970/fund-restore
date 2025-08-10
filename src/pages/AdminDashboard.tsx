@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -48,6 +48,7 @@ interface CaseStats {
 }
 
 const AdminDashboard: React.FC = () => {
+  const queryClient = useQueryClient();
   const [selectedCase, setSelectedCase] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -140,9 +141,15 @@ const AdminDashboard: React.FC = () => {
       if (error) throw error;
       
       toast.success("Case status updated");
-      // Invalidate queries to refresh data
+      
+      // Invalidate queries to refresh data immediately
+      queryClient.invalidateQueries({ queryKey: ["admin-cases"] });
+      queryClient.invalidateQueries({ queryKey: ["case-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["case-details", caseId] });
+      
     } catch (error) {
-      toast.error("Failed to update case status");
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      toast.error(`Failed to update case status: ${errorMessage}`);
       console.error("Error updating case status:", error);
     }
   };
