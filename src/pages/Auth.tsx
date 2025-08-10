@@ -37,11 +37,6 @@ const Auth: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation() as any;
   
-  // Redirect if already authenticated
-  if (user) {
-    return <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace />;
-  }
-
   const loginForm = useForm<LoginFormValues>({ 
     resolver: zodResolver(loginSchema), 
     defaultValues: { email: "", password: "" } 
@@ -57,6 +52,11 @@ const Auth: React.FC = () => {
       confirmPassword: "" 
     } 
   });
+
+  // Redirect if already authenticated - AFTER all hooks are called
+  if (user) {
+    return <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace />;
+  }
 
   const onLogin = async (values: LoginFormValues) => {
     const { error } = await signIn(values.email, values.password) as any;
