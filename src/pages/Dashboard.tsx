@@ -6,9 +6,10 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CaseProgress } from "@/components/CaseProgress";
 import { CaseMessages } from "@/components/CaseMessages";
 
@@ -237,33 +238,58 @@ const Dashboard: React.FC = () => {
           </div>
         ) : userCase ? (
           <>
-            {/* Case Header */}
-            <div className="space-y-4">
-              <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-bold">{userCase.title}</h1>
-                  {userCase.description && (
-                    <p className="text-muted-foreground">{userCase.description}</p>
-                  )}
+            {/* Case Header - Collapsible */}
+            <Card>
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <CardTitle className="text-2xl">{userCase.title}</CardTitle>
+                    {userCase.description && (
+                      <CardDescription className="line-clamp-2">
+                        {userCase.description.length > 80 
+                          ? `${userCase.description.substring(0, 80)}...` 
+                          : userCase.description
+                        }
+                      </CardDescription>
+                    )}
+                  </div>
+                  <CaseStatusBadge status={userCase.status} />
                 </div>
-                <CaseStatusBadge status={userCase.status} />
-              </div>
+              </CardHeader>
               
-              <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  Created {new Date(userCase.created_at).toLocaleDateString()}
-                </div>
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4" />
-                  {Math.round(userCase.progress_percentage)}% Complete
-                </div>
-                <div className="flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4" />
-                  Last update {new Date(userCase.last_update).toLocaleDateString()}
-                </div>
-              </div>
-            </div>
+              <CardContent>
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="case-details" className="border-none">
+                    <AccordionTrigger className="text-sm font-medium">
+                      View Full Case Details
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-4">
+                      {userCase.description && (
+                        <div>
+                          <h4 className="font-medium mb-2">Description</h4>
+                          <p className="text-muted-foreground whitespace-pre-wrap">{userCase.description}</p>
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4" />
+                          Created {new Date(userCase.created_at).toLocaleDateString()}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <TrendingUp className="h-4 w-4" />
+                          {Math.round(userCase.progress_percentage)}% Complete
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <AlertCircle className="h-4 w-4" />
+                          Last update {new Date(userCase.last_update).toLocaleDateString()}
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </CardContent>
+            </Card>
 
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
