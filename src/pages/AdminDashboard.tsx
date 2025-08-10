@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CaseProgress } from "@/components/CaseProgress";
@@ -446,9 +447,12 @@ const AdminDashboard: React.FC = () => {
                           {/* Full Description */}
                           <div className="space-y-3">
                             <h4 className="font-medium text-foreground">Description</h4>
-                            <p className="text-muted-foreground leading-relaxed">
-                              {selectedCaseData.case.description || "No description provided for this case."}
-                            </p>
+                            <Textarea 
+                              readOnly 
+                              value={selectedCaseData.case.description || "No description provided for this case."}
+                              className="min-h-[120px] resize-none bg-muted/30 text-foreground"
+                              rows={6}
+                            />
                           </div>
 
                           {/* Case Information */}
