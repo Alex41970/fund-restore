@@ -58,7 +58,7 @@ const Auth: React.FC = () => {
     const { error } = await signIn(values.email, values.password) as any;
     if (error) return toast.error(error.message || "Login failed");
     toast.success("Welcome back!");
-    navigate(from, { replace: true });
+    navigate("/dashboard", { replace: true });
   };
 
   const onSignup = async (values: SignupFormValues) => {
@@ -68,8 +68,8 @@ const Auth: React.FC = () => {
       phoneNumber: values.phoneNumber,
     }) as any;
     if (error) return toast.error(error.message || "Sign up failed");
-    toast.success("Account created successfully! You can now log in.");
-    navigate(from, { replace: true });
+    toast.success("Account created successfully! Welcome to your dashboard!");
+    navigate("/dashboard", { replace: true });
   };
 
   return (

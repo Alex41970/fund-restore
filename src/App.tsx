@@ -38,6 +38,18 @@ const App = () => (
             <Header />
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin" element={
+                <ProtectedRoute requireAdmin>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              {/* Marketing pages - only accessible when not logged in */}
               <Route path="/about" element={<About />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/services" element={<Services />} />
@@ -50,17 +62,6 @@ const App = () => (
               <Route path="/security" element={<Security />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/payment-canceled" element={<PaymentCanceled />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin" element={
-                <ProtectedRoute requireAdmin>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

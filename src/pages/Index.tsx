@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { StatCard } from "@/components/StatCard";
@@ -22,7 +22,24 @@ import {
 } from "lucide-react";
 
 const Index = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  
+  // Redirect authenticated users to dashboard
+  if (!loading && user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  
+  // Show loading state while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
   
   const stats = [
     { icon: TrendingUp, title: "Success Rate", value: "94%", description: "Cases resolved successfully" },
@@ -103,15 +120,9 @@ const Index = () => {
               Professional money recovery specialists with a 94% success rate. We help recover funds from scams, chargebacks, and wire transfer errors.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: "400ms" }}>
-              {user ? (
-                <Button asChild size="xl" variant="premium">
-                  <Link to="/dashboard">Access Client Portal</Link>
-                </Button>
-              ) : (
-                <Button asChild size="xl" variant="premium">
-                  <Link to="/start">Get Free Consultation</Link>
-                </Button>
-              )}
+              <Button asChild size="xl" variant="premium">
+                <Link to="/start">Get Free Consultation</Link>
+              </Button>
               <Button asChild size="xl" variant="outline-premium">
                 <Link to="/case-studies">View Success Stories</Link>
               </Button>

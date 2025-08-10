@@ -15,6 +15,24 @@ export const Header: React.FC = () => {
     navigate("/");
   };
 
+  // Show different header based on auth state
+  if (user) {
+    // Client portal header - minimal navigation
+    return (
+      <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
+          <span className="font-semibold">Lixington Capital Recovery</span>
+          <nav className="flex items-center gap-4">
+            <NavLink to="/dashboard" className={linkCls}>Dashboard</NavLink>
+            {isAdmin && <NavLink to="/admin" className={linkCls}>Admin</NavLink>}
+            <Button size="sm" variant="outline" onClick={handleSignOut}>Sign out</Button>
+          </nav>
+        </div>
+      </header>
+    );
+  }
+
+  // Marketing website header - full navigation
   return (
     <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
@@ -27,15 +45,9 @@ export const Header: React.FC = () => {
           <NavLink to="/pricing" className={linkCls}>Pricing</NavLink>
           <NavLink to="/start" className={linkCls}>Start</NavLink>
           <NavLink to="/contact" className={linkCls}>Contact</NavLink>
-          {user && <NavLink to="/dashboard" className={linkCls}>Dashboard</NavLink>}
-          {isAdmin && <NavLink to="/admin" className={linkCls}>Admin</NavLink>}
-          {!user ? (
-            <Button asChild size="sm">
-              <NavLink to="/auth">Sign in</NavLink>
-            </Button>
-          ) : (
-            <Button size="sm" variant="outline" onClick={handleSignOut}>Sign out</Button>
-          )}
+          <Button asChild size="sm">
+            <NavLink to="/auth">Sign in</NavLink>
+          </Button>
         </nav>
       </div>
     </header>
