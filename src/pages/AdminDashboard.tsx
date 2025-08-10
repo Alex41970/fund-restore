@@ -417,18 +417,18 @@ const AdminDashboard: React.FC = () => {
                 <Card>
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <div className="space-y-2">
-                        <CardTitle>{selectedCaseData.case.title}</CardTitle>
-                        <CardDescription>
+                      <div className="flex-1 min-w-0 space-y-2">
+                        <CardTitle className="break-words">{selectedCaseData.case.title}</CardTitle>
+                        <CardDescription className="line-clamp-2 break-words">
                           {selectedCaseData.case.description 
-                            ? selectedCaseData.case.description.length > 150
-                              ? `${selectedCaseData.case.description.substring(0, 150)}...`
+                            ? selectedCaseData.case.description.length > 80
+                              ? `${selectedCaseData.case.description.substring(0, 80)}...`
                               : selectedCaseData.case.description
                             : "No description provided"
                           }
                         </CardDescription>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         <CaseStatusBadge status={selectedCaseData.case.status} />
                         <Button variant="outline" onClick={() => setSelectedCase(null)}>
                           Close
