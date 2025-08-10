@@ -55,6 +55,96 @@ export type Database = {
           },
         ]
       }
+      case_messages: {
+        Row: {
+          body: string
+          case_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          case_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          case_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      case_progress: {
+        Row: {
+          case_id: string
+          created_at: string
+          description: string | null
+          id: string
+          status: string
+          step_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          case_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          status?: string
+          step_order: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          case_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          status?: string
+          step_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      case_requirements: {
+        Row: {
+          case_id: string
+          created_at: string
+          description: string | null
+          id: string
+          required_by: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          case_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          required_by?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          case_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          required_by?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       case_updates: {
         Row: {
           body: string
