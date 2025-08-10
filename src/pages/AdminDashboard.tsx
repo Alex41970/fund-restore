@@ -3,11 +3,12 @@ import { Helmet } from "react-helmet-async";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CaseProgress } from "@/components/CaseProgress";
 import { CaseMessages } from "@/components/CaseMessages";
 
@@ -23,7 +24,11 @@ import {
   Search,
   Filter,
   BarChart3,
-  CheckCircle
+  CheckCircle,
+  Hash,
+  Calendar,
+  Paperclip,
+  MessageSquare
 } from "lucide-react";
 
 interface CaseRow {
@@ -128,6 +133,24 @@ const AdminDashboard: React.FC = () => {
         .select("*")
         .eq("case_id", selectedCase)
         .order("created_at");
+
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!selectedCase,
+  });
+
+  // Fetch attachments for selected case
+  const { data: selectedCaseAttachments } = useQuery({
+    queryKey: ["case-attachments", selectedCase],
+    queryFn: async () => {
+      if (!selectedCase) return [];
+      
+      const { data, error } = await supabase
+        .from("case_attachments")
+        .select("*")
+        .eq("case_id", selectedCase)
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
       return data || [];
@@ -396,9 +419,14 @@ const AdminDashboard: React.FC = () => {
                     <div className="flex items-start justify-between">
                       <div className="space-y-2">
                         <CardTitle>{selectedCaseData.case.title}</CardTitle>
-                        {selectedCaseData.case.description && (
-                          <p className="text-muted-foreground">{selectedCaseData.case.description}</p>
-                        )}
+                        <CardDescription>
+                          {selectedCaseData.case.description 
+                            ? selectedCaseData.case.description.length > 150
+                              ? `${selectedCaseData.case.description.substring(0, 150)}...`
+                              : selectedCaseData.case.description
+                            : "No description provided"
+                          }
+                        </CardDescription>
                       </div>
                       <div className="flex items-center gap-2">
                         <CaseStatusBadge status={selectedCaseData.case.status} />
@@ -408,6 +436,118 @@ const AdminDashboard: React.FC = () => {
                       </div>
                     </div>
                   </CardHeader>
+                  <CardContent>
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="case-details">
+                        <AccordionTrigger className="text-base font-medium">
+                          View Full Case Details
+                        </AccordionTrigger>
+                        <AccordionContent className="space-y-6">
+                          {/* Full Description */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-foreground">Description</h4>
+                            <p className="text-muted-foreground leading-relaxed">
+                              {selectedCaseData.case.description || "No description provided for this case."}
+                            </p>
+                          </div>
+
+                          {/* Case Information */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-foreground flex items-center gap-2">
+                              <Hash className="h-4 w-4" />
+                              Case Information
+                            </h4>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                              <div className="space-y-2">
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Case ID:</span>
+                                  <span className="font-mono text-xs">{selectedCaseData.case.id}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Status:</span>
+                                  <CaseStatusBadge status={selectedCaseData.case.status} />
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Progress:</span>
+                                  <span className="font-medium">{selectedCaseData.case.progress_percentage || 0}%</span>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Created:</span>
+                                  <span>{new Date(selectedCaseData.case.created_at).toLocaleDateString()}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Last Update:</span>
+                                  <span>{new Date(selectedCaseData.case.updated_at).toLocaleDateString()}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Case Statistics */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-foreground flex items-center gap-2">
+                              <BarChart3 className="h-4 w-4" />
+                              Case Statistics
+                            </h4>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground flex items-center gap-1">
+                                  <MessageSquare className="h-3 w-3" />
+                                  Messages:
+                                </span>
+                                <span className="font-medium">{selectedCaseMessages?.length || 0}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground flex items-center gap-1">
+                                  <TrendingUp className="h-3 w-3" />
+                                  Updates:
+                                </span>
+                                <span className="font-medium">{selectedCaseData.progressUpdates?.length || 0}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground flex items-center gap-1">
+                                  <Paperclip className="h-3 w-3" />
+                                  Attachments:
+                                </span>
+                                <span className="font-medium">{selectedCaseAttachments?.length || 0}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Attachments Section */}
+                          {selectedCaseAttachments && selectedCaseAttachments.length > 0 && (
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-foreground flex items-center gap-2">
+                                <Paperclip className="h-4 w-4" />
+                                Attachments
+                              </h4>
+                              <div className="space-y-2">
+                                {selectedCaseAttachments.map((attachment: any) => (
+                                  <div 
+                                    key={attachment.id} 
+                                    className="flex items-center justify-between p-3 border rounded-lg bg-muted/30"
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      <Paperclip className="h-4 w-4 text-muted-foreground" />
+                                      <div>
+                                        <p className="text-sm font-medium">{attachment.file_name}</p>
+                                        <p className="text-xs text-muted-foreground">
+                                          {attachment.file_size && `${(attachment.file_size / 1024).toFixed(1)} KB • `}
+                                          {new Date(attachment.created_at).toLocaleDateString()}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </CardContent>
                 </Card>
 
                 {/* Case Management Tabs */}
