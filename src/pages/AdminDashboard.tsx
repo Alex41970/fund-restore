@@ -123,30 +123,38 @@ const AdminDashboard: React.FC = () => {
   });
 
   // Fetch selected case details
-  const { data: selectedCaseData } = useQuery({
+  const { data: selectedCaseData, isLoading: caseDetailsLoading, error: caseDetailsError } = useQuery({
     queryKey: ["case-details", selectedCase],
     queryFn: async () => {
       if (!selectedCase) return null;
       
-      const [caseData, progressSteps, progressUpdates] = await Promise.all([
-        supabase.from("cases").select(`
-          *,
-          profiles!cases_user_id_fkey(
-            display_name,
-            first_name,
-            last_name,
-            phone_number
-          )
-        `).eq("id", selectedCase).single(),
-        supabase.from("case_progress").select("*").eq("case_id", selectedCase).order("step_order"),
-        supabase.from("case_progress_updates").select("*").eq("case_id", selectedCase).order("created_at", { ascending: false }),
-      ]);
+      try {
+        const [caseData, progressSteps, progressUpdates] = await Promise.all([
+          supabase.from("cases").select("*").eq("id", selectedCase).single(),
+          supabase.from("case_progress").select("*").eq("case_id", selectedCase).order("step_order"),
+          supabase.from("case_progress_updates").select("*").eq("case_id", selectedCase).order("created_at", { ascending: false }),
+        ]);
 
-      return {
-        case: caseData.data,
-        progress: progressSteps.data || [],
-        progressUpdates: progressUpdates.data || [],
-      };
+        // If case exists, fetch the profile separately
+        let profile = null;
+        if (caseData.data?.user_id) {
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("display_name, first_name, last_name, phone_number")
+            .eq("id", caseData.data.user_id)
+            .single();
+          profile = profileData;
+        }
+
+        return {
+          case: { ...caseData.data, profiles: profile },
+          progress: progressSteps.data || [],
+          progressUpdates: progressUpdates.data || [],
+        };
+      } catch (error) {
+        console.error("Error fetching case details:", error);
+        throw error;
+      }
     },
     enabled: !!selectedCase,
   });
@@ -537,6 +545,20 @@ const AdminDashboard: React.FC = () => {
                   <p className="text-muted-foreground">
                     Select a case from the overview tab to view detailed information
                   </p>
+                </CardContent>
+              </Card>
+            ) : caseDetailsLoading ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <div className="text-muted-foreground">Loading case details...</div>
+                </CardContent>
+              </Card>
+            ) : caseDetailsError ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <div className="text-destructive">
+                    Error loading case details: {String((caseDetailsError as any).message || caseDetailsError)}
+                  </div>
                 </CardContent>
               </Card>
             ) : selectedCaseData && selectedCaseData.case ? (
