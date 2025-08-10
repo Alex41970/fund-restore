@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,10 +33,14 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 const Auth: React.FC = () => {
-  const { signIn, signUp } = useAuth();
+  const { user, isAdmin, signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation() as any;
-  const from = location.state?.from?.pathname || "/dashboard";
+  
+  // Redirect if already authenticated
+  if (user) {
+    return <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace />;
+  }
 
   const loginForm = useForm<LoginFormValues>({ 
     resolver: zodResolver(loginSchema), 
@@ -58,7 +62,7 @@ const Auth: React.FC = () => {
     const { error } = await signIn(values.email, values.password) as any;
     if (error) return toast.error(error.message || "Login failed");
     toast.success("Welcome back!");
-    navigate("/dashboard", { replace: true });
+    // Redirect will be handled by auth state change
   };
 
   const onSignup = async (values: SignupFormValues) => {
@@ -69,7 +73,7 @@ const Auth: React.FC = () => {
     }) as any;
     if (error) return toast.error(error.message || "Sign up failed");
     toast.success("Account created successfully! Welcome to your dashboard!");
-    navigate("/dashboard", { replace: true });
+    // Redirect will be handled by auth state change
   };
 
   return (

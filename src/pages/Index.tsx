@@ -22,11 +22,11 @@ import {
 } from "lucide-react";
 
 const Index = () => {
-  const { user, loading } = useAuth();
+  const { user, isAdmin, loading } = useAuth();
   
-  // Redirect authenticated users to dashboard
+  // Redirect authenticated users to their appropriate dashboard
   if (!loading && user) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace />;
   }
   
   // Show loading state while checking auth

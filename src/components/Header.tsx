@@ -23,8 +23,11 @@ export const Header: React.FC = () => {
         <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
           <span className="font-semibold">Lixington Capital Recovery</span>
           <nav className="flex items-center gap-4">
-            <NavLink to="/dashboard" className={linkCls}>Dashboard</NavLink>
-            {isAdmin && <NavLink to="/admin" className={linkCls}>Admin</NavLink>}
+            {isAdmin ? (
+              <NavLink to="/admin" className={linkCls}>Admin</NavLink>
+            ) : (
+              <NavLink to="/dashboard" className={linkCls}>Dashboard</NavLink>
+            )}
             <Button size="sm" variant="outline" onClick={handleSignOut}>Sign out</Button>
           </nav>
         </div>

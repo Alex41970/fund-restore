@@ -8,6 +8,7 @@ interface AuthContextValue {
   loading: boolean;
   roles: string[];
   isAdmin: boolean;
+  isClient: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any } | void>;
   signUp: (email: string, password: string, userData?: { firstName: string; lastName: string; phoneNumber: string }) => Promise<{ error: any } | void>;
   signOut: () => Promise<void>;
@@ -100,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     roles,
     isAdmin: roles.includes("admin"),
+    isClient: roles.includes("user") || (!roles.includes("admin") && roles.length > 0),
     signIn,
     signUp,
     signOut,

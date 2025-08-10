@@ -5,7 +5,8 @@ import { useAuth } from "@/hooks/use-auth";
 export const ProtectedRoute: React.FC<{
   children: React.ReactNode;
   requireAdmin?: boolean;
-}> = ({ children, requireAdmin }) => {
+  requireClient?: boolean;
+}> = ({ children, requireAdmin, requireClient }) => {
   const { user, loading, isAdmin } = useAuth();
   const location = useLocation();
 
@@ -15,8 +16,14 @@ export const ProtectedRoute: React.FC<{
     return <Navigate to="/auth" replace state={{ from: location }} />;
   }
 
+  // Admin-only route accessed by non-admin
   if (requireAdmin && !isAdmin) {
     return <Navigate to="/dashboard" replace />;
+  }
+
+  // Client-only route accessed by admin
+  if (requireClient && isAdmin) {
+    return <Navigate to="/admin" replace />;
   }
 
   return <>{children}</>;
