@@ -420,12 +420,7 @@ const AdminDashboard: React.FC = () => {
                       <div className="flex-1 min-w-0 space-y-2">
                         <CardTitle className="break-words">{selectedCaseData.case.title}</CardTitle>
                         <CardDescription className="line-clamp-2 break-words">
-                          {selectedCaseData.case.description 
-                            ? selectedCaseData.case.description.length > 80
-                              ? `${selectedCaseData.case.description.substring(0, 80)}...`
-                              : selectedCaseData.case.description
-                            : "No description provided"
-                          }
+                          {selectedCaseData.case.description || "No description provided"}
                         </CardDescription>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
