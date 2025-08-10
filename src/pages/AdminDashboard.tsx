@@ -60,7 +60,7 @@ const AdminDashboard: React.FC = () => {
         .from("cases")
         .select(`
           *,
-          profiles:user_id(display_name, first_name, last_name)
+          profiles!fk_cases_user_id(display_name, first_name, last_name)
         `)
         .order("created_at", { ascending: false });
       if (error) throw error;
