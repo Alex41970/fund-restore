@@ -18,11 +18,14 @@ import { toast } from "@/components/ui/sonner";
 import { 
   FileText, 
   MessageSquare, 
-   
   TrendingUp, 
   Clock, 
   AlertCircle,
-  Eye
+  Eye,
+  Paperclip,
+  Calendar,
+  BarChart3,
+  Hash
 } from "lucide-react";
 
 interface CaseRow {
@@ -123,6 +126,22 @@ const Dashboard: React.FC = () => {
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
+    },
+    enabled: !!userCase?.id,
+  });
+
+  // Fetch case attachments
+  const { data: attachments } = useQuery({
+    queryKey: ["case-attachments", userCase?.id],
+    queryFn: async () => {
+      if (!userCase?.id) return [];
+      const { data, error } = await supabase
+        .from("attachments")
+        .select("*")
+        .eq("case_id", userCase.id)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data || [];
     },
     enabled: !!userCase?.id,
   });
@@ -263,28 +282,105 @@ const Dashboard: React.FC = () => {
                     <AccordionTrigger className="text-sm font-medium">
                       View Full Case Details
                     </AccordionTrigger>
-                    <AccordionContent className="space-y-4">
+                    <AccordionContent className="space-y-6">
+                      {/* Case Description */}
                       {userCase.description && (
-                        <div>
-                          <h4 className="font-medium mb-2">Description</h4>
-                          <p className="text-muted-foreground whitespace-pre-wrap">{userCase.description}</p>
+                        <div className="space-y-2">
+                          <h4 className="font-semibold text-foreground flex items-center gap-2">
+                            <FileText className="h-4 w-4" />
+                            Description
+                          </h4>
+                          <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
+                            {userCase.description}
+                          </p>
                         </div>
                       )}
                       
-                      <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4" />
-                          Created {new Date(userCase.created_at).toLocaleDateString()}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <TrendingUp className="h-4 w-4" />
-                          {Math.round(userCase.progress_percentage)}% Complete
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <AlertCircle className="h-4 w-4" />
-                          Last update {new Date(userCase.last_update).toLocaleDateString()}
+                      {/* Case Metadata */}
+                      <div className="space-y-3">
+                        <h4 className="font-semibold text-foreground flex items-center gap-2">
+                          <Hash className="h-4 w-4" />
+                          Case Information
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <Hash className="h-4 w-4" />
+                            <span className="font-medium">Case ID:</span>
+                            <span className="font-mono">{userCase.id.substring(0, 8)}...</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <BarChart3 className="h-4 w-4" />
+                            <span className="font-medium">Status:</span>
+                            <span className="capitalize">{userCase.status}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <Calendar className="h-4 w-4" />
+                            <span className="font-medium">Created:</span>
+                            <span>{new Date(userCase.created_at).toLocaleString()}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <Clock className="h-4 w-4" />
+                            <span className="font-medium">Last Update:</span>
+                            <span>{new Date(userCase.last_update).toLocaleString()}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <TrendingUp className="h-4 w-4" />
+                            <span className="font-medium">Progress:</span>
+                            <span>{Math.round(userCase.progress_percentage)}% Complete</span>
+                          </div>
                         </div>
                       </div>
+
+                      {/* Case Statistics */}
+                      <div className="space-y-3">
+                        <h4 className="font-semibold text-foreground flex items-center gap-2">
+                          <BarChart3 className="h-4 w-4" />
+                          Case Statistics
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <MessageSquare className="h-4 w-4" />
+                            <span className="font-medium">Messages:</span>
+                            <span>{messages?.length || 0}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <TrendingUp className="h-4 w-4" />
+                            <span className="font-medium">Progress Updates:</span>
+                            <span>{progressUpdates?.length || 0}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <Paperclip className="h-4 w-4" />
+                            <span className="font-medium">Attachments:</span>
+                            <span>{attachments?.length || 0}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Case Attachments */}
+                      {attachments && attachments.length > 0 && (
+                        <div className="space-y-3">
+                          <h4 className="font-semibold text-foreground flex items-center gap-2">
+                            <Paperclip className="h-4 w-4" />
+                            Attachments ({attachments.length})
+                          </h4>
+                          <div className="space-y-2">
+                            {attachments.map((attachment) => (
+                              <div key={attachment.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                <div className="flex items-center gap-3">
+                                  <FileText className="h-4 w-4 text-muted-foreground" />
+                                  <div>
+                                    <p className="font-medium text-sm">{attachment.file_name}</p>
+                                    <p className="text-xs text-muted-foreground">
+                                      {attachment.size ? `${(attachment.size / 1024).toFixed(1)} KB` : 'Unknown size'} • 
+                                      Uploaded {new Date(attachment.created_at).toLocaleDateString()}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
