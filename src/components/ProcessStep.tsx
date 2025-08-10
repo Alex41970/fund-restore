@@ -2,36 +2,51 @@ import React from "react";
 import { LucideIcon } from "lucide-react";
 
 interface ProcessStepProps {
-  step: number;
+  stepNumber: number;
   title: string;
   description: string;
+  details: string[];
   icon: LucideIcon;
-  isLast?: boolean;
+  isEven?: boolean;
+  delay?: number;
 }
 
 export const ProcessStep: React.FC<ProcessStepProps> = ({
-  step,
+  stepNumber,
   title,
   description,
+  details,
   icon: Icon,
-  isLast = false,
+  isEven = false,
+  delay = 0,
 }) => {
   return (
-    <div className="relative flex items-start space-x-4 animate-slide-up" style={{ animationDelay: `${step * 200}ms` }}>
-      <div className="flex flex-col items-center">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full gradient-primary text-white font-bold text-lg shadow-medium">
-          {step}
+    <div 
+      className={`flex items-center gap-8 animate-fade-in ${isEven ? 'flex-row-reverse' : ''}`}
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      <div className="flex-1">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-3 rounded-lg gradient-primary">
+            <Icon className="h-6 w-6 text-white" />
+          </div>
+          <h3 className="text-xl font-bold font-playfair text-foreground">{title}</h3>
         </div>
-        {!isLast && (
-          <div className="w-0.5 h-16 bg-gradient-to-b from-trust-blue to-trust-blue-light mt-4" />
-        )}
+        <p className="text-muted-foreground mb-4 leading-relaxed">{description}</p>
+        <ul className="space-y-2">
+          {details.map((detail, index) => (
+            <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0" />
+              {detail}
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="flex-1 pb-8">
-        <div className="flex items-center space-x-3 mb-2">
-          <Icon className="h-5 w-5 text-trust-blue" />
-          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+      
+      <div className="flex-shrink-0">
+        <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center font-bold text-2xl shadow-elegant">
+          {stepNumber}
         </div>
-        <p className="text-muted-foreground leading-relaxed">{description}</p>
       </div>
     </div>
   );

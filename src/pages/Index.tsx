@@ -242,11 +242,12 @@ const Index = () => {
             {processSteps.map((step, index) => (
               <ProcessStep
                 key={step.title}
-                step={index + 1}
+                stepNumber={index + 1}
                 title={step.title}
                 description={step.description}
+                details={[step.description]}
                 icon={step.icon}
-                isLast={index === processSteps.length - 1}
+                delay={index * 200}
               />
             ))}
           </div>

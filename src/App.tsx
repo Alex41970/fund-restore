@@ -17,6 +17,11 @@ import Services from "./pages/Services";
 import Pricing from "./pages/Pricing";
 import Start from "./pages/Start";
 import Contact from "./pages/Contact";
+import About from "./pages/About";
+import CaseStudies from "./pages/CaseStudies";
+import Blog from "./pages/Blog";
+import FAQ from "./pages/FAQ";
+import Security from "./pages/Security";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCanceled from "./pages/PaymentCanceled";
 
@@ -33,11 +38,16 @@ const App = () => (
             <Header />
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/case-studies" element={<CaseStudies />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/start" element={<Start />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/security" element={<Security />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/payment-canceled" element={<PaymentCanceled />} />
               <Route path="/auth" element={<Auth />} />
