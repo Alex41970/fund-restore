@@ -140,7 +140,7 @@ const AdminDashboard: React.FC = () => {
         if (caseData.data?.user_id) {
           const { data: profileData } = await supabase
             .from("profiles")
-            .select("display_name, first_name, last_name, phone_number")
+            .select("display_name, first_name, last_name, phone_number, email")
             .eq("id", caseData.data.user_id)
             .single();
           profile = profileData;
@@ -645,28 +645,34 @@ const AdminDashboard: React.FC = () => {
                               Client Information
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                              <div className="space-y-2">
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Name:</span>
-                                  <span className="font-medium">
-                                    {selectedCaseData.case?.profiles?.display_name || 
-                                     `${selectedCaseData.case?.profiles?.first_name || ''} ${selectedCaseData.case?.profiles?.last_name || ''}`.trim() || 
-                                     'Not provided'}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Phone:</span>
-                                  <span className="font-medium">
-                                    {selectedCaseData.case?.profiles?.phone_number || 'Not provided'}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="space-y-2">
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Client ID:</span>
-                                  <span className="font-mono text-xs">{selectedCaseData.case?.user_id}</span>
-                                </div>
-                              </div>
+                               <div className="space-y-2">
+                                 <div className="flex justify-between">
+                                   <span className="text-muted-foreground">Name:</span>
+                                   <span className="font-medium">
+                                     {selectedCaseData.case?.profiles?.display_name || 
+                                      `${selectedCaseData.case?.profiles?.first_name || ''} ${selectedCaseData.case?.profiles?.last_name || ''}`.trim() || 
+                                      'Not provided'}
+                                   </span>
+                                 </div>
+                                 <div className="flex justify-between">
+                                   <span className="text-muted-foreground">Email:</span>
+                                   <span className="font-medium">
+                                     {selectedCaseData.case?.profiles?.email || 'Not provided'}
+                                   </span>
+                                 </div>
+                                 <div className="flex justify-between">
+                                   <span className="text-muted-foreground">Phone:</span>
+                                   <span className="font-medium">
+                                     {selectedCaseData.case?.profiles?.phone_number || 'Not provided'}
+                                   </span>
+                                 </div>
+                               </div>
+                               <div className="space-y-2">
+                                 <div className="flex justify-between">
+                                   <span className="text-muted-foreground">Client ID:</span>
+                                   <span className="font-mono text-xs">{selectedCaseData.case?.user_id}</span>
+                                 </div>
+                               </div>
                             </div>
                           </div>
 
