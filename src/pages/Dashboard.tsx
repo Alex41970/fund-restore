@@ -11,13 +11,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { CaseProgress } from "@/components/CaseProgress";
 import { CaseMessages } from "@/components/CaseMessages";
-import { CaseRequirements } from "@/components/CaseRequirements";
+
 import { CaseStatusBadge } from "@/components/CaseStatusBadge";
 import { toast } from "@/components/ui/sonner";
 import { 
   FileText, 
   MessageSquare, 
-  CheckSquare, 
+   
   TrendingUp, 
   Clock, 
   AlertCircle,
@@ -120,16 +120,16 @@ const Dashboard: React.FC = () => {
     enabled: !!userCase?.id,
   });
 
-  // Fetch case requirements
-  const { data: requirements } = useQuery({
-    queryKey: ["case-requirements", userCase?.id],
+  // Fetch progress updates
+  const { data: progressUpdates } = useQuery({
+    queryKey: ["progress-updates", userCase?.id],
     queryFn: async () => {
       if (!userCase?.id) return [];
       const { data, error } = await supabase
-        .from("case_requirements")
+        .from("case_progress_updates")
         .select("*")
         .eq("case_id", userCase.id)
-        .order("created_at");
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },
@@ -276,7 +276,7 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -285,21 +285,7 @@ const Dashboard: React.FC = () => {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Progress</p>
-                      <p className="text-2xl font-bold">{Math.round(userCase.progress_percentage)}%</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-warning-amber/10">
-                      <CheckSquare className="h-5 w-5 text-warning-amber" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Requirements</p>
-                      <p className="text-2xl font-bold">{requirements?.length || 0}</p>
+                      <p className="text-2xl font-bold">{Math.round(userCase.progress_percentage || 0)}%</p>
                     </div>
                   </div>
                 </CardContent>
@@ -322,7 +308,7 @@ const Dashboard: React.FC = () => {
 
             {/* Main Content Tabs */}
             <Tabs defaultValue="progress" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="progress" className="flex items-center gap-2">
                   <TrendingUp className="h-4 w-4" />
                   Progress
@@ -331,16 +317,15 @@ const Dashboard: React.FC = () => {
                   <MessageSquare className="h-4 w-4" />
                   Messages
                 </TabsTrigger>
-                <TabsTrigger value="requirements" className="flex items-center gap-2">
-                  <FileText className="h-4 w-4" />
-                  Requirements
-                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="progress" className="space-y-6">
                 <CaseProgress 
+                  caseId={userCase.id}
                   steps={progressSteps || []} 
-                  progressPercentage={userCase.progress_percentage} 
+                  progressPercentage={userCase.progress_percentage || 0}
+                  progressUpdates={progressUpdates || []}
+                  isAdmin={false}
                 />
               </TabsContent>
 
@@ -352,13 +337,6 @@ const Dashboard: React.FC = () => {
                 />
               </TabsContent>
 
-              <TabsContent value="requirements" className="space-y-6">
-                <CaseRequirements 
-                  caseId={userCase.id} 
-                  requirements={requirements || []} 
-                  isAdmin={false}
-                />
-              </TabsContent>
             </Tabs>
           </>
         ) : (

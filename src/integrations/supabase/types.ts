@@ -118,35 +118,32 @@ export type Database = {
         }
         Relationships: []
       }
-      case_requirements: {
+      case_progress_updates: {
         Row: {
           case_id: string
           created_at: string
-          description: string | null
+          created_by: string
           id: string
-          required_by: string | null
-          status: string
-          title: string
+          progress_percentage: number
+          update_message: string
           updated_at: string
         }
         Insert: {
           case_id: string
           created_at?: string
-          description?: string | null
+          created_by: string
           id?: string
-          required_by?: string | null
-          status?: string
-          title: string
+          progress_percentage: number
+          update_message: string
           updated_at?: string
         }
         Update: {
           case_id?: string
           created_at?: string
-          description?: string | null
+          created_by?: string
           id?: string
-          required_by?: string | null
-          status?: string
-          title?: string
+          progress_percentage?: number
+          update_message?: string
           updated_at?: string
         }
         Relationships: []
@@ -188,6 +185,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          progress_percentage: number | null
           status: Database["public"]["Enums"]["case_status"]
           title: string
           updated_at: string
@@ -197,6 +195,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          progress_percentage?: number | null
           status?: Database["public"]["Enums"]["case_status"]
           title: string
           updated_at?: string
@@ -206,6 +205,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          progress_percentage?: number | null
           status?: Database["public"]["Enums"]["case_status"]
           title?: string
           updated_at?: string

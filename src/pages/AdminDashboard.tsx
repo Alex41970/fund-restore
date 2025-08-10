@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CaseProgress } from "@/components/CaseProgress";
 import { CaseMessages } from "@/components/CaseMessages";
-import { CaseRequirements } from "@/components/CaseRequirements";
+
 import { CaseStatusBadge } from "@/components/CaseStatusBadge";
 import { StatCard } from "@/components/StatCard";
 import { toast } from "@/components/ui/sonner";
@@ -102,14 +102,16 @@ const AdminDashboard: React.FC = () => {
     queryFn: async () => {
       if (!selectedCase) return null;
       
-      const [caseData, progressSteps] = await Promise.all([
+      const [caseData, progressSteps, progressUpdates] = await Promise.all([
         supabase.from("cases").select("*").eq("id", selectedCase).single(),
         supabase.from("case_progress").select("*").eq("case_id", selectedCase).order("step_order"),
+        supabase.from("case_progress_updates").select("*").eq("case_id", selectedCase).order("created_at", { ascending: false }),
       ]);
 
       return {
         case: caseData.data,
         progress: progressSteps.data || [],
+        progressUpdates: progressUpdates.data || [],
       };
     },
     enabled: !!selectedCase,
@@ -133,17 +135,17 @@ const AdminDashboard: React.FC = () => {
     enabled: !!selectedCase,
   });
 
-  // Fetch requirements separately to match component invalidation
-  const { data: selectedCaseRequirements } = useQuery({
-    queryKey: ["case-requirements", selectedCase],
+  // Fetch progress updates separately
+  const { data: selectedCaseProgressUpdates } = useQuery({
+    queryKey: ["progress-updates", selectedCase],
     queryFn: async () => {
       if (!selectedCase) return [];
       
       const { data, error } = await supabase
-        .from("case_requirements")
+        .from("case_progress_updates")
         .select("*")
         .eq("case_id", selectedCase)
-        .order("created_at");
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
       return data || [];
@@ -179,7 +181,7 @@ const AdminDashboard: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["case-stats"] });
       queryClient.invalidateQueries({ queryKey: ["case-details", caseId] });
       queryClient.invalidateQueries({ queryKey: ["case-messages", caseId] });
-      queryClient.invalidateQueries({ queryKey: ["case-requirements", caseId] });
+      queryClient.invalidateQueries({ queryKey: ["progress-updates", caseId] });
       
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -409,39 +411,30 @@ const AdminDashboard: React.FC = () => {
                 </Card>
 
                 {/* Case Management Tabs */}
-                <Tabs defaultValue="progress" className="space-y-4">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="progress">Progress</TabsTrigger>
-                    <TabsTrigger value="messages">Messages</TabsTrigger>
-                    <TabsTrigger value="requirements">Requirements</TabsTrigger>
-                  </TabsList>
+                  <Tabs defaultValue="progress" className="space-y-4">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="progress">Progress</TabsTrigger>
+                      <TabsTrigger value="messages">Messages</TabsTrigger>
+                    </TabsList>
 
-                  <TabsContent value="progress">
-                    <CaseProgress 
-                      steps={selectedCaseData.progress} 
-                      progressPercentage={selectedCaseData.progress.length > 0 
-                        ? (selectedCaseData.progress.filter(s => s.status === 'completed').length / selectedCaseData.progress.length) * 100 
-                        : 0
-                      } 
-                    />
-                  </TabsContent>
+                    <TabsContent value="progress">
+                      <CaseProgress 
+                        caseId={selectedCase}
+                        steps={selectedCaseData.progress} 
+                        progressPercentage={selectedCaseData.case?.progress_percentage || 0}
+                        progressUpdates={selectedCaseData.progressUpdates || []}
+                        isAdmin={true}
+                      />
+                    </TabsContent>
 
-                  <TabsContent value="messages">
-                    <CaseMessages 
-                      caseId={selectedCase} 
-                      messages={selectedCaseMessages || []} 
-                      isAdmin={true}
-                    />
-                  </TabsContent>
-
-                  <TabsContent value="requirements">
-                    <CaseRequirements 
-                      caseId={selectedCase} 
-                      requirements={selectedCaseRequirements || []} 
-                      isAdmin={true}
-                    />
-                  </TabsContent>
-                </Tabs>
+                    <TabsContent value="messages">
+                      <CaseMessages 
+                        caseId={selectedCase} 
+                        messages={selectedCaseMessages || []} 
+                        isAdmin={true}
+                      />
+                    </TabsContent>
+                  </Tabs>
               </div>
             ) : (
               <Card>
