@@ -129,7 +129,15 @@ const AdminDashboard: React.FC = () => {
       if (!selectedCase) return null;
       
       const [caseData, progressSteps, progressUpdates] = await Promise.all([
-        supabase.from("cases").select("*").eq("id", selectedCase).single(),
+        supabase.from("cases").select(`
+          *,
+          profiles!cases_user_id_fkey(
+            display_name,
+            first_name,
+            last_name,
+            phone_number
+          )
+        `).eq("id", selectedCase).single(),
         supabase.from("case_progress").select("*").eq("case_id", selectedCase).order("step_order"),
         supabase.from("case_progress_updates").select("*").eq("case_id", selectedCase).order("created_at", { ascending: false }),
       ]);
@@ -600,6 +608,38 @@ const AdminDashboard: React.FC = () => {
                                 <div className="flex justify-between">
                                   <span className="text-muted-foreground">Last Update:</span>
                                   <span>{new Date(selectedCaseData.case.updated_at).toLocaleDateString()}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Client Information */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-foreground flex items-center gap-2">
+                              <Users className="h-4 w-4" />
+                              Client Information
+                            </h4>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                              <div className="space-y-2">
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Name:</span>
+                                  <span className="font-medium">
+                                    {selectedCaseData.case.profiles?.display_name || 
+                                     `${selectedCaseData.case.profiles?.first_name || ''} ${selectedCaseData.case.profiles?.last_name || ''}`.trim() || 
+                                     'Not provided'}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Phone:</span>
+                                  <span className="font-medium">
+                                    {selectedCaseData.case.profiles?.phone_number || 'Not provided'}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Client ID:</span>
+                                  <span className="font-mono text-xs">{selectedCaseData.case.user_id}</span>
                                 </div>
                               </div>
                             </div>
