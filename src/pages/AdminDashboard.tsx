@@ -102,19 +102,51 @@ const AdminDashboard: React.FC = () => {
     queryFn: async () => {
       if (!selectedCase) return null;
       
-      const [caseData, progressSteps, messages, requirements] = await Promise.all([
+      const [caseData, progressSteps] = await Promise.all([
         supabase.from("cases").select("*").eq("id", selectedCase).single(),
         supabase.from("case_progress").select("*").eq("case_id", selectedCase).order("step_order"),
-        supabase.from("case_messages").select("*").eq("case_id", selectedCase).order("created_at"),
-        supabase.from("case_requirements").select("*").eq("case_id", selectedCase).order("created_at"),
       ]);
 
       return {
         case: caseData.data,
         progress: progressSteps.data || [],
-        messages: messages.data || [],
-        requirements: requirements.data || [],
       };
+    },
+    enabled: !!selectedCase,
+  });
+
+  // Fetch messages separately to match component invalidation
+  const { data: selectedCaseMessages } = useQuery({
+    queryKey: ["case-messages", selectedCase],
+    queryFn: async () => {
+      if (!selectedCase) return [];
+      
+      const { data, error } = await supabase
+        .from("case_messages")
+        .select("*")
+        .eq("case_id", selectedCase)
+        .order("created_at");
+
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!selectedCase,
+  });
+
+  // Fetch requirements separately to match component invalidation
+  const { data: selectedCaseRequirements } = useQuery({
+    queryKey: ["case-requirements", selectedCase],
+    queryFn: async () => {
+      if (!selectedCase) return [];
+      
+      const { data, error } = await supabase
+        .from("case_requirements")
+        .select("*")
+        .eq("case_id", selectedCase)
+        .order("created_at");
+
+      if (error) throw error;
+      return data || [];
     },
     enabled: !!selectedCase,
   });
@@ -146,6 +178,8 @@ const AdminDashboard: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["admin-cases"] });
       queryClient.invalidateQueries({ queryKey: ["case-stats"] });
       queryClient.invalidateQueries({ queryKey: ["case-details", caseId] });
+      queryClient.invalidateQueries({ queryKey: ["case-messages", caseId] });
+      queryClient.invalidateQueries({ queryKey: ["case-requirements", caseId] });
       
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -395,7 +429,7 @@ const AdminDashboard: React.FC = () => {
                   <TabsContent value="messages">
                     <CaseMessages 
                       caseId={selectedCase} 
-                      messages={selectedCaseData.messages} 
+                      messages={selectedCaseMessages || []} 
                       isAdmin={true}
                     />
                   </TabsContent>
@@ -403,7 +437,7 @@ const AdminDashboard: React.FC = () => {
                   <TabsContent value="requirements">
                     <CaseRequirements 
                       caseId={selectedCase} 
-                      requirements={selectedCaseData.requirements} 
+                      requirements={selectedCaseRequirements || []} 
                       isAdmin={true}
                     />
                   </TabsContent>
