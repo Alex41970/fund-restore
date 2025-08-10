@@ -49,21 +49,31 @@ const Dashboard: React.FC = () => {
   const { data: userCase, isLoading } = useQuery({
     queryKey: ["user-case", user?.id],
     queryFn: async (): Promise<CaseDetails | null> => {
+      if (!user) return null;
+      
       const { data, error } = await supabase
         .from("cases")
-        .select(`
-          *,
-          progress_percentage:case_progress(calculated_percentage)
-        `)
+        .select("*")
+        .eq("user_id", user.id)
         .maybeSingle();
       
       if (error) throw error;
       if (!data) return null;
 
+      // Calculate progress percentage based on completed steps
+      const { data: progressData } = await supabase
+        .from("case_progress")
+        .select("status")
+        .eq("case_id", data.id);
+
+      const totalSteps = progressData?.length || 0;
+      const completedSteps = progressData?.filter(step => step.status === "completed").length || 0;
+      const progressPercentage = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
+
       // Format the response
       return {
         ...data,
-        progress_percentage: data.progress_percentage?.[0]?.calculated_percentage || 0,
+        progress_percentage: progressPercentage,
         last_update: data.updated_at
       };
     },
