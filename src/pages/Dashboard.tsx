@@ -13,6 +13,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { CaseProgress } from "@/components/CaseProgress";
 import { CaseMessages } from "@/components/CaseMessages";
 
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CaseStatusBadge } from "@/components/CaseStatusBadge";
 import { toast } from "@/components/ui/sonner";
 import { 
@@ -290,9 +291,12 @@ const Dashboard: React.FC = () => {
                             <FileText className="h-4 w-4" />
                             Description
                           </h4>
-                          <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
-                            {userCase.description}
-                          </p>
+                          <Textarea 
+                            readOnly 
+                            value={userCase.description}
+                            className="min-h-[120px] resize-none bg-muted/30 text-foreground"
+                            rows={6}
+                          />
                         </div>
                       )}
                       
