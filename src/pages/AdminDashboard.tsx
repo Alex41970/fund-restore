@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { CaseProgress } from "@/components/CaseProgress";
 import { CaseMessages } from "@/components/CaseMessages";
 
@@ -29,7 +30,11 @@ import {
   Hash,
   Calendar,
   Paperclip,
-  MessageSquare
+  MessageSquare,
+  Shield,
+  UserCheck,
+  UserX,
+  Settings
 } from "lucide-react";
 
 interface CaseRow {
@@ -53,11 +58,26 @@ interface CaseStats {
   avg_progress: number;
 }
 
+interface UserWithRoles {
+  id: string;
+  email: string;
+  created_at: string;
+  profiles?: {
+    display_name: string;
+    first_name: string;
+    last_name: string;
+  };
+  user_roles: Array<{
+    role: string;
+  }>;
+}
+
 const AdminDashboard: React.FC = () => {
   const queryClient = useQueryClient();
   const [selectedCase, setSelectedCase] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [userSearchTerm, setUserSearchTerm] = useState("");
 
   // Fetch all cases with user profiles
   const { data: cases, isLoading, error } = useQuery({
@@ -177,6 +197,56 @@ const AdminDashboard: React.FC = () => {
     enabled: !!selectedCase,
   });
 
+  // Fetch all users with roles
+  const { data: users, isLoading: usersLoading } = useQuery({
+    queryKey: ["admin-users"],
+    queryFn: async (): Promise<UserWithRoles[]> => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select(`
+          id,
+          display_name,
+          first_name,
+          last_name,
+          user_roles(role)
+        `)
+        .order("display_name", { ascending: true });
+      
+      if (error) throw error;
+      
+      // Also get emails from auth.users metadata if available
+      const usersWithEmails = await Promise.all(
+        (data || []).map(async (user) => {
+          // Since we can't query auth.users directly, we'll use the user ID as fallback
+          return {
+            id: user.id,
+            email: `User ${user.id.slice(0, 8)}`, // Fallback display
+            created_at: new Date().toISOString(),
+            profiles: {
+              display_name: user.display_name,
+              first_name: user.first_name,
+              last_name: user.last_name,
+            },
+            user_roles: user.user_roles || [],
+          };
+        })
+      );
+      
+      return usersWithEmails;
+    },
+  });
+
+  // Filter users
+  const filteredUsers = users?.filter(u => {
+    const matchesSearch = !userSearchTerm || 
+      u.profiles?.display_name?.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
+      u.profiles?.first_name?.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
+      u.profiles?.last_name?.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
+      u.email.toLowerCase().includes(userSearchTerm.toLowerCase());
+    
+    return matchesSearch;
+  }) || [];
+
   // Filter cases
   const filteredCases = cases?.filter(c => {
     const matchesStatus = statusFilter === "all" || c.status === statusFilter;
@@ -211,6 +281,48 @@ const AdminDashboard: React.FC = () => {
       const errorMessage = error instanceof Error ? error.message : String(error);
       toast.error(`Failed to update case status: ${errorMessage}`);
       console.error("Error updating case status:", error);
+    }
+  };
+
+  const handleRoleUpdate = async (userId: string, action: 'add' | 'remove') => {
+    try {
+      // Check if this would leave the system without any admins
+      if (action === 'remove') {
+        const adminCount = users?.filter(u => 
+          u.user_roles.some(r => r.role === 'admin')
+        ).length || 0;
+        
+        if (adminCount <= 1) {
+          toast.error("Cannot remove the last admin user");
+          return;
+        }
+      }
+
+      if (action === 'add') {
+        const { error } = await supabase
+          .from("user_roles")
+          .insert({ user_id: userId, role: 'admin' });
+        
+        if (error) throw error;
+        toast.success("User promoted to admin");
+      } else {
+        const { error } = await supabase
+          .from("user_roles")
+          .delete()
+          .eq("user_id", userId)
+          .eq("role", "admin");
+        
+        if (error) throw error;
+        toast.success("Admin role removed from user");
+      }
+      
+      // Refresh users data
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      toast.error(`Failed to update user role: ${errorMessage}`);
+      console.error("Error updating user role:", error);
     }
   };
 
@@ -265,7 +377,7 @@ const AdminDashboard: React.FC = () => {
 
         {/* Main Content */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               Case Overview
@@ -273,6 +385,10 @@ const AdminDashboard: React.FC = () => {
             <TabsTrigger value="details" className="flex items-center gap-2">
               <Eye className="h-4 w-4" />
               Case Details
+            </TabsTrigger>
+            <TabsTrigger value="users" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              User Management
             </TabsTrigger>
           </TabsList>
 
@@ -587,6 +703,190 @@ const AdminDashboard: React.FC = () => {
                 </CardContent>
               </Card>
             )}
+          </TabsContent>
+
+          {/* User Management */}
+          <TabsContent value="users" className="space-y-6">
+            {/* User Search */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Search className="h-5 w-5" />
+                  Search Users
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Input
+                  placeholder="Search users by name or email..."
+                  value={userSearchTerm}
+                  onChange={(e) => setUserSearchTerm(e.target.value)}
+                  className="w-full"
+                />
+              </CardContent>
+            </Card>
+
+            {/* Users Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  All Users ({filteredUsers.length})
+                </CardTitle>
+                <CardDescription>
+                  Manage user roles and permissions. At least one admin must remain in the system.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {usersLoading ? (
+                  <div className="text-center py-8 text-muted-foreground">Loading users...</div>
+                ) : filteredUsers.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">No users found</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-left border-b">
+                          <th className="py-3 pr-4 font-medium">User</th>
+                          <th className="py-3 pr-4 font-medium">Name</th>
+                          <th className="py-3 pr-4 font-medium">Roles</th>
+                          <th className="py-3 pr-4 font-medium">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredUsers.map((user) => {
+                          const isAdmin = user.user_roles.some(r => r.role === 'admin');
+                          const adminCount = users?.filter(u => 
+                            u.user_roles.some(r => r.role === 'admin')
+                          ).length || 0;
+                          const isLastAdmin = isAdmin && adminCount <= 1;
+                          
+                          return (
+                            <tr key={user.id} className="border-b last:border-0 hover:bg-muted/30">
+                              <td className="py-3 pr-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                                    <Users className="h-4 w-4 text-muted-foreground" />
+                                  </div>
+                                  <div>
+                                    <div className="font-mono text-xs text-muted-foreground">
+                                      {user.id.slice(0, 8)}...
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="py-3 pr-4">
+                                <div>
+                                  <div className="font-medium">
+                                    {user.profiles?.display_name || 
+                                     `${user.profiles?.first_name || ''} ${user.profiles?.last_name || ''}`.trim() || 
+                                     'No name set'}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {user.profiles?.first_name && user.profiles?.last_name 
+                                      ? `${user.profiles.first_name} ${user.profiles.last_name}`
+                                      : 'Profile incomplete'}
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="py-3 pr-4">
+                                <div className="flex flex-wrap gap-1">
+                                  {user.user_roles.length > 0 ? (
+                                    user.user_roles.map((role, index) => (
+                                      <Badge 
+                                        key={index}
+                                        variant={role.role === 'admin' ? 'default' : 'secondary'}
+                                        className="text-xs"
+                                      >
+                                        {role.role === 'admin' && <Shield className="h-3 w-3 mr-1" />}
+                                        {role.role}
+                                      </Badge>
+                                    ))
+                                  ) : (
+                                    <Badge variant="outline" className="text-xs">
+                                      user
+                                    </Badge>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="py-3 pr-4">
+                                <div className="flex gap-2">
+                                  {isAdmin ? (
+                                    <AlertDialog>
+                                      <AlertDialogTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          disabled={isLastAdmin}
+                                          className="text-destructive hover:text-destructive"
+                                        >
+                                          <UserX className="h-4 w-4" />
+                                        </Button>
+                                      </AlertDialogTrigger>
+                                      <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                          <AlertDialogTitle>Remove Admin Role</AlertDialogTitle>
+                                          <AlertDialogDescription>
+                                            Are you sure you want to remove admin role from this user? 
+                                            They will lose access to admin functions.
+                                          </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                          <AlertDialogAction
+                                            onClick={() => handleRoleUpdate(user.id, 'remove')}
+                                            className="bg-destructive text-destructive-foreground hover:bg-destructive/80"
+                                          >
+                                            Remove Admin
+                                          </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
+                                  ) : (
+                                    <AlertDialog>
+                                      <AlertDialogTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          className="text-primary hover:text-primary"
+                                        >
+                                          <UserCheck className="h-4 w-4" />
+                                        </Button>
+                                      </AlertDialogTrigger>
+                                      <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                          <AlertDialogTitle>Promote to Admin</AlertDialogTitle>
+                                          <AlertDialogDescription>
+                                            Are you sure you want to grant admin privileges to this user? 
+                                            They will have access to all admin functions including user management.
+                                          </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                          <AlertDialogAction
+                                            onClick={() => handleRoleUpdate(user.id, 'add')}
+                                          >
+                                            Grant Admin Access
+                                          </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
+                                  )}
+                                </div>
+                                {isLastAdmin && (
+                                  <div className="text-xs text-muted-foreground mt-1">
+                                    Last admin
+                                  </div>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
