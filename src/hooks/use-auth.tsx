@@ -9,7 +9,7 @@ interface AuthContextValue {
   roles: string[];
   isAdmin: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any } | void>;
-  signUp: (email: string, password: string) => Promise<{ error: any } | void>;
+  signUp: (email: string, password: string, userData?: { firstName: string; lastName: string; phoneNumber: string }) => Promise<{ error: any } | void>;
   signOut: () => Promise<void>;
 }
 
@@ -74,12 +74,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, userData?: { firstName: string; lastName: string; phoneNumber: string }) => {
     const redirectUrl = `${window.location.origin}/`;
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: redirectUrl },
+      options: { 
+        emailRedirectTo: redirectUrl,
+        data: {
+          first_name: userData?.firstName,
+          last_name: userData?.lastName,
+          phone_number: userData?.phoneNumber,
+          display_name: userData ? `${userData.firstName} ${userData.lastName}` : undefined,
+        }
+      },
     });
     return { error };
   };

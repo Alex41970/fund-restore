@@ -12,12 +12,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { toast } from "@/components/ui/sonner";
 import { useAuth } from "@/hooks/use-auth";
 
-const schema = z.object({
+const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 });
 
-type FormValues = z.infer<typeof schema>;
+const signupSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  phoneNumber: z.string().min(10, "Valid phone number is required"),
+  email: z.string().email(),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string().min(8),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+type SignupFormValues = z.infer<typeof signupSchema>;
 
 const Auth: React.FC = () => {
   const { signIn, signUp } = useAuth();
@@ -25,20 +38,38 @@ const Auth: React.FC = () => {
   const location = useLocation() as any;
   const from = location.state?.from?.pathname || "/dashboard";
 
-  const loginForm = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { email: "", password: "" } });
-  const signupForm = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { email: "", password: "" } });
+  const loginForm = useForm<LoginFormValues>({ 
+    resolver: zodResolver(loginSchema), 
+    defaultValues: { email: "", password: "" } 
+  });
+  const signupForm = useForm<SignupFormValues>({ 
+    resolver: zodResolver(signupSchema), 
+    defaultValues: { 
+      firstName: "", 
+      lastName: "", 
+      phoneNumber: "", 
+      email: "", 
+      password: "", 
+      confirmPassword: "" 
+    } 
+  });
 
-  const onLogin = async (values: FormValues) => {
+  const onLogin = async (values: LoginFormValues) => {
     const { error } = await signIn(values.email, values.password) as any;
     if (error) return toast.error(error.message || "Login failed");
     toast.success("Welcome back!");
     navigate(from, { replace: true });
   };
 
-  const onSignup = async (values: FormValues) => {
-    const { error } = await signUp(values.email, values.password) as any;
+  const onSignup = async (values: SignupFormValues) => {
+    const { error } = await signUp(values.email, values.password, {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      phoneNumber: values.phoneNumber,
+    }) as any;
     if (error) return toast.error(error.message || "Sign up failed");
-    toast.success("Check your email to confirm your account.");
+    toast.success("Account created successfully! You can now log in.");
+    navigate(from, { replace: true });
   };
 
   return (
@@ -76,13 +107,79 @@ const Auth: React.FC = () => {
               </TabsContent>
               <TabsContent value="signup" className="mt-4">
                 <form onSubmit={signupForm.handleSubmit(onSignup)} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName">First Name</Label>
+                      <Input 
+                        id="firstName" 
+                        type="text" 
+                        placeholder="John" 
+                        {...signupForm.register("firstName")}
+                      />
+                      {signupForm.formState.errors.firstName && (
+                        <p className="text-sm text-destructive">{signupForm.formState.errors.firstName.message}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName">Last Name</Label>
+                      <Input 
+                        id="lastName" 
+                        type="text" 
+                        placeholder="Doe" 
+                        {...signupForm.register("lastName")}
+                      />
+                      {signupForm.formState.errors.lastName && (
+                        <p className="text-sm text-destructive">{signupForm.formState.errors.lastName.message}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phoneNumber">Phone Number</Label>
+                    <Input 
+                      id="phoneNumber" 
+                      type="tel" 
+                      placeholder="+1 (555) 123-4567" 
+                      {...signupForm.register("phoneNumber")}
+                    />
+                    {signupForm.formState.errors.phoneNumber && (
+                      <p className="text-sm text-destructive">{signupForm.formState.errors.phoneNumber.message}</p>
+                    )}
+                  </div>
                   <div className="space-y-2">
                     <Label htmlFor="email2">Email</Label>
-                    <Input id="email2" type="email" placeholder="you@example.com" {...signupForm.register("email")}/>
+                    <Input 
+                      id="email2" 
+                      type="email" 
+                      placeholder="you@example.com" 
+                      {...signupForm.register("email")}
+                    />
+                    {signupForm.formState.errors.email && (
+                      <p className="text-sm text-destructive">{signupForm.formState.errors.email.message}</p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="password2">Password</Label>
-                    <Input id="password2" type="password" {...signupForm.register("password")} />
+                    <Input 
+                      id="password2" 
+                      type="password" 
+                      placeholder="Minimum 8 characters" 
+                      {...signupForm.register("password")} 
+                    />
+                    {signupForm.formState.errors.password && (
+                      <p className="text-sm text-destructive">{signupForm.formState.errors.password.message}</p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <Input 
+                      id="confirmPassword" 
+                      type="password" 
+                      placeholder="Confirm your password" 
+                      {...signupForm.register("confirmPassword")} 
+                    />
+                    {signupForm.formState.errors.confirmPassword && (
+                      <p className="text-sm text-destructive">{signupForm.formState.errors.confirmPassword.message}</p>
+                    )}
                   </div>
                   <Button className="w-full" type="submit">Create account</Button>
                 </form>
