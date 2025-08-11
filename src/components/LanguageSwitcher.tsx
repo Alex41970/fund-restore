@@ -18,10 +18,13 @@ export const LanguageSwitcher: React.FC = () => {
   const { i18n } = useTranslation();
 
   const handleLanguageChange = (language: string) => {
+    console.log('Changing language to:', language);
     i18n.changeLanguage(language);
+    console.log('Language changed, new language:', i18n.language);
   };
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+  console.log('Current language:', i18n.language, 'Current language object:', currentLanguage);
 
   return (
     <DropdownMenu>

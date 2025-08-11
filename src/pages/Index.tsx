@@ -115,10 +115,11 @@ const Index = () => {
               <span>Trusted by 2,500+ clients worldwide</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-bold font-playfair mb-6 animate-slide-up">
-              {t('pages.index.hero.title')}
+              Recover Your Lost Funds
+              <span className="block text-premium-gold">With Confidence</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8 leading-relaxed animate-slide-up" style={{ animationDelay: "200ms" }}>
-              {t('pages.index.hero.subtitle')}
+              Professional money recovery specialists with a 94% success rate. We help recover funds from scams, chargebacks, and wire transfer errors.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: "400ms" }}>
               <Button asChild size="xl" variant="premium">
@@ -160,9 +161,9 @@ const Index = () => {
       <section className="px-4 py-20 bg-muted/30">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">{t('pages.index.services.title')}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">Our Recovery Services</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('pages.index.services.subtitle')}
+              Comprehensive fund recovery solutions tailored to your specific situation.
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -245,9 +246,9 @@ const Index = () => {
       <section className="px-4 py-20 bg-background">
         <div className="mx-auto max-w-4xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">{t('pages.index.process.title')}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">Our Recovery Process</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('pages.index.process.subtitle')}
+              A proven 4-step methodology that maximizes your chances of successful fund recovery.
             </p>
           </div>
           <div className="space-y-8">
@@ -270,9 +271,9 @@ const Index = () => {
       <section className="px-4 py-20 bg-muted/30">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">{t('pages.index.testimonials.title')}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">Client Success Stories</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('pages.index.testimonials.subtitle')}
+              Real recoveries, real results. See what our clients say about their experience.
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2">
@@ -300,9 +301,9 @@ const Index = () => {
       <section className="px-4 py-20 bg-background">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">{t('pages.index.trust.title')}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">Why Trust Lixington Capital Recovery</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('pages.index.trust.subtitle')}
+              Industry-leading credentials and security standards protect your interests.
             </p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -322,10 +323,10 @@ const Index = () => {
       <section className="px-4 py-20 bg-gradient-to-r from-trust-blue to-trust-blue-light">
         <div className="mx-auto max-w-4xl text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-6">
-            {t('pages.index.cta.title')}
+            Ready to Recover Your Funds?
           </h2>
           <p className="text-xl mb-8 text-white/90">
-            {t('pages.index.cta.subtitle')}
+            Start with a free consultation. No upfront fees, no hidden costs.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button asChild size="xl" variant="premium">
