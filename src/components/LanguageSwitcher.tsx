@@ -27,26 +27,38 @@ export const LanguageSwitcher: React.FC = () => {
   console.log('Current language:', i18n.language, 'Current language object:', currentLanguage);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2">
-          <Globe className="h-4 w-4" />
-          <span className="hidden sm:inline">{currentLanguage.flag} {currentLanguage.name}</span>
-          <span className="sm:hidden">{currentLanguage.flag}</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        {languages.map((language) => (
-          <DropdownMenuItem
-            key={language.code}
-            onClick={() => handleLanguageChange(language.code)}
-            className={i18n.language === language.code ? "bg-accent" : ""}
+    <div className="relative">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2 bg-background hover:bg-accent border-border"
           >
-            <span className="mr-2">{language.flag}</span>
-            {language.name}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+            <Globe className="h-4 w-4" />
+            <span className="hidden md:inline">{currentLanguage.flag} {currentLanguage.name}</span>
+            <span className="md:hidden">{currentLanguage.flag}</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent 
+          align="end" 
+          className="z-50 bg-background border border-border shadow-lg min-w-[160px] p-1"
+          sideOffset={5}
+        >
+          {languages.map((language) => (
+            <DropdownMenuItem
+              key={language.code}
+              onClick={() => handleLanguageChange(language.code)}
+              className={`cursor-pointer hover:bg-accent rounded-sm ${
+                i18n.language === language.code ? "bg-accent text-accent-foreground" : ""
+              }`}
+            >
+              <span className="mr-2 text-base">{language.flag}</span>
+              <span className="text-sm">{language.name}</span>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };

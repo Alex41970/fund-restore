@@ -22,17 +22,19 @@ export const Header: React.FC = () => {
   if (user) {
     // Client portal header - minimal navigation
     return (
-      <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 sticky top-0 z-40">
         <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
-          <span className="font-semibold">Lixington Capital Recovery</span>
-          <nav className="flex items-center gap-4">
+          <span className="font-semibold text-foreground">Lixington Capital Recovery</span>
+          <nav className="flex items-center gap-3">
             {isAdmin ? (
               <NavLink to="/admin" className={linkCls}>{t('navigation.admin')}</NavLink>
             ) : (
               <NavLink to="/dashboard" className={linkCls}>{t('navigation.dashboard')}</NavLink>
             )}
             <LanguageSwitcher />
-            <Button size="sm" variant="outline" onClick={handleSignOut}>{t('common.signOut')}</Button>
+            <Button size="sm" variant="outline" onClick={handleSignOut} className="bg-background hover:bg-accent">
+              {t('common.signOut')}
+            </Button>
           </nav>
         </div>
       </header>
@@ -41,19 +43,21 @@ export const Header: React.FC = () => {
 
   // Marketing website header - full navigation
   return (
-    <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 sticky top-0 z-40">
       <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
-        <NavLink to="/" className="font-semibold">Lixington Capital Recovery</NavLink>
-        <nav className="flex items-center gap-4">
-          <NavLink to="/" className={linkCls} end>{t('navigation.home')}</NavLink>
-          <NavLink to="/about" className={linkCls}>{t('navigation.about')}</NavLink>
-          <NavLink to="/services" className={linkCls}>{t('navigation.services')}</NavLink>
-          <NavLink to="/case-studies" className={linkCls}>{t('navigation.caseStudies')}</NavLink>
-          <NavLink to="/pricing" className={linkCls}>{t('navigation.pricing')}</NavLink>
-          <NavLink to="/start" className={linkCls}>{t('navigation.start')}</NavLink>
-          <NavLink to="/contact" className={linkCls}>{t('navigation.contact')}</NavLink>
+        <NavLink to="/" className="font-semibold text-foreground">Lixington Capital Recovery</NavLink>
+        <nav className="flex items-center gap-3 overflow-x-auto">
+          <div className="hidden lg:flex items-center gap-3">
+            <NavLink to="/" className={linkCls} end>{t('navigation.home')}</NavLink>
+            <NavLink to="/about" className={linkCls}>{t('navigation.about')}</NavLink>
+            <NavLink to="/services" className={linkCls}>{t('navigation.services')}</NavLink>
+            <NavLink to="/case-studies" className={linkCls}>{t('navigation.caseStudies')}</NavLink>
+            <NavLink to="/pricing" className={linkCls}>{t('navigation.pricing')}</NavLink>
+            <NavLink to="/start" className={linkCls}>{t('navigation.start')}</NavLink>
+            <NavLink to="/contact" className={linkCls}>{t('navigation.contact')}</NavLink>
+          </div>
           <LanguageSwitcher />
-          <Button asChild size="sm">
+          <Button asChild size="sm" variant="default" className="bg-primary hover:bg-primary/90">
             <NavLink to="/auth">{t('common.signIn')}</NavLink>
           </Button>
         </nav>
