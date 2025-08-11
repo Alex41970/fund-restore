@@ -2,7 +2,6 @@ import { Helmet } from "react-helmet-async";
 import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { useTranslation } from "react-i18next";
 import { StatCard } from "@/components/StatCard";
 import { ProcessStep } from "@/components/ProcessStep";
 import { TestimonialCard } from "@/components/TestimonialCard";
@@ -24,7 +23,6 @@ import {
 
 const Index = () => {
   const { user, isAdmin, loading } = useAuth();
-  const { t } = useTranslation();
   
   // Redirect authenticated users to their appropriate dashboard
   if (!loading && user) {
@@ -37,7 +35,7 @@ const Index = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">{t('common.loading')}</p>
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -123,10 +121,10 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: "400ms" }}>
               <Button asChild size="xl" variant="premium">
-                <Link to="/auth">{t('common.getFreeConsultation')}</Link>
+                <Link to="/auth">Get Free Consultation</Link>
               </Button>
               <Button asChild size="xl" variant="outline-premium">
-                <Link to="/case-studies">{t('common.viewSuccessStories')}</Link>
+                <Link to="/case-studies">View Success Stories</Link>
               </Button>
             </div>
           </div>
@@ -330,10 +328,10 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button asChild size="xl" variant="premium">
-              <Link to="/auth">{t('common.getFreeConsultation')}</Link>
+              <Link to="/auth">Get Free Consultation</Link>
             </Button>
             <Button asChild size="xl" variant="outline-premium">
-              <Link to="/contact">{t('common.speakWithExpert')}</Link>
+              <Link to="/contact">Speak with an Expert</Link>
             </Button>
           </div>
         </div>
