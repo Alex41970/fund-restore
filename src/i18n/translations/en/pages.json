@@ -62,5 +62,84 @@
       "title": "Start Your Fund Recovery Today",
       "subtitle": "Don't let fraudsters keep your money. Our expert team is ready to help you recover what's rightfully yours."
     }
+  },
+  "dashboard": {
+    "welcome": "Welcome to Your Dashboard",
+    "createCaseDescription": "Create your case to get started with our recovery services.",
+    "createYourCase": "Create Your Case",
+    "caseTitle": "Case title",
+    "describeYourSituation": "Describe your situation (optional)",
+    "createCase": "Create Case",
+    "yourCase": "Your Case",
+    "loadingCase": "Loading your case...",
+    "viewFullCaseDetails": "View Full Case Details",
+    "description": "Description",
+    "caseInformation": "Case Information",
+    "caseId": "Case ID",
+    "status": "Status",
+    "created": "Created",
+    "lastUpdate": "Last Update",
+    "progress": "Progress",
+    "complete": "Complete",
+    "caseStatistics": "Case Statistics",
+    "messages": "Messages",
+    "progressUpdates": "Progress Updates",
+    "attachments": "Attachments",
+    "uploaded": "Uploaded",
+    "unknownSize": "Unknown size",
+    "tabs": {
+      "progress": "Progress",
+      "messages": "Messages"
+    }
+  },
+  "adminDashboard": {
+    "title": "Admin Dashboard",
+    "subtitle": "Manage all cases and track progress across your organization",
+    "statistics": {
+      "totalCases": "Total Cases",
+      "allCasesInSystem": "All cases in system",
+      "inProgress": "In Progress",
+      "activeCases": "Active cases",
+      "resolved": "Resolved",
+      "completedCases": "Completed cases",
+      "avgProgress": "Avg Progress",
+      "averageCaseCompletion": "Average case completion"
+    },
+    "tabs": {
+      "caseOverview": "Case Overview",
+      "caseDetails": "Case Details",
+      "userManagement": "User Management"
+    },
+    "filtersSearch": "Filters & Search",
+    "searchCasesClients": "Search cases or clients...",
+    "filterByStatus": "Filter by status",
+    "allStatuses": "All Statuses",
+    "allCases": "All Cases",
+    "loadingCases": "Loading cases...",
+    "errorLoadingCases": "Error loading cases:",
+    "noCasesFound": "No cases found",
+    "case": "Case",
+    "client": "Client",
+    "actions": "Actions",
+    "viewDetails": "View Details",
+    "selectCase": "Select a case to view details",
+    "caseManagement": "Case Management",
+    "clientInformation": "Client Information",
+    "userManagement": {
+      "title": "User Management",
+      "searchUsers": "Search users...",
+      "loadingUsers": "Loading users...",
+      "noUsersFound": "No users found",
+      "user": "User",
+      "role": "Role",
+      "admin": "Admin",
+      "client": "Client",
+      "promoteToAdmin": "Promote to Admin",
+      "removeAdmin": "Remove Admin",
+      "cannotRemoveLastAdmin": "Cannot remove the last admin user",
+      "userPromotedToAdmin": "User promoted to admin",
+      "adminRoleRemoved": "Admin role removed from user",
+      "failedToUpdateUserRole": "Failed to update user role:"
+    }
   }
 }

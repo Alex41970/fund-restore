@@ -1,5 +1,6 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 import { 
   Clock, 
   Play, 
@@ -16,48 +17,50 @@ interface CaseStatusBadgeProps {
 }
 
 export const CaseStatusBadge: React.FC<CaseStatusBadgeProps> = ({ status, className }) => {
+  const { t } = useTranslation();
+
   const getStatusConfig = (status: string) => {
     switch (status) {
       case "open":
         return {
           icon: <Clock className="h-3 w-3" />,
-          label: "Open",
+          label: t('status.open'),
           className: "bg-muted text-muted-foreground border-muted-foreground/20"
         };
       case "in_progress":
         return {
           icon: <Play className="h-3 w-3" />,
-          label: "In Progress",
+          label: t('status.inProgress'),
           className: "bg-trust-blue/10 text-trust-blue border-trust-blue/20"
         };
       case "pending_client":
         return {
           icon: <AlertTriangle className="h-3 w-3" />,
-          label: "Pending Client",
+          label: t('status.pendingClient'),
           className: "bg-warning-amber/10 text-warning-amber border-warning-amber/20"
         };
       case "under_review":
         return {
           icon: <Pause className="h-3 w-3" />,
-          label: "Under Review",
+          label: t('status.underReview'),
           className: "bg-secondary text-secondary-foreground border-secondary-foreground/20"
         };
       case "resolved":
         return {
           icon: <CheckCircle className="h-3 w-3" />,
-          label: "Resolved",
+          label: t('status.resolved'),
           className: "bg-success-green/10 text-success-green border-success-green/20"
         };
       case "closed":
         return {
           icon: <XCircle className="h-3 w-3" />,
-          label: "Closed",
+          label: t('status.closed'),
           className: "bg-destructive/10 text-destructive border-destructive/20"
         };
       case "archived":
         return {
           icon: <Archive className="h-3 w-3" />,
-          label: "Archived",
+          label: t('status.archived'),
           className: "bg-muted/50 text-muted-foreground border-muted-foreground/10"
         };
       default:

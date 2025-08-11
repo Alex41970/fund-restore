@@ -62,5 +62,84 @@
       "title": "Inizia il Tuo Recupero Fondi Oggi",
       "subtitle": "Non lasciare che i truffatori tengano i tuoi soldi. Il nostro team di esperti è pronto ad aiutarti a recuperare ciò che è legittimamente tuo."
     }
+  },
+  "dashboard": {
+    "welcome": "Benvenuto nella Tua Dashboard",
+    "createCaseDescription": "Crea il tuo caso per iniziare con i nostri servizi di recupero.",
+    "createYourCase": "Crea il Tuo Caso",
+    "caseTitle": "Titolo del caso",
+    "describeYourSituation": "Descrivi la tua situazione (facoltativo)",
+    "createCase": "Crea Caso",
+    "yourCase": "Il Tuo Caso",
+    "loadingCase": "Caricamento del tuo caso...",
+    "viewFullCaseDetails": "Visualizza Dettagli Completi del Caso",
+    "description": "Descrizione",
+    "caseInformation": "Informazioni del Caso",
+    "caseId": "ID Caso",
+    "status": "Stato",
+    "created": "Creato",
+    "lastUpdate": "Ultimo Aggiornamento",
+    "progress": "Progresso",
+    "complete": "Completo",
+    "caseStatistics": "Statistiche del Caso",
+    "messages": "Messaggi",
+    "progressUpdates": "Aggiornamenti Progresso",
+    "attachments": "Allegati",
+    "uploaded": "Caricato",
+    "unknownSize": "Dimensione sconosciuta",
+    "tabs": {
+      "progress": "Progresso",
+      "messages": "Messaggi"
+    }
+  },
+  "adminDashboard": {
+    "title": "Dashboard Admin",
+    "subtitle": "Gestisci tutti i casi e traccia il progresso nella tua organizzazione",
+    "statistics": {
+      "totalCases": "Casi Totali",
+      "allCasesInSystem": "Tutti i casi nel sistema",
+      "inProgress": "In Corso",
+      "activeCases": "Casi attivi",
+      "resolved": "Risolti",
+      "completedCases": "Casi completati",
+      "avgProgress": "Progresso Medio",
+      "averageCaseCompletion": "Completamento medio dei casi"
+    },
+    "tabs": {
+      "caseOverview": "Panoramica Casi",
+      "caseDetails": "Dettagli Caso",
+      "userManagement": "Gestione Utenti"
+    },
+    "filtersSearch": "Filtri e Ricerca",
+    "searchCasesClients": "Cerca casi o clienti...",
+    "filterByStatus": "Filtra per stato",
+    "allStatuses": "Tutti gli Stati",
+    "allCases": "Tutti i Casi",
+    "loadingCases": "Caricamento casi...",
+    "errorLoadingCases": "Errore nel caricamento dei casi:",
+    "noCasesFound": "Nessun caso trovato",
+    "case": "Caso",
+    "client": "Cliente",
+    "actions": "Azioni",
+    "viewDetails": "Visualizza Dettagli",
+    "selectCase": "Seleziona un caso per visualizzare i dettagli",
+    "caseManagement": "Gestione Casi",
+    "clientInformation": "Informazioni Cliente",
+    "userManagement": {
+      "title": "Gestione Utenti",
+      "searchUsers": "Cerca utenti...",
+      "loadingUsers": "Caricamento utenti...",
+      "noUsersFound": "Nessun utente trovato",
+      "user": "Utente",
+      "role": "Ruolo",
+      "admin": "Admin",
+      "client": "Cliente",
+      "promoteToAdmin": "Promuovi ad Admin",
+      "removeAdmin": "Rimuovi Admin",
+      "cannotRemoveLastAdmin": "Impossibile rimuovere l'ultimo utente admin",
+      "userPromotedToAdmin": "Utente promosso ad admin",
+      "adminRoleRemoved": "Ruolo admin rimosso dall'utente",
+      "failedToUpdateUserRole": "Impossibile aggiornare il ruolo utente:"
+    }
   }
 }

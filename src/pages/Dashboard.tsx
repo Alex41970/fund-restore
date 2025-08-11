@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,6 +45,7 @@ interface CaseDetails extends CaseRow {
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const qc = useQueryClient();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -204,23 +206,23 @@ const Dashboard: React.FC = () => {
 
         <div className="mx-auto max-w-2xl px-4 py-8 space-y-8">
           <div className="text-center space-y-4">
-            <h1 className="text-3xl font-bold">Welcome to Your Dashboard</h1>
-            <p className="text-muted-foreground">Create your case to get started with our recovery services.</p>
+            <h1 className="text-3xl font-bold">{t('pages.dashboard.welcome')}</h1>
+            <p className="text-muted-foreground">{t('pages.dashboard.createCaseDescription')}</p>
           </div>
           
           <Card>
             <CardHeader>
-              <CardTitle>Create Your Case</CardTitle>
+              <CardTitle>{t('pages.dashboard.createYourCase')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4">
                 <Input 
-                  placeholder="Case title" 
+                  placeholder={t('pages.dashboard.caseTitle')} 
                   value={title} 
                   onChange={(e) => setTitle(e.target.value)} 
                 />
                 <Textarea 
-                  placeholder="Describe your situation (optional)" 
+                  placeholder={t('pages.dashboard.describeYourSituation')} 
                   value={description} 
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
@@ -233,7 +235,7 @@ const Dashboard: React.FC = () => {
                   className="text-sm text-muted-foreground"
                 />
                 <Button onClick={handleCreate} disabled={!canSubmit} className="w-full">
-                  Create Case
+                  {t('pages.dashboard.createCase')}
                 </Button>
               </div>
             </CardContent>
@@ -246,7 +248,7 @@ const Dashboard: React.FC = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>Dashboard | Your Case</title>
+        <title>{t('pages.dashboard.yourCase')} | Lixington Capital Recovery</title>
         <meta name="description" content="Track your case progress and communicate with our team." />
         <link rel="canonical" href={window.location.origin + "/dashboard"} />
       </Helmet>
@@ -254,7 +256,7 @@ const Dashboard: React.FC = () => {
       <div className="mx-auto max-w-6xl px-4 py-8 space-y-8">
         {isLoading ? (
           <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-muted-foreground">Loading your case...</div>
+            <div className="text-muted-foreground">{t('pages.dashboard.loadingCase')}</div>
           </div>
         ) : userCase ? (
           <>
@@ -281,7 +283,7 @@ const Dashboard: React.FC = () => {
                 <Accordion type="single" collapsible>
                   <AccordionItem value="case-details" className="border-none">
                     <AccordionTrigger className="text-sm font-medium">
-                      View Full Case Details
+                      {t('pages.dashboard.viewFullCaseDetails')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-6">
                       {/* Case Description */}
@@ -289,7 +291,7 @@ const Dashboard: React.FC = () => {
                         <div className="space-y-2">
                           <h4 className="font-semibold text-foreground flex items-center gap-2">
                             <FileText className="h-4 w-4" />
-                            Description
+                            {t('pages.dashboard.description')}
                           </h4>
                           <Textarea 
                             readOnly 
@@ -304,57 +306,57 @@ const Dashboard: React.FC = () => {
                       <div className="space-y-3">
                         <h4 className="font-semibold text-foreground flex items-center gap-2">
                           <Hash className="h-4 w-4" />
-                          Case Information
+                          {t('pages.dashboard.caseInformation')}
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <Hash className="h-4 w-4" />
-                            <span className="font-medium">Case ID:</span>
+                            <span className="font-medium">{t('pages.dashboard.caseId')}:</span>
                             <span className="font-mono">{userCase.id.substring(0, 8)}...</span>
                           </div>
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <BarChart3 className="h-4 w-4" />
-                            <span className="font-medium">Status:</span>
+                            <span className="font-medium">{t('pages.dashboard.status')}:</span>
                             <span className="capitalize">{userCase.status}</span>
                           </div>
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <Calendar className="h-4 w-4" />
-                            <span className="font-medium">Created:</span>
+                            <span className="font-medium">{t('pages.dashboard.created')}:</span>
                             <span>{new Date(userCase.created_at).toLocaleString()}</span>
                           </div>
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <Clock className="h-4 w-4" />
-                            <span className="font-medium">Last Update:</span>
+                            <span className="font-medium">{t('pages.dashboard.lastUpdate')}:</span>
                             <span>{new Date(userCase.last_update).toLocaleString()}</span>
                           </div>
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <TrendingUp className="h-4 w-4" />
-                            <span className="font-medium">Progress:</span>
-                            <span>{Math.round(userCase.progress_percentage)}% Complete</span>
+                            <span className="font-medium">{t('pages.dashboard.progress')}:</span>
+                            <span>{Math.round(userCase.progress_percentage)}% {t('pages.dashboard.complete')}</span>
                           </div>
                         </div>
                       </div>
 
                       {/* Case Statistics */}
                       <div className="space-y-3">
-                        <h4 className="font-semibold text-foreground flex items-center gap-2">
-                          <BarChart3 className="h-4 w-4" />
-                          Case Statistics
+                          <h4 className="font-semibold text-foreground flex items-center gap-2">
+                            <BarChart3 className="h-4 w-4" />
+                            {t('pages.dashboard.caseStatistics')}
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <MessageSquare className="h-4 w-4" />
-                            <span className="font-medium">Messages:</span>
+                            <span className="font-medium">{t('pages.dashboard.messages')}:</span>
                             <span>{messages?.length || 0}</span>
                           </div>
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <TrendingUp className="h-4 w-4" />
-                            <span className="font-medium">Progress Updates:</span>
+                            <span className="font-medium">{t('pages.dashboard.progressUpdates')}:</span>
                             <span>{progressUpdates?.length || 0}</span>
                           </div>
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <Paperclip className="h-4 w-4" />
-                            <span className="font-medium">Attachments:</span>
+                            <span className="font-medium">{t('pages.dashboard.attachments')}:</span>
                             <span>{attachments?.length || 0}</span>
                           </div>
                         </div>
@@ -365,7 +367,7 @@ const Dashboard: React.FC = () => {
                         <div className="space-y-3">
                           <h4 className="font-semibold text-foreground flex items-center gap-2">
                             <Paperclip className="h-4 w-4" />
-                            Attachments ({attachments.length})
+                            {t('pages.dashboard.attachments')} ({attachments.length})
                           </h4>
                           <div className="space-y-2">
                             {attachments.map((attachment) => (
@@ -374,9 +376,9 @@ const Dashboard: React.FC = () => {
                                   <FileText className="h-4 w-4 text-muted-foreground" />
                                   <div>
                                     <p className="font-medium text-sm">{attachment.file_name}</p>
-                                    <p className="text-xs text-muted-foreground">
-                                      {attachment.size ? `${(attachment.size / 1024).toFixed(1)} KB` : 'Unknown size'} • 
-                                      Uploaded {new Date(attachment.created_at).toLocaleDateString()}
+                                     <p className="text-xs text-muted-foreground">
+                                       {attachment.size ? `${(attachment.size / 1024).toFixed(1)} KB` : t('pages.dashboard.unknownSize')} • 
+                                       {t('pages.dashboard.uploaded')} {new Date(attachment.created_at).toLocaleDateString()}
                                     </p>
                                   </div>
                                 </div>
@@ -400,7 +402,7 @@ const Dashboard: React.FC = () => {
                       <TrendingUp className="h-5 w-5 text-trust-blue" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Progress</p>
+                      <p className="text-sm text-muted-foreground">{t('pages.dashboard.progress')}</p>
                       <p className="text-2xl font-bold">{Math.round(userCase.progress_percentage || 0)}%</p>
                     </div>
                   </div>
@@ -414,7 +416,7 @@ const Dashboard: React.FC = () => {
                       <MessageSquare className="h-5 w-5 text-success-green" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Messages</p>
+                      <p className="text-sm text-muted-foreground">{t('pages.dashboard.messages')}</p>
                       <p className="text-2xl font-bold">{messages?.length || 0}</p>
                     </div>
                   </div>
@@ -427,11 +429,11 @@ const Dashboard: React.FC = () => {
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="progress" className="flex items-center gap-2">
                   <TrendingUp className="h-4 w-4" />
-                  Progress
+                  {t('pages.dashboard.tabs.progress')}
                 </TabsTrigger>
                 <TabsTrigger value="messages" className="flex items-center gap-2">
                   <MessageSquare className="h-4 w-4" />
-                  Messages
+                  {t('pages.dashboard.tabs.messages')}
                 </TabsTrigger>
               </TabsList>
 
