@@ -1,0 +1,13 @@
+{
+  "open": "Aperto",
+  "inProgress": "In Corso",
+  "resolved": "Risolto",
+  "closed": "Chiuso",
+  "pending": "In Attesa",
+  "approved": "Approvato",
+  "rejected": "Rifiutato",
+  "active": "Attivo",
+  "inactive": "Inattivo",
+  "completed": "Completato",
+  "cancelled": "Annullato"
+}

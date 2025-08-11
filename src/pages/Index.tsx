@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { useTranslation } from "react-i18next";
 import { StatCard } from "@/components/StatCard";
 import { ProcessStep } from "@/components/ProcessStep";
 import { TestimonialCard } from "@/components/TestimonialCard";
@@ -23,6 +24,7 @@ import {
 
 const Index = () => {
   const { user, isAdmin, loading } = useAuth();
+  const { t } = useTranslation();
   
   // Redirect authenticated users to their appropriate dashboard
   if (!loading && user) {
@@ -35,7 +37,7 @@ const Index = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -113,18 +115,17 @@ const Index = () => {
               <span>Trusted by 2,500+ clients worldwide</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-bold font-playfair mb-6 animate-slide-up">
-              Recover Your Lost Funds
-              <span className="block text-premium-gold">With Confidence</span>
+              {t('pages.index.hero.title')}
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8 leading-relaxed animate-slide-up" style={{ animationDelay: "200ms" }}>
-              Professional money recovery specialists with a 94% success rate. We help recover funds from scams, chargebacks, and wire transfer errors.
+              {t('pages.index.hero.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: "400ms" }}>
               <Button asChild size="xl" variant="premium">
-                <Link to="/auth">Get Free Consultation</Link>
+                <Link to="/auth">{t('common.getFreeConsultation')}</Link>
               </Button>
               <Button asChild size="xl" variant="outline-premium">
-                <Link to="/case-studies">View Success Stories</Link>
+                <Link to="/case-studies">{t('common.viewSuccessStories')}</Link>
               </Button>
             </div>
           </div>
@@ -159,9 +160,9 @@ const Index = () => {
       <section className="px-4 py-20 bg-muted/30">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">Our Recovery Services</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">{t('pages.index.services.title')}</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive fund recovery solutions tailored to your specific situation.
+              {t('pages.index.services.subtitle')}
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -244,9 +245,9 @@ const Index = () => {
       <section className="px-4 py-20 bg-background">
         <div className="mx-auto max-w-4xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">Our Recovery Process</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">{t('pages.index.process.title')}</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A proven 4-step methodology that maximizes your chances of successful fund recovery.
+              {t('pages.index.process.subtitle')}
             </p>
           </div>
           <div className="space-y-8">
@@ -269,9 +270,9 @@ const Index = () => {
       <section className="px-4 py-20 bg-muted/30">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">Client Success Stories</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">{t('pages.index.testimonials.title')}</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Real recoveries, real results. See what our clients say about their experience.
+              {t('pages.index.testimonials.subtitle')}
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2">
@@ -299,9 +300,9 @@ const Index = () => {
       <section className="px-4 py-20 bg-background">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">Why Trust Lixington Capital Recovery</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">{t('pages.index.trust.title')}</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Industry-leading credentials and security standards protect your interests.
+              {t('pages.index.trust.subtitle')}
             </p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -321,17 +322,17 @@ const Index = () => {
       <section className="px-4 py-20 bg-gradient-to-r from-trust-blue to-trust-blue-light">
         <div className="mx-auto max-w-4xl text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-6">
-            Ready to Recover Your Funds?
+            {t('pages.index.cta.title')}
           </h2>
           <p className="text-xl mb-8 text-white/90">
-            Start with a free consultation. No upfront fees, no hidden costs.
+            {t('pages.index.cta.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button asChild size="xl" variant="premium">
-              <Link to="/auth">Get Free Consultation</Link>
+              <Link to="/auth">{t('common.getFreeConsultation')}</Link>
             </Button>
             <Button asChild size="xl" variant="outline-premium">
-              <Link to="/contact">Speak with an Expert</Link>
+              <Link to="/contact">{t('common.speakWithExpert')}</Link>
             </Button>
           </div>
         </div>

@@ -1,0 +1,66 @@
+{
+  "index": {
+    "hero": {
+      "title": "Recupera i Tuoi Fondi Persi con Investigazioni Finanziarie Esperte",
+      "subtitle": "Servizi professionali di recupero fondi con comprovata esperienza. Aiutiamo individui e aziende a recuperare denaro perso a causa di frodi, truffe e transazioni non autorizzate.",
+      "stats": {
+        "recovered": "Fondi Recuperati",
+        "successRate": "Tasso di Successo",
+        "clients": "Clienti Soddisfatti",
+        "experience": "Anni di Esperienza"
+      }
+    },
+    "services": {
+      "title": "I Nostri Servizi di Recupero",
+      "subtitle": "Investigazioni finanziarie specializzate e recupero fondi attraverso multiple categorie di frode",
+      "forex": {
+        "title": "Truffe Forex e Trading",
+        "description": "Recupero da broker forex fraudolenti e piattaforme di opzioni binarie"
+      },
+      "crypto": {
+        "title": "Recupero Criptovalute",
+        "description": "Tracciamento e recupero di asset digitali persi o rubati e investimenti crypto"
+      },
+      "investment": {
+        "title": "Frodi di Investimento",
+        "description": "Schemi Ponzi, piattaforme di investimento false e trasferimenti di fondi non autorizzati"
+      },
+      "romance": {
+        "title": "Truffe Sentimentali e di Appuntamenti",
+        "description": "Recupero di fondi persi attraverso truffe di appuntamenti online e frodi romantiche"
+      }
+    },
+    "process": {
+      "title": "Il Nostro Processo di Recupero Comprovato",
+      "subtitle": "Un approccio sistematico per massimizzare le possibilità di recupero dei tuoi fondi",
+      "consultation": {
+        "title": "Consulenza Gratuita",
+        "description": "Valutazione iniziale del caso e analisi della fattibilità di recupero"
+      },
+      "investigation": {
+        "title": "Investigazione",
+        "description": "Analisi completa della frode e raccolta di prove"
+      },
+      "recovery": {
+        "title": "Azione di Recupero",
+        "description": "Procedimenti legali e sforzi diretti di recupero"
+      },
+      "resolution": {
+        "title": "Risoluzione del Caso",
+        "description": "Recupero fondi e chiusura del caso con documentazione completa"
+      }
+    },
+    "testimonials": {
+      "title": "Storie di Successo dei Clienti",
+      "subtitle": "Recuperi reali da clienti soddisfatti in tutto il mondo"
+    },
+    "trust": {
+      "title": "Perché Scegliere Lixington Capital Recovery",
+      "subtitle": "Di fiducia per migliaia di persone per servizi professionali di recupero fondi"
+    },
+    "cta": {
+      "title": "Inizia il Tuo Recupero Fondi Oggi",
+      "subtitle": "Non lasciare che i truffatori tengano i tuoi soldi. Il nostro team di esperti è pronto ad aiutarti a recuperare ciò che è legittimamente tuo."
+    }
+  }
+}

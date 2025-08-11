@@ -1,0 +1,13 @@
+{
+  "open": "Open",
+  "inProgress": "In Progress",
+  "resolved": "Resolved",
+  "closed": "Closed",
+  "pending": "Pending",
+  "approved": "Approved",
+  "rejected": "Rejected",
+  "active": "Active",
+  "inactive": "Inactive",
+  "completed": "Completed",
+  "cancelled": "Cancelled"
+}

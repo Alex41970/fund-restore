@@ -1,0 +1,66 @@
+{
+  "index": {
+    "hero": {
+      "title": "Recover Your Lost Funds with Expert Financial Investigation",
+      "subtitle": "Professional fund recovery services with proven track record. We help individuals and businesses recover money lost to fraud, scams, and unauthorized transactions.",
+      "stats": {
+        "recovered": "Funds Recovered",
+        "successRate": "Success Rate",
+        "clients": "Satisfied Clients",
+        "experience": "Years Experience"
+      }
+    },
+    "services": {
+      "title": "Our Recovery Services",
+      "subtitle": "Specialized financial investigation and fund recovery across multiple fraud categories",
+      "forex": {
+        "title": "Forex & Trading Scams",
+        "description": "Recovery from fraudulent forex brokers and binary options platforms"
+      },
+      "crypto": {
+        "title": "Cryptocurrency Recovery",
+        "description": "Tracing and recovering lost or stolen digital assets and crypto investments"
+      },
+      "investment": {
+        "title": "Investment Fraud",
+        "description": "Ponzi schemes, fake investment platforms, and unauthorized fund transfers"
+      },
+      "romance": {
+        "title": "Romance & Dating Scams",
+        "description": "Recovering funds lost through online dating and romance fraud schemes"
+      }
+    },
+    "process": {
+      "title": "Our Proven Recovery Process",
+      "subtitle": "A systematic approach to maximize your fund recovery chances",
+      "consultation": {
+        "title": "Free Consultation",
+        "description": "Initial case assessment and recovery feasibility analysis"
+      },
+      "investigation": {
+        "title": "Investigation",
+        "description": "Comprehensive fraud analysis and evidence gathering"
+      },
+      "recovery": {
+        "title": "Recovery Action",
+        "description": "Legal proceedings and direct recovery efforts"
+      },
+      "resolution": {
+        "title": "Case Resolution",
+        "description": "Fund recovery and case closure with full documentation"
+      }
+    },
+    "testimonials": {
+      "title": "Client Success Stories",
+      "subtitle": "Real recoveries from satisfied clients worldwide"
+    },
+    "trust": {
+      "title": "Why Choose Lixington Capital Recovery",
+      "subtitle": "Trusted by thousands for professional fund recovery services"
+    },
+    "cta": {
+      "title": "Start Your Fund Recovery Today",
+      "subtitle": "Don't let fraudsters keep your money. Our expert team is ready to help you recover what's rightfully yours."
+    }
+  }
+}
