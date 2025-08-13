@@ -235,7 +235,7 @@ const AdminDashboard: React.FC = () => {
       // Then get all profiles
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
-        .select("id, display_name, first_name, last_name")
+        .select("id, display_name, first_name, last_name, email")
         .order("display_name", { ascending: true });
       
       if (profilesError) throw profilesError;
@@ -248,7 +248,7 @@ const AdminDashboard: React.FC = () => {
         
         return {
           id: profile.id,
-          email: `User ${profile.id.slice(0, 8)}`, // Fallback display
+          email: profile.email || `User ${profile.id.slice(0, 8)}`,
           created_at: new Date().toISOString(),
           profiles: {
             display_name: profile.display_name,
