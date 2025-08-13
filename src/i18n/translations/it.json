@@ -170,6 +170,40 @@
     }
   },
   "auth": {
+    "title": "Autenticazione - Lixington Capital Recovery",
+    "description": "Accedi al tuo account o creane uno nuovo per accedere ai nostri servizi di recupero fondi",
+    "pageTitle": "Benvenuto a Lixington Capital Recovery",
+    "pageDescription": "Accedi al tuo account o creane uno nuovo per iniziare con i nostri servizi esperti di recupero fondi",
+    "tabs": {
+      "login": "Accedi",
+      "signup": "Registrati"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "phoneNumber": "Numero di Telefono",
+      "confirmPassword": "Conferma Password"
+    },
+    "placeholders": {
+      "email": "Inserisci il tuo indirizzo email",
+      "firstName": "Mario",
+      "lastName": "Rossi",
+      "phoneNumber": "+39 123 456 7890",
+      "password": "Minimo 8 caratteri",
+      "confirmPassword": "Conferma la tua password"
+    },
+    "buttons": {
+      "login": "Accedi",
+      "signup": "Crea Account"
+    },
+    "messages": {
+      "loginFailed": "Accesso fallito. Controlla le tue credenziali.",
+      "welcome": "Bentornato!",
+      "signupFailed": "Creazione account fallita. Riprova.",
+      "accountCreated": "Account creato con successo! Benvenuto a Lixington Capital Recovery."
+    },
     "signIn": {
       "title": "Bentornato",
       "subtitle": "Accedi al tuo account per accedere ai tuoi casi di recupero",

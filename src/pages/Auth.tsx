@@ -115,11 +115,11 @@ const Auth: React.FC = () => {
                 <form onSubmit={signupForm.handleSubmit(onSignup)} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="firstName">First Name</Label>
+                      <Label htmlFor="firstName">{t('auth.fields.firstName')}</Label>
                       <Input 
                         id="firstName" 
                         type="text" 
-                        placeholder="John" 
+                        placeholder={t('auth.placeholders.firstName')} 
                         {...signupForm.register("firstName")}
                       />
                       {signupForm.formState.errors.firstName && (
@@ -127,11 +127,11 @@ const Auth: React.FC = () => {
                       )}
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="lastName">Last Name</Label>
+                      <Label htmlFor="lastName">{t('auth.fields.lastName')}</Label>
                       <Input 
                         id="lastName" 
                         type="text" 
-                        placeholder="Doe" 
+                        placeholder={t('auth.placeholders.lastName')} 
                         {...signupForm.register("lastName")}
                       />
                       {signupForm.formState.errors.lastName && (
@@ -140,11 +140,11 @@ const Auth: React.FC = () => {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phoneNumber">Phone Number</Label>
+                    <Label htmlFor="phoneNumber">{t('auth.fields.phoneNumber')}</Label>
                     <Input 
                       id="phoneNumber" 
                       type="tel" 
-                      placeholder="+1 (555) 123-4567" 
+                      placeholder={t('auth.placeholders.phoneNumber')} 
                       {...signupForm.register("phoneNumber")}
                     />
                     {signupForm.formState.errors.phoneNumber && (
@@ -152,11 +152,11 @@ const Auth: React.FC = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email2">Email</Label>
+                    <Label htmlFor="email2">{t('auth.fields.email')}</Label>
                     <Input 
                       id="email2" 
                       type="email" 
-                      placeholder="you@example.com" 
+                      placeholder={t('auth.placeholders.email')} 
                       {...signupForm.register("email")}
                     />
                     {signupForm.formState.errors.email && (
@@ -164,11 +164,11 @@ const Auth: React.FC = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password2">Password</Label>
+                    <Label htmlFor="password2">{t('auth.fields.password')}</Label>
                     <Input 
                       id="password2" 
                       type="password" 
-                      placeholder="Minimum 8 characters" 
+                      placeholder={t('auth.placeholders.password')} 
                       {...signupForm.register("password")} 
                     />
                     {signupForm.formState.errors.password && (
@@ -176,18 +176,18 @@ const Auth: React.FC = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <Label htmlFor="confirmPassword">{t('auth.fields.confirmPassword')}</Label>
                     <Input 
                       id="confirmPassword" 
                       type="password" 
-                      placeholder="Confirm your password" 
+                      placeholder={t('auth.placeholders.confirmPassword')} 
                       {...signupForm.register("confirmPassword")} 
                     />
                     {signupForm.formState.errors.confirmPassword && (
                       <p className="text-sm text-destructive">{signupForm.formState.errors.confirmPassword.message}</p>
                     )}
                   </div>
-                  <Button className="w-full" type="submit">Create account</Button>
+                  <Button className="w-full" type="submit">{t('auth.buttons.signup')}</Button>
                 </form>
               </TabsContent>
             </Tabs>

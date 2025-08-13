@@ -170,6 +170,40 @@
     }
   },
   "auth": {
+    "title": "Authentication - Lixington Capital Recovery",
+    "description": "Sign in to your account or create a new one to access our fund recovery services",
+    "pageTitle": "Welcome to Lixington Capital Recovery",
+    "pageDescription": "Sign in to your account or create a new one to get started with our expert fund recovery services",
+    "tabs": {
+      "login": "Sign In",
+      "signup": "Sign Up"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "phoneNumber": "Phone Number",
+      "confirmPassword": "Confirm Password"
+    },
+    "placeholders": {
+      "email": "Enter your email address",
+      "firstName": "John",
+      "lastName": "Doe",
+      "phoneNumber": "+1 (555) 123-4567",
+      "password": "Minimum 8 characters",
+      "confirmPassword": "Confirm your password"
+    },
+    "buttons": {
+      "login": "Sign In",
+      "signup": "Create Account"
+    },
+    "messages": {
+      "loginFailed": "Login failed. Please check your credentials.",
+      "welcome": "Welcome back!",
+      "signupFailed": "Account creation failed. Please try again.",
+      "accountCreated": "Account created successfully! Welcome to Lixington Capital Recovery."
+    },
     "signIn": {
       "title": "Welcome Back",
       "subtitle": "Sign in to your account to access your recovery cases",
