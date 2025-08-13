@@ -1,0 +1,156 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "create": "Create",
+    "update": "Update"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "successStories": "Success Stories",
+    "pricing": "Pricing",
+    "start": "Start",
+    "contact": "Contact",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "dashboard": "Dashboard",
+    "admin": "Admin"
+  },
+  "header": {
+    "companyName": "Lixington Capital Recovery"
+  },
+  "pages": {
+    "index": {
+      "hero": {
+        "title": "Recover Your Lost Funds",
+        "subtitle": "Professional assistance for chargebacks, crypto scam recovery, and wire recalls",
+        "cta": "Start Free Evaluation",
+        "contactExpert": "Contact Expert"
+      },
+      "stats": {
+        "recovered": "Recovered",
+        "successRate": "Success Rate",
+        "responseTime": "Response Time",
+        "hours": "hours"
+      },
+      "services": {
+        "title": "Our Services",
+        "chargeback": {
+          "title": "Card Chargebacks",
+          "description": "Expert assistance with credit card dispute resolution"
+        },
+        "crypto": {
+          "title": "Crypto Recovery",
+          "description": "Advanced blockchain analysis and asset tracing"
+        },
+        "wire": {
+          "title": "Wire Recalls",
+          "description": "Swift action to recover misdirected transfers"
+        },
+        "marketplace": {
+          "title": "Marketplace Disputes",
+          "description": "Platform-specific recovery strategies"
+        }
+      },
+      "process": {
+        "title": "Recovery Process",
+        "step1": {
+          "title": "Free Evaluation",
+          "description": "We assess your case and determine the best recovery strategy"
+        },
+        "step2": {
+          "title": "Evidence Collection",
+          "description": "Gather all necessary documentation and proof"
+        },
+        "step3": {
+          "title": "Recovery Action",
+          "description": "Execute the recovery plan with financial institutions"
+        },
+        "step4": {
+          "title": "Fund Return",
+          "description": "Secure the return of your recovered funds"
+        }
+      },
+      "testimonials": {
+        "title": "Success Stories"
+      },
+      "trust": {
+        "title": "Why Choose Us"
+      },
+      "cta": {
+        "title": "Ready to Recover Your Funds?",
+        "description": "Start your free evaluation today and take the first step towards recovery",
+        "button": "Begin Free Evaluation"
+      }
+    },
+    "services": {
+      "title": "Services",
+      "description": "Expert chargebacks, crypto scam assistance, wire recalls, and dispute services.",
+      "cardChargebacks": {
+        "title": "Card Chargebacks",
+        "description": "We help prepare evidence and communicate with your bank to file effective chargebacks."
+      },
+      "cryptoRecovery": {
+        "title": "Crypto Scam Recovery",
+        "description": "We trace on-chain activity and coordinate with platforms for potential asset freezes."
+      },
+      "wireRecalls": {
+        "title": "Wire Transfer Recalls",
+        "description": "We contact recipient banks promptly to request recall or return of misdirected funds."
+      },
+      "marketplaceDisputes": {
+        "title": "Marketplace & Broker Disputes",
+        "description": "Assistance with platform disputes and escalations."
+      }
+    },
+    "pricing": {
+      "title": "Pricing",
+      "description": "Transparent fees for evaluation and recovery services.",
+      "freeEvaluation": {
+        "title": "Free Evaluation",
+        "description": "We'll review your situation and advise next steps.",
+        "cta": "Start Now"
+      },
+      "caseReview": {
+        "title": "Case Review Fee",
+        "description": "Deeper analysis and evidence planning. Stripe checkout coming next."
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "createCase": {
+      "title": "Create New Case",
+      "caseTitle": "Case Title",
+      "caseTitlePlaceholder": "Brief description of your situation",
+      "description": "Description",
+      "descriptionPlaceholder": "Provide detailed information about your case...",
+      "attachments": "Attachments",
+      "attachmentsHint": "Upload relevant documents, screenshots, or evidence",
+      "button": "Create Case"
+    },
+    "caseDetails": {
+      "quickStats": "Quick Stats",
+      "progress": "Progress",
+      "messages": "Messages",
+      "description": "Description",
+      "caseInfo": "Case Information",
+      "status": "Status",
+      "created": "Created",
+      "lastUpdate": "Last Update",
+      "attachments": "Attachments"
+    }
+  }
+}

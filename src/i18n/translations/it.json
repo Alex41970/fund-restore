@@ -1,0 +1,156 @@
+{
+  "common": {
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "view": "Visualizza",
+    "close": "Chiudi",
+    "back": "Indietro",
+    "next": "Avanti",
+    "submit": "Invia",
+    "create": "Crea",
+    "update": "Aggiorna"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "Chi Siamo",
+    "services": "Servizi",
+    "successStories": "Storie di Successo",
+    "pricing": "Prezzi",
+    "start": "Inizia",
+    "contact": "Contatti",
+    "signIn": "Accedi",
+    "signOut": "Esci",
+    "dashboard": "Dashboard",
+    "admin": "Admin"
+  },
+  "header": {
+    "companyName": "Lixington Capital Recovery"
+  },
+  "pages": {
+    "index": {
+      "hero": {
+        "title": "Recupera i Tuoi Fondi Persi",
+        "subtitle": "Assistenza professionale per chargeback, recupero truffe crypto e richiamo bonifici",
+        "cta": "Inizia Valutazione Gratuita",
+        "contactExpert": "Contatta Esperto"
+      },
+      "stats": {
+        "recovered": "Recuperati",
+        "successRate": "Tasso di Successo",
+        "responseTime": "Tempo di Risposta",
+        "hours": "ore"
+      },
+      "services": {
+        "title": "I Nostri Servizi",
+        "chargeback": {
+          "title": "Chargeback Carte",
+          "description": "Assistenza esperta per la risoluzione di dispute carte di credito"
+        },
+        "crypto": {
+          "title": "Recupero Crypto",
+          "description": "Analisi blockchain avanzata e tracciamento asset"
+        },
+        "wire": {
+          "title": "Richiamo Bonifici",
+          "description": "Azione rapida per recuperare trasferimenti mal indirizzati"
+        },
+        "marketplace": {
+          "title": "Dispute Marketplace",
+          "description": "Strategie di recupero specifiche per piattaforme"
+        }
+      },
+      "process": {
+        "title": "Processo di Recupero",
+        "step1": {
+          "title": "Valutazione Gratuita",
+          "description": "Valutiamo il tuo caso e determiniamo la migliore strategia di recupero"
+        },
+        "step2": {
+          "title": "Raccolta Prove",
+          "description": "Raccogliamo tutta la documentazione e le prove necessarie"
+        },
+        "step3": {
+          "title": "Azione di Recupero",
+          "description": "Eseguiamo il piano di recupero con le istituzioni finanziarie"
+        },
+        "step4": {
+          "title": "Restituzione Fondi",
+          "description": "Assicuriamo la restituzione dei tuoi fondi recuperati"
+        }
+      },
+      "testimonials": {
+        "title": "Storie di Successo"
+      },
+      "trust": {
+        "title": "Perché Sceglierci"
+      },
+      "cta": {
+        "title": "Pronto a Recuperare i Tuoi Fondi?",
+        "description": "Inizia la tua valutazione gratuita oggi e fai il primo passo verso il recupero",
+        "button": "Inizia Valutazione Gratuita"
+      }
+    },
+    "services": {
+      "title": "Servizi",
+      "description": "Chargeback esperti, assistenza truffe crypto, richiamo bonifici e servizi di disputa.",
+      "cardChargebacks": {
+        "title": "Chargeback Carte",
+        "description": "Ti aiutiamo a preparare le prove e comunicare con la tua banca per presentare chargeback efficaci."
+      },
+      "cryptoRecovery": {
+        "title": "Recupero Truffe Crypto",
+        "description": "Tracciamo l'attività on-chain e coordiniamo con le piattaforme per potenziali blocchi degli asset."
+      },
+      "wireRecalls": {
+        "title": "Richiamo Bonifici",
+        "description": "Contattiamo prontamente le banche destinatarie per richiedere il richiamo o la restituzione di fondi mal indirizzati."
+      },
+      "marketplaceDisputes": {
+        "title": "Dispute Marketplace e Broker",
+        "description": "Assistenza con dispute di piattaforme e escalation."
+      }
+    },
+    "pricing": {
+      "title": "Prezzi",
+      "description": "Tariffe trasparenti per servizi di valutazione e recupero.",
+      "freeEvaluation": {
+        "title": "Valutazione Gratuita",
+        "description": "Esamineremo la tua situazione e consiglieremo i prossimi passi.",
+        "cta": "Inizia Ora"
+      },
+      "caseReview": {
+        "title": "Tariffa Revisione Caso",
+        "description": "Analisi approfondita e pianificazione delle prove. Checkout Stripe in arrivo."
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "createCase": {
+      "title": "Crea Nuovo Caso",
+      "caseTitle": "Titolo Caso",
+      "caseTitlePlaceholder": "Breve descrizione della tua situazione",
+      "description": "Descrizione",
+      "descriptionPlaceholder": "Fornisci informazioni dettagliate sul tuo caso...",
+      "attachments": "Allegati",
+      "attachmentsHint": "Carica documenti rilevanti, screenshot o prove",
+      "button": "Crea Caso"
+    },
+    "caseDetails": {
+      "quickStats": "Statistiche Rapide",
+      "progress": "Progresso",
+      "messages": "Messaggi",
+      "description": "Descrizione",
+      "caseInfo": "Informazioni Caso",
+      "status": "Stato",
+      "created": "Creato",
+      "lastUpdate": "Ultimo Aggiornamento",
+      "attachments": "Allegati"
+    }
+  }
+}
