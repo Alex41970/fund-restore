@@ -33,8 +33,9 @@ export const Footer: React.FC = () => {
   const { user } = useAuth();
   const location = useLocation();
 
-  // Hide footer on authenticated user pages
-  if (user && (location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/admin'))) {
+  // Hide footer on auth pages and authenticated user pages
+  if (location.pathname.startsWith('/auth') || 
+      (user && (location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/admin')))) {
     return null;
   }
 
