@@ -19,6 +19,7 @@ import { UserDetailsModal } from "@/components/UserDetailsModal";
 import { CaseStatusBadge } from "@/components/CaseStatusBadge";
 import { StatCard } from "@/components/StatCard";
 import { AdminInvoiceManager } from "@/components/AdminInvoiceManager";
+import PaymentConfigurationManager from "@/components/PaymentConfigurationManager";
 import { toast } from "@/components/ui/sonner";
 import { 
   Users, 
@@ -422,7 +423,7 @@ const AdminDashboard: React.FC = () => {
 
         {/* Main Content */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               {t("admin.tabs.overview")}
@@ -435,8 +436,12 @@ const AdminDashboard: React.FC = () => {
               <CreditCard className="h-4 w-4" />
               {t("admin.tabs.invoices")}
             </TabsTrigger>
-            <TabsTrigger value="users" className="flex items-center gap-2">
+            <TabsTrigger value="payments" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
+              Payment Config
+            </TabsTrigger>
+            <TabsTrigger value="users" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
               {t("admin.tabs.users")}
             </TabsTrigger>
           </TabsList>
@@ -791,6 +796,11 @@ const AdminDashboard: React.FC = () => {
           {/* Invoice Management */}
           <TabsContent value="invoices" className="space-y-6">
             <AdminInvoiceManager />
+          </TabsContent>
+
+          {/* Payment Configuration */}
+          <TabsContent value="payments" className="space-y-6">
+            <PaymentConfigurationManager />
           </TabsContent>
 
           {/* User Management */}

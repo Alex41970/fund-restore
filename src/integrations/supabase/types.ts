@@ -236,6 +236,8 @@ export type Database = {
           id: string
           invoice_status: string
           paid_at: string | null
+          payment_configuration_id: string | null
+          payment_instructions: string | null
           payment_method: string | null
           updated_at: string
           user_id: string
@@ -251,6 +253,8 @@ export type Database = {
           id?: string
           invoice_status?: string
           paid_at?: string | null
+          payment_configuration_id?: string | null
+          payment_instructions?: string | null
           payment_method?: string | null
           updated_at?: string
           user_id: string
@@ -266,6 +270,8 @@ export type Database = {
           id?: string
           invoice_status?: string
           paid_at?: string | null
+          payment_configuration_id?: string | null
+          payment_instructions?: string | null
           payment_method?: string | null
           updated_at?: string
           user_id?: string
@@ -332,6 +338,63 @@ export type Database = {
           token_symbol?: string
           transaction_hash?: string
           wallet_address?: string
+        }
+        Relationships: []
+      }
+      payment_configurations: {
+        Row: {
+          created_at: string
+          created_by: string
+          crypto_currency: string | null
+          crypto_network: string | null
+          crypto_wallet_address: string | null
+          id: string
+          is_active: boolean
+          name: string
+          payment_method: string
+          updated_at: string
+          wire_account_holder: string | null
+          wire_account_number: string | null
+          wire_bank_address: string | null
+          wire_bank_name: string | null
+          wire_routing_number: string | null
+          wire_swift_code: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          crypto_currency?: string | null
+          crypto_network?: string | null
+          crypto_wallet_address?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          payment_method: string
+          updated_at?: string
+          wire_account_holder?: string | null
+          wire_account_number?: string | null
+          wire_bank_address?: string | null
+          wire_bank_name?: string | null
+          wire_routing_number?: string | null
+          wire_swift_code?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          crypto_currency?: string | null
+          crypto_network?: string | null
+          crypto_wallet_address?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          payment_method?: string
+          updated_at?: string
+          wire_account_holder?: string | null
+          wire_account_number?: string | null
+          wire_bank_address?: string | null
+          wire_bank_name?: string | null
+          wire_routing_number?: string | null
+          wire_swift_code?: string | null
         }
         Relationships: []
       }

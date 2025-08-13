@@ -22,11 +22,26 @@ const invoiceSchema = z.object({
   currency: z.string().default("USD"),
   description: z.string().min(1, "Description is required"),
   due_date: z.string().min(1, "Due date is required"),
-  payment_method: z.string().default("crypto"),
-  blockchain_network: z.string().default("ethereum"),
+  payment_configuration_id: z.string().min(1, "Payment method is required"),
 });
 
 type InvoiceFormData = z.infer<typeof invoiceSchema>;
+
+interface PaymentConfiguration {
+  id: string;
+  name: string;
+  payment_method: 'crypto' | 'wire_transfer';
+  crypto_wallet_address?: string;
+  crypto_network?: string;
+  crypto_currency?: string;
+  wire_bank_name?: string;
+  wire_account_number?: string;
+  wire_routing_number?: string;
+  wire_swift_code?: string;
+  wire_account_holder?: string;
+  wire_bank_address?: string;
+  is_active: boolean;
+}
 
 interface Invoice {
   id: string;
@@ -40,8 +55,11 @@ interface Invoice {
   created_at: string;
   updated_at: string;
   paid_at?: string;
+  payment_configuration_id?: string;
+  payment_instructions?: string;
   cases?: { title: string };
   profiles?: { display_name: string; email: string };
+  payment_configurations?: PaymentConfiguration;
 }
 
 interface Case {
@@ -61,6 +79,7 @@ export const AdminInvoiceManager = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [cases, setCases] = useState<Case[]>([]);
   const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [paymentConfigurations, setPaymentConfigurations] = useState<PaymentConfiguration[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
@@ -70,8 +89,7 @@ export const AdminInvoiceManager = () => {
     resolver: zodResolver(invoiceSchema),
     defaultValues: {
       currency: "USD",
-      payment_method: "crypto",
-      blockchain_network: "ethereum",
+      payment_configuration_id: "",
     },
   });
 
@@ -87,12 +105,26 @@ export const AdminInvoiceManager = () => {
   // Get selected case to auto-populate currency
   const selectedCase = filteredCases.find(c => c.id === selectedCaseId);
 
-  // Auto-populate currency when case is selected
+  // Auto-populate currency when case is selected and generate payment instructions
   useEffect(() => {
     if (selectedCase?.preferred_currency) {
       form.setValue("currency", selectedCase.preferred_currency);
     }
   }, [selectedCase, form]);
+
+  const selectedPaymentConfig = paymentConfigurations.find(
+    pc => pc.id === form.watch('payment_configuration_id')
+  );
+
+  const generatePaymentInstructions = (config: PaymentConfiguration | undefined): string => {
+    if (!config) return '';
+    
+    if (config.payment_method === 'crypto') {
+      return `Pay with ${config.crypto_currency} on ${config.crypto_network} network to: ${config.crypto_wallet_address}`;
+    } else {
+      return `Wire transfer to:\nBank: ${config.wire_bank_name}\nAccount Holder: ${config.wire_account_holder}\nAccount Number: ${config.wire_account_number}${config.wire_routing_number ? `\nRouting Number: ${config.wire_routing_number}` : ''}${config.wire_swift_code ? `\nSWIFT Code: ${config.wire_swift_code}` : ''}${config.wire_bank_address ? `\nBank Address: ${config.wire_bank_address}` : ''}`;
+    }
+  };
 
   useEffect(() => {
     loadData();
@@ -160,6 +192,19 @@ export const AdminInvoiceManager = () => {
         setProfiles(profilesData || []);
       }
 
+      // Load active payment configurations for dropdown
+      const { data: paymentConfigsData, error: paymentConfigsError } = await supabase
+        .from('payment_configurations')
+        .select('*')
+        .eq('is_active', true)
+        .order('name');
+
+      if (paymentConfigsError) {
+        console.error('Error loading payment configurations:', paymentConfigsError);
+      } else {
+        setPaymentConfigurations(paymentConfigsData || []);
+      }
+
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -169,11 +214,14 @@ export const AdminInvoiceManager = () => {
 
   const onSubmit = async (data: InvoiceFormData) => {
     try {
+      const paymentInstructions = generatePaymentInstructions(selectedPaymentConfig);
+      
       const { error } = await supabase
         .from('client_invoices')
         .insert({
           ...data,
           due_date: new Date(data.due_date).toISOString(),
+          payment_instructions: paymentInstructions,
         });
 
       if (error) {
@@ -455,6 +503,38 @@ export const AdminInvoiceManager = () => {
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="payment_configuration_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Payment Method</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select payment method" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {paymentConfigurations.map((config) => (
+                            <SelectItem key={config.id} value={config.id}>
+                              {config.name} ({config.payment_method === 'crypto' ? `${config.crypto_currency} - ${config.crypto_network}` : 'Wire Transfer'})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {selectedPaymentConfig && (
+                  <div className="p-4 border rounded-lg bg-muted/50">
+                    <h4 className="font-medium mb-2">Payment Instructions Preview:</h4>
+                    <pre className="text-sm whitespace-pre-wrap">{generatePaymentInstructions(selectedPaymentConfig)}</pre>
+                  </div>
+                )}
 
                 <div className="flex gap-2">
                   <Button type="submit" className="flex-1">Create Invoice</Button>

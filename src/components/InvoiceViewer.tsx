@@ -20,6 +20,14 @@ interface Invoice {
   description: string;
   created_at: string;
   paid_at?: string;
+  payment_instructions?: string;
+  payment_configurations?: {
+    id: string;
+    name: string;
+    payment_method: 'crypto' | 'wire_transfer';
+    crypto_wallet_address?: string;
+    crypto_currency?: string;
+  };
 }
 
 interface WalletConnection {
@@ -54,7 +62,10 @@ export const InvoiceViewer = ({ caseId }: InvoiceViewerProps) => {
     try {
       let query = supabase
         .from('client_invoices')
-        .select('*')
+        .select(`
+          *,
+          payment_configurations(id, name, payment_method, crypto_wallet_address, crypto_currency)
+        `)
         .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
 
@@ -251,22 +262,41 @@ export const InvoiceViewer = ({ caseId }: InvoiceViewerProps) => {
                 )}
               </div>
 
+              {invoice.payment_instructions && (
+                <div className="p-3 bg-muted rounded-lg">
+                  <span className="text-sm font-medium text-muted-foreground">Payment Instructions:</span>
+                  <pre className="text-sm whitespace-pre-wrap mt-1">{invoice.payment_instructions}</pre>
+                </div>
+              )}
+
               {invoice.invoice_status === 'pending' && (
                 <>
                   <Separator />
                   <div className="space-y-3">
-                    <Alert>
-                      <AlertDescription>
-                        Pay securely with cryptocurrency. Estimated cost: ~{(invoice.amount_due / 3000).toFixed(4)} ETH
-                      </AlertDescription>
-                    </Alert>
-                    <Button 
-                      onClick={() => handlePayInvoice(invoice)}
-                      disabled={processing}
-                      className="w-full"
-                    >
-                      {processing ? "Processing Payment..." : "Pay with Crypto"}
-                    </Button>
+                    {invoice.payment_configurations?.payment_method === 'crypto' && (
+                      <>
+                        <Alert>
+                          <AlertDescription>
+                            Pay securely with cryptocurrency. Estimated cost: ~{(invoice.amount_due / 3000).toFixed(4)} {invoice.payment_configurations.crypto_currency || 'ETH'}
+                          </AlertDescription>
+                        </Alert>
+                        <Button 
+                          onClick={() => handlePayInvoice(invoice)}
+                          disabled={processing}
+                          className="w-full"
+                        >
+                          {processing ? "Processing Payment..." : `Pay with Crypto (${invoice.payment_configurations.crypto_currency || 'ETH'})`}
+                        </Button>
+                      </>
+                    )}
+                    
+                    {invoice.payment_configurations?.payment_method === 'wire_transfer' && (
+                      <Alert>
+                        <AlertDescription>
+                          Please use the payment instructions above to send a wire transfer. Contact support once payment is sent.
+                        </AlertDescription>
+                      </Alert>
+                    )}
                   </div>
                 </>
               )}
