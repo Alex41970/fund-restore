@@ -38,7 +38,8 @@ import {
   UserCheck,
   UserX,
   Settings,
-  CreditCard
+  CreditCard,
+  Trash2
 } from "lucide-react";
 
 interface CaseRow {
@@ -347,6 +348,21 @@ const AdminDashboard: React.FC = () => {
       const errorMessage = error instanceof Error ? error.message : String(error);
       toast.error(`${t("admin.notifications.roleUpdateFailed")}: ${errorMessage}`);
       console.error("Error updating user role:", error);
+    }
+  };
+
+  const handleUserDelete = async (userId: string) => {
+    try {
+      // Delete from auth.users which will cascade to profiles and other related tables
+      const { error } = await supabase.auth.admin.deleteUser(userId);
+      
+      if (error) throw error;
+      
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      toast.success('User deleted successfully');
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast.error('Failed to delete user');
     }
   };
 
@@ -875,7 +891,7 @@ const AdminDashboard: React.FC = () => {
                                   )}
                                 </div>
                               </td>
-                              <td className="py-3 pr-4">
+                               <td className="py-3 pr-4">
                                 <div className="flex gap-2">
                                   {isAdmin ? (
                                     <AlertDialog>
@@ -938,6 +954,48 @@ const AdminDashboard: React.FC = () => {
                                       </AlertDialogContent>
                                     </AlertDialog>
                                   )}
+                                  
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        disabled={isLastAdmin}
+                                        className="text-destructive hover:text-destructive"
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Delete User</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          Are you sure you want to permanently delete this user? This action cannot be undone and will remove:
+                                          <ul className="list-disc list-inside mt-2 space-y-1">
+                                            <li>User profile and account data</li>
+                                            <li>All associated cases and messages</li>
+                                            <li>Payment history and invoices</li>
+                                            <li>Uploaded attachments</li>
+                                          </ul>
+                                          {isLastAdmin && (
+                                            <div className="mt-3 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
+                                              <strong>Cannot delete:</strong> This is the last admin user. At least one admin must remain in the system.
+                                            </div>
+                                          )}
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction
+                                          onClick={() => handleUserDelete(user.id)}
+                                          disabled={isLastAdmin}
+                                          className="bg-destructive text-destructive-foreground hover:bg-destructive/80"
+                                        >
+                                          Delete User
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
                                 </div>
                                 {isLastAdmin && (
                                   <div className="text-xs text-muted-foreground mt-1">
