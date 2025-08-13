@@ -13,6 +13,7 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { SUPPORTED_CURRENCIES, formatCurrency } from "@/lib/currency";
 
 const invoiceSchema = z.object({
   case_id: z.string().min(1, "Case is required"),
@@ -47,6 +48,7 @@ interface Case {
   id: string;
   title: string;
   user_id: string;
+  preferred_currency?: string;
 }
 
 interface Profile {
@@ -75,11 +77,22 @@ export const AdminInvoiceManager = () => {
 
   // Watch for client selection to filter cases
   const selectedClientId = form.watch("user_id");
+  const selectedCaseId = form.watch("case_id");
   
   // Filter cases based on selected client
   const filteredCases = selectedClientId 
     ? cases.filter(case_ => case_.user_id === selectedClientId)
     : [];
+
+  // Get selected case to auto-populate currency
+  const selectedCase = filteredCases.find(c => c.id === selectedCaseId);
+
+  // Auto-populate currency when case is selected
+  useEffect(() => {
+    if (selectedCase?.preferred_currency) {
+      form.setValue("currency", selectedCase.preferred_currency);
+    }
+  }, [selectedCase, form]);
 
   useEffect(() => {
     loadData();
@@ -126,7 +139,7 @@ export const AdminInvoiceManager = () => {
       // Load cases for dropdown
       const { data: casesData, error: casesError } = await supabase
         .from('cases')
-        .select('id, title, user_id')
+        .select('id, title, user_id, preferred_currency')
         .order('created_at', { ascending: false });
 
       if (casesError) {
@@ -389,6 +402,31 @@ export const AdminInvoiceManager = () => {
 
                 <FormField
                   control={form.control}
+                  name="currency"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Currency</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select currency" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {SUPPORTED_CURRENCIES.map((currency) => (
+                            <SelectItem key={currency.code} value={currency.code}>
+                              {currency.symbol} {currency.code} - {currency.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
                   name="description"
                   render={({ field }) => (
                     <FormItem>
@@ -455,7 +493,7 @@ export const AdminInvoiceManager = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
                     <span className="text-muted-foreground">Amount:</span>
-                    <div className="font-semibold">${invoice.amount_due} {invoice.currency}</div>
+                    <div className="font-semibold">{formatCurrency(invoice.amount_due, invoice.currency)}</div>
                   </div>
                   <div>
                     <span className="text-muted-foreground">Due Date:</span>

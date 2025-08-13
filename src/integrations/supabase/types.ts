@@ -185,6 +185,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          preferred_currency: string
           progress_percentage: number | null
           status: Database["public"]["Enums"]["case_status"]
           title: string
@@ -195,6 +196,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          preferred_currency?: string
           progress_percentage?: number | null
           status?: Database["public"]["Enums"]["case_status"]
           title: string
@@ -205,6 +207,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          preferred_currency?: string
           progress_percentage?: number | null
           status?: Database["public"]["Enums"]["case_status"]
           title?: string

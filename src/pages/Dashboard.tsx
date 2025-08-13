@@ -30,6 +30,8 @@ import {
   BarChart3,
   Hash
 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SUPPORTED_CURRENCIES } from "@/lib/currency";
 
 interface CaseRow {
   id: string;
@@ -52,6 +54,7 @@ const Dashboard: React.FC = () => {
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState<FileList | null>(null);
   const [selectedCase, setSelectedCase] = useState<string | null>(null);
+  const [preferredCurrency, setPreferredCurrency] = useState("USD");
 
   // Fetch user's case (single case per user)
   const { data: userCase, isLoading } = useQuery({
@@ -158,7 +161,12 @@ const Dashboard: React.FC = () => {
 
     const { data: inserted, error } = await supabase
       .from("cases")
-      .insert({ title, description: description || null, user_id: user.id })
+      .insert({ 
+        title, 
+        description: description || null, 
+        user_id: user.id,
+        preferred_currency: preferredCurrency 
+      })
       .select("id")
       .maybeSingle();
 
@@ -191,6 +199,7 @@ const Dashboard: React.FC = () => {
     setTitle("");
     setDescription("");
     setFiles(null);
+    setPreferredCurrency("USD");
     toast.success(t("dashboard.notifications.caseCreated"));
     qc.invalidateQueries({ queryKey: ["user-case", user.id] });
   };
@@ -228,6 +237,21 @@ const Dashboard: React.FC = () => {
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
                 />
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Preferred Currency</label>
+                  <Select value={preferredCurrency} onValueChange={setPreferredCurrency}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select currency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SUPPORTED_CURRENCIES.map((currency) => (
+                        <SelectItem key={currency.code} value={currency.code}>
+                          {currency.symbol} {currency.code} - {currency.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <input
                   aria-label={t("dashboard.createCase.attachments")}
                   type="file"
