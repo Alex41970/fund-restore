@@ -67,16 +67,36 @@ serve(async (req) => {
       });
     }
 
-    if (userData && (userData.first_name || userData.last_name || userData.phone_number)) {
-      await supabaseAdmin
+    // Update profiles table with any changed data
+    const profileUpdates: any = {};
+    
+    if (email) {
+      profileUpdates.email = email;
+    }
+    
+    if (userData) {
+      if (userData.first_name) profileUpdates.first_name = userData.first_name;
+      if (userData.last_name) profileUpdates.last_name = userData.last_name;
+      if (userData.phone_number) profileUpdates.phone_number = userData.phone_number;
+      
+      if (userData.first_name || userData.last_name) {
+        profileUpdates.display_name = `${userData.first_name || ''} ${userData.last_name || ''}`.trim();
+      }
+    }
+
+    if (Object.keys(profileUpdates).length > 0) {
+      const { error: profileUpdateError } = await supabaseAdmin
         .from('profiles')
-        .update({
-          first_name: userData.first_name,
-          last_name: userData.last_name,
-          phone_number: userData.phone_number,
-          display_name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim(),
-        })
+        .update(profileUpdates)
         .eq('id', userId);
+        
+      if (profileUpdateError) {
+        console.error('Error updating profile:', profileUpdateError);
+        return new Response(JSON.stringify({ error: `Profile update failed: ${profileUpdateError.message}` }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
     }
 
     console.log(`User ${userId} updated successfully by admin ${user.id}`);
