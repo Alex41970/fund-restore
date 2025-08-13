@@ -221,5 +221,60 @@
       "lastUpdate": "Last Update",
       "attachments": "Attachments"
     }
+  },
+  "footer": {
+    "company": {
+      "description": "Expert financial recovery services with proven results and industry-leading success rates.",
+      "licensed": "Licensed & Regulated",
+      "certified": "Industry Certified", 
+      "trusted": "Trusted by Thousands"
+    },
+    "navigation": {
+      "title": "Quick Links"
+    },
+    "services": {
+      "title": "Our Services",
+      "bankDisputes": "Bank & Card Disputes",
+      "cryptoRecovery": "Crypto Scam Recovery", 
+      "wireRecalls": "Wire Transfer Recalls",
+      "consultation": "Expert Consultation",
+      "marketplaceDisputes": "Marketplace Disputes"
+    },
+    "resources": {
+      "title": "Resources",
+      "faq": "FAQ",
+      "blog": "Blog & Insights",
+      "security": "Security Center",
+      "guides": "Recovery Guides",
+      "support": "Help Center"
+    },
+    "contact": {
+      "title": "Get in Touch",
+      "email": "support@lixington.com",
+      "emailHours": "24/7 Support",
+      "phone": "+1 (555) 123-4567",
+      "phoneHours": "Mon-Fri 9AM-6PM EST",
+      "location": "New York, NY",
+      "consultation": "Book Consultation"
+    },
+    "newsletter": {
+      "placeholder": "Enter your email",
+      "subscribe": "Subscribe",
+      "privacy": "We respect your privacy. Unsubscribe at any time."
+    },
+    "cta": {
+      "title": "Ready to Recover Your Funds?",
+      "description": "Join thousands of satisfied clients who have successfully recovered their lost funds. Get started with a free case evaluation and expert consultation today.",
+      "getStarted": "Start Free Evaluation",
+      "contactUs": "Contact Expert"
+    },
+    "bottom": {
+      "copyright": "© 2024 Lixington Capital Recovery. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service", 
+      "security": "Security Policy",
+      "compliance": "Compliance"
+    },
+    "disclaimer": "Lixington Capital Recovery is a licensed financial recovery service. Success rates vary by case type and circumstances. Past results do not guarantee future outcomes. All consultations are confidential and subject to our privacy policy."
   }
 }

@@ -221,5 +221,60 @@
       "lastUpdate": "Ultimo Aggiornamento",
       "attachments": "Allegati"
     }
+  },
+  "footer": {
+    "company": {
+      "description": "Servizi esperti di recupero finanziario con risultati comprovati e tassi di successo leader del settore.",
+      "licensed": "Autorizzato e Regolamentato",
+      "certified": "Certificato del Settore",
+      "trusted": "Fidato da Migliaia"
+    },
+    "navigation": {
+      "title": "Link Veloci"
+    },
+    "services": {
+      "title": "I Nostri Servizi",
+      "bankDisputes": "Controversie Bancarie e Carte",
+      "cryptoRecovery": "Recupero Truffe Crypto",
+      "wireRecalls": "Richiami Bonifici",
+      "consultation": "Consulenza Esperta",
+      "marketplaceDisputes": "Controversie Marketplace"
+    },
+    "resources": {
+      "title": "Risorse",
+      "faq": "FAQ",
+      "blog": "Blog e Approfondimenti",
+      "security": "Centro Sicurezza",
+      "guides": "Guide al Recupero",
+      "support": "Centro Assistenza"
+    },
+    "contact": {
+      "title": "Contattaci",
+      "email": "support@lixington.com",
+      "emailHours": "Supporto 24/7",
+      "phone": "+1 (555) 123-4567",
+      "phoneHours": "Lun-Ven 9-18 EST",
+      "location": "New York, NY",
+      "consultation": "Prenota Consulenza"
+    },
+    "newsletter": {
+      "placeholder": "Inserisci la tua email",
+      "subscribe": "Iscriviti",
+      "privacy": "Rispettiamo la tua privacy. Annulla iscrizione in qualsiasi momento."
+    },
+    "cta": {
+      "title": "Pronto a Recuperare i Tuoi Fondi?",
+      "description": "Unisciti a migliaia di clienti soddisfatti che hanno recuperato con successo i loro fondi persi. Inizia oggi con una valutazione gratuita del caso e consulenza esperta.",
+      "getStarted": "Inizia Valutazione Gratuita",
+      "contactUs": "Contatta Esperto"
+    },
+    "bottom": {
+      "copyright": "© 2024 Lixington Capital Recovery. Tutti i diritti riservati.",
+      "privacy": "Politica Privacy",
+      "terms": "Termini di Servizio",
+      "security": "Politica Sicurezza",
+      "compliance": "Conformità"
+    },
+    "disclaimer": "Lixington Capital Recovery è un servizio di recupero finanziario autorizzato. I tassi di successo variano per tipo di caso e circostanze. I risultati passati non garantiscono risultati futuri. Tutte le consulenze sono confidenziali e soggette alla nostra politica sulla privacy."
   }
 }

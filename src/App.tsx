@@ -12,6 +12,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/hooks/use-auth";
 import { I18nProvider } from "@/contexts/I18nContext";
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import HowItWorks from "./pages/HowItWorks";
 import Services from "./pages/Services";
@@ -67,6 +68,7 @@ const App = () => (
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <Footer />
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>
