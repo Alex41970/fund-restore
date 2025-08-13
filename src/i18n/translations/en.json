@@ -31,102 +31,171 @@
   "header": {
     "companyName": "Lixington Capital Recovery"
   },
-  "pages": {
-    "index": {
-      "hero": {
-        "title": "Recover Your Lost Funds",
-        "subtitle": "Professional assistance for chargebacks, crypto scam recovery, and wire recalls",
-        "cta": "Start Free Evaluation",
-        "contactExpert": "Contact Expert"
+  "home": {
+    "hero": {
+      "badge": "Trusted Fund Recovery Experts",
+      "title": "Recover Your Lost Funds",
+      "subtitle": "Professional Fund Recovery Services",
+      "description": "Expert assistance for chargebacks, crypto scam recovery, and wire recalls with proven results",
+      "cta": "Start Free Evaluation",
+      "ctaSecondary": "Contact Expert"
+    },
+    "stats": {
+      "title": "Proven Track Record",
+      "description": "Our results speak for themselves",
+      "successRate": {
+        "title": "Success Rate",
+        "value": "94%",
+        "description": "Cases resolved successfully"
       },
-      "stats": {
-        "recovered": "Recovered",
-        "successRate": "Success Rate",
-        "responseTime": "Response Time",
-        "hours": "hours"
+      "clientsServed": {
+        "title": "Clients Served",
+        "value": "2,500+",
+        "description": "Satisfied customers worldwide"
       },
-      "services": {
-        "title": "Our Services",
-        "chargeback": {
-          "title": "Card Chargebacks",
-          "description": "Expert assistance with credit card dispute resolution"
-        },
-        "crypto": {
-          "title": "Crypto Recovery",
-          "description": "Advanced blockchain analysis and asset tracing"
-        },
-        "wire": {
-          "title": "Wire Recalls",
-          "description": "Swift action to recover misdirected transfers"
-        },
-        "marketplace": {
-          "title": "Marketplace Disputes",
-          "description": "Platform-specific recovery strategies"
-        }
+      "fundsRecovered": {
+        "title": "Funds Recovered",
+        "value": "$50M+",
+        "description": "Total amount recovered"
       },
-      "process": {
-        "title": "Recovery Process",
-        "step1": {
-          "title": "Free Evaluation",
-          "description": "We assess your case and determine the best recovery strategy"
-        },
-        "step2": {
-          "title": "Evidence Collection",
-          "description": "Gather all necessary documentation and proof"
-        },
-        "step3": {
-          "title": "Recovery Action",
-          "description": "Execute the recovery plan with financial institutions"
-        },
-        "step4": {
-          "title": "Fund Return",
-          "description": "Secure the return of your recovered funds"
-        }
-      },
-      "testimonials": {
-        "title": "Success Stories"
-      },
-      "trust": {
-        "title": "Why Choose Us"
-      },
-      "cta": {
-        "title": "Ready to Recover Your Funds?",
-        "description": "Start your free evaluation today and take the first step towards recovery",
-        "button": "Begin Free Evaluation"
+      "avgResolution": {
+        "title": "Avg Resolution",
+        "value": "30 days",
+        "description": "Average case resolution time"
       }
     },
     "services": {
-      "title": "Services",
-      "description": "Expert chargebacks, crypto scam assistance, wire recalls, and dispute services.",
-      "cardChargebacks": {
-        "title": "Card Chargebacks",
-        "description": "We help prepare evidence and communicate with your bank to file effective chargebacks."
+      "title": "Our Services",
+      "description": "Comprehensive recovery solutions for all types of financial disputes",
+      "bankDisputes": {
+        "title": "Bank & Card Disputes",
+        "description": "Expert assistance with credit card chargebacks and bank dispute resolution",
+        "features": {
+          "chargeback": "Chargeback preparation and filing",
+          "evidence": "Evidence gathering and documentation",
+          "bankComm": "Direct bank communication"
+        }
       },
       "cryptoRecovery": {
         "title": "Crypto Scam Recovery",
-        "description": "We trace on-chain activity and coordinate with platforms for potential asset freezes."
+        "description": "Advanced blockchain analysis and cryptocurrency asset tracing",
+        "features": {
+          "tracing": "On-chain transaction tracing",
+          "escalations": "Exchange platform escalations",
+          "freezing": "Asset freezing coordination"
+        }
       },
       "wireRecalls": {
         "title": "Wire Transfer Recalls",
-        "description": "We contact recipient banks promptly to request recall or return of misdirected funds."
-      },
-      "marketplaceDisputes": {
-        "title": "Marketplace & Broker Disputes",
-        "description": "Assistance with platform disputes and escalations."
+        "description": "Swift action to recover misdirected or fraudulent wire transfers",
+        "features": {
+          "swift": "SWIFT network communication",
+          "bankToBank": "Bank-to-bank coordination",
+          "legal": "Legal pressure when needed"
+        }
       }
     },
-    "pricing": {
-      "title": "Pricing",
-      "description": "Transparent fees for evaluation and recovery services.",
-      "freeEvaluation": {
-        "title": "Free Evaluation",
-        "description": "We'll review your situation and advise next steps.",
-        "cta": "Start Now"
-      },
-      "caseReview": {
-        "title": "Case Review Fee",
-        "description": "Deeper analysis and evidence planning. Stripe checkout coming next."
+    "process": {
+      "title": "Our Recovery Process",
+      "description": "A proven 4-step methodology that maximizes your chances of successful fund recovery",
+      "steps": {
+        "evaluation": {
+          "title": "Free Evaluation",
+          "description": "We assess your case and determine the best recovery strategy",
+          "details": [
+            "Initial case assessment",
+            "Recovery probability analysis", 
+            "Strategic planning consultation"
+          ]
+        },
+        "evidence": {
+          "title": "Evidence Collection",
+          "description": "Gather all necessary documentation and proof",
+          "details": [
+            "Document collection and organization",
+            "Transaction trail analysis",
+            "Communication record compilation"
+          ]
+        },
+        "recovery": {
+          "title": "Recovery Action", 
+          "description": "Execute the recovery plan with financial institutions",
+          "details": [
+            "Direct institution communication",
+            "Formal dispute filing",
+            "Escalation management"
+          ]
+        },
+        "resolution": {
+          "title": "Fund Resolution",
+          "description": "Secure the return of your recovered funds",
+          "details": [
+            "Settlement negotiation",
+            "Fund transfer coordination",
+            "Case closure documentation"
+          ]
+        }
       }
+    },
+    "testimonials": {
+      "title": "Client Success Stories",
+      "description": "Real recoveries, real results. See what our clients say about their experience",
+      "viewAll": "View All Success Stories"
+    },
+    "trust": {
+      "title": "Why Trust Lixington Capital Recovery",
+      "description": "Industry-leading credentials and security standards protect your interests",
+      "licensed": {
+        "title": "Licensed & Regulated",
+        "description": "Fully licensed financial recovery services"
+      },
+      "recognition": {
+        "title": "Industry Recognition",
+        "description": "Award-winning recovery specialists"
+      },
+      "security": {
+        "title": "Bank-Grade Security",
+        "description": "Your data protected with enterprise security"
+      },
+      "global": {
+        "title": "Global Network",
+        "description": "Worldwide banking and legal connections"
+      }
+    },
+    "cta": {
+      "title": "Ready to Recover Your Funds?",
+      "description": "Start with a free consultation. No upfront fees, no hidden costs.",
+      "button": "Get Free Consultation",
+      "secondary": "Speak with an Expert"
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account to access your recovery cases",
+      "email": "Email",
+      "password": "Password",
+      "button": "Sign In",
+      "forgotPassword": "Forgot your password?",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up here"
+    },
+    "signUp": {
+      "title": "Create Account",
+      "subtitle": "Join thousands who've recovered their funds",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "button": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in here"
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Password must be at least 8 characters",
+      "passwordsMatch": "Passwords must match"
     }
   },
   "dashboard": {
@@ -135,7 +204,7 @@
       "title": "Create New Case",
       "caseTitle": "Case Title",
       "caseTitlePlaceholder": "Brief description of your situation",
-      "description": "Description",
+      "description": "Description", 
       "descriptionPlaceholder": "Provide detailed information about your case...",
       "attachments": "Attachments",
       "attachmentsHint": "Upload relevant documents, screenshots, or evidence",

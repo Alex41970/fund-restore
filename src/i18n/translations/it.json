@@ -31,102 +31,171 @@
   "header": {
     "companyName": "Lixington Capital Recovery"
   },
-  "pages": {
-    "index": {
-      "hero": {
-        "title": "Recupera i Tuoi Fondi Persi",
-        "subtitle": "Assistenza professionale per chargeback, recupero truffe crypto e richiamo bonifici",
-        "cta": "Inizia Valutazione Gratuita",
-        "contactExpert": "Contatta Esperto"
+  "home": {
+    "hero": {
+      "badge": "Esperti Recupero Fondi di Fiducia",
+      "title": "Recupera i Tuoi Fondi Persi",
+      "subtitle": "Servizi Professionali di Recupero Fondi",
+      "description": "Assistenza esperta per storni di addebito, recupero truffe crypto e richiami bonifici con risultati comprovati",
+      "cta": "Inizia Valutazione Gratuita",
+      "ctaSecondary": "Contatta Esperto"
+    },
+    "stats": {
+      "title": "Track Record Comprovato",
+      "description": "I nostri risultati parlano da soli",
+      "successRate": {
+        "title": "Tasso di Successo",
+        "value": "94%",
+        "description": "Casi risolti con successo"
       },
-      "stats": {
-        "recovered": "Recuperati",
-        "successRate": "Tasso di Successo",
-        "responseTime": "Tempo di Risposta",
-        "hours": "ore"
+      "clientsServed": {
+        "title": "Clienti Serviti",
+        "value": "2,500+",
+        "description": "Clienti soddisfatti in tutto il mondo"
       },
-      "services": {
-        "title": "I Nostri Servizi",
-        "chargeback": {
-          "title": "Chargeback Carte",
-          "description": "Assistenza esperta per la risoluzione di dispute carte di credito"
-        },
-        "crypto": {
-          "title": "Recupero Crypto",
-          "description": "Analisi blockchain avanzata e tracciamento asset"
-        },
-        "wire": {
-          "title": "Richiamo Bonifici",
-          "description": "Azione rapida per recuperare trasferimenti mal indirizzati"
-        },
-        "marketplace": {
-          "title": "Dispute Marketplace",
-          "description": "Strategie di recupero specifiche per piattaforme"
-        }
+      "fundsRecovered": {
+        "title": "Fondi Recuperati",
+        "value": "$50M+",
+        "description": "Importo totale recuperato"
       },
-      "process": {
-        "title": "Processo di Recupero",
-        "step1": {
-          "title": "Valutazione Gratuita",
-          "description": "Valutiamo il tuo caso e determiniamo la migliore strategia di recupero"
-        },
-        "step2": {
-          "title": "Raccolta Prove",
-          "description": "Raccogliamo tutta la documentazione e le prove necessarie"
-        },
-        "step3": {
-          "title": "Azione di Recupero",
-          "description": "Eseguiamo il piano di recupero con le istituzioni finanziarie"
-        },
-        "step4": {
-          "title": "Restituzione Fondi",
-          "description": "Assicuriamo la restituzione dei tuoi fondi recuperati"
-        }
-      },
-      "testimonials": {
-        "title": "Storie di Successo"
-      },
-      "trust": {
-        "title": "Perché Sceglierci"
-      },
-      "cta": {
-        "title": "Pronto a Recuperare i Tuoi Fondi?",
-        "description": "Inizia la tua valutazione gratuita oggi e fai il primo passo verso il recupero",
-        "button": "Inizia Valutazione Gratuita"
+      "avgResolution": {
+        "title": "Risoluzione Media",
+        "value": "30 giorni",
+        "description": "Tempo medio di risoluzione caso"
       }
     },
     "services": {
-      "title": "Servizi",
-      "description": "Chargeback esperti, assistenza truffe crypto, richiamo bonifici e servizi di disputa.",
-      "cardChargebacks": {
-        "title": "Chargeback Carte",
-        "description": "Ti aiutiamo a preparare le prove e comunicare con la tua banca per presentare chargeback efficaci."
+      "title": "I Nostri Servizi",
+      "description": "Soluzioni di recupero complete per tutti i tipi di controversie finanziarie",
+      "bankDisputes": {
+        "title": "Controversie Banche e Carte",
+        "description": "Assistenza esperta con storni di addebito carte di credito e risoluzione controversie bancarie",
+        "features": {
+          "chargeback": "Preparazione e presentazione storni",
+          "evidence": "Raccolta prove e documentazione",
+          "bankComm": "Comunicazione diretta con banche"
+        }
       },
       "cryptoRecovery": {
         "title": "Recupero Truffe Crypto",
-        "description": "Tracciamo l'attività on-chain e coordiniamo con le piattaforme per potenziali blocchi degli asset."
+        "description": "Analisi blockchain avanzata e tracciamento asset criptovalute",
+        "features": {
+          "tracing": "Tracciamento transazioni on-chain",
+          "escalations": "Escalation piattaforme exchange",
+          "freezing": "Coordinamento blocco asset"
+        }
       },
       "wireRecalls": {
-        "title": "Richiamo Bonifici",
-        "description": "Contattiamo prontamente le banche destinatarie per richiedere il richiamo o la restituzione di fondi mal indirizzati."
-      },
-      "marketplaceDisputes": {
-        "title": "Dispute Marketplace e Broker",
-        "description": "Assistenza con dispute di piattaforme e escalation."
+        "title": "Richiami Bonifici",
+        "description": "Azione rapida per recuperare bonifici mal indirizzati o fraudolenti",
+        "features": {
+          "swift": "Comunicazione rete SWIFT",
+          "bankToBank": "Coordinamento banca-a-banca",
+          "legal": "Pressione legale quando necessario"
+        }
       }
     },
-    "pricing": {
-      "title": "Prezzi",
-      "description": "Tariffe trasparenti per servizi di valutazione e recupero.",
-      "freeEvaluation": {
-        "title": "Valutazione Gratuita",
-        "description": "Esamineremo la tua situazione e consiglieremo i prossimi passi.",
-        "cta": "Inizia Ora"
-      },
-      "caseReview": {
-        "title": "Tariffa Revisione Caso",
-        "description": "Analisi approfondita e pianificazione delle prove. Checkout Stripe in arrivo."
+    "process": {
+      "title": "Il Nostro Processo di Recupero",
+      "description": "Una metodologia in 4 fasi comprovata che massimizza le possibilità di successo nel recupero fondi",
+      "steps": {
+        "evaluation": {
+          "title": "Valutazione Gratuita",
+          "description": "Valutiamo il tuo caso e determiniamo la migliore strategia di recupero",
+          "details": [
+            "Valutazione iniziale del caso",
+            "Analisi probabilità di recupero",
+            "Consulenza pianificazione strategica"
+          ]
+        },
+        "evidence": {
+          "title": "Raccolta Prove",
+          "description": "Raccogliamo tutta la documentazione e le prove necessarie",
+          "details": [
+            "Raccolta e organizzazione documenti",
+            "Analisi traccia transazioni",
+            "Compilazione registri comunicazioni"
+          ]
+        },
+        "recovery": {
+          "title": "Azione di Recupero",
+          "description": "Eseguiamo il piano di recupero con le istituzioni finanziarie",
+          "details": [
+            "Comunicazione diretta con istituzioni",
+            "Presentazione controversia formale",
+            "Gestione escalation"
+          ]
+        },
+        "resolution": {
+          "title": "Risoluzione Fondi",
+          "description": "Assicuriamo il ritorno dei tuoi fondi recuperati",
+          "details": [
+            "Negoziazione accordo",
+            "Coordinamento trasferimento fondi",
+            "Documentazione chiusura caso"
+          ]
+        }
       }
+    },
+    "testimonials": {
+      "title": "Storie di Successo Clienti",
+      "description": "Recuperi reali, risultati reali. Vedi cosa dicono i nostri clienti della loro esperienza",
+      "viewAll": "Visualizza Tutte le Storie di Successo"
+    },
+    "trust": {
+      "title": "Perché Fidarsi di Lixington Capital Recovery",
+      "description": "Credenziali leader del settore e standard di sicurezza proteggono i tuoi interessi",
+      "licensed": {
+        "title": "Autorizzati e Regolamentati",
+        "description": "Servizi di recupero finanziario completamente autorizzati"
+      },
+      "recognition": {
+        "title": "Riconoscimento del Settore",
+        "description": "Specialisti del recupero premiati"
+      },
+      "security": {
+        "title": "Sicurezza Grado Bancario",
+        "description": "I tuoi dati protetti con sicurezza aziendale"
+      },
+      "global": {
+        "title": "Rete Globale",
+        "description": "Connessioni bancarie e legali mondiali"
+      }
+    },
+    "cta": {
+      "title": "Pronto a Recuperare i Tuoi Fondi?",
+      "description": "Inizia con una consulenza gratuita. Nessuna commissione anticipata, nessun costo nascosto.",
+      "button": "Ottieni Consulenza Gratuita",
+      "secondary": "Parla con un Esperto"
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "Bentornato",
+      "subtitle": "Accedi al tuo account per accedere ai tuoi casi di recupero",
+      "email": "Email",
+      "password": "Password",
+      "button": "Accedi",
+      "forgotPassword": "Hai dimenticato la password?",
+      "noAccount": "Non hai un account?",
+      "signUpLink": "Registrati qui"
+    },
+    "signUp": {
+      "title": "Crea Account",
+      "subtitle": "Unisciti alle migliaia che hanno recuperato i loro fondi",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Conferma Password",
+      "button": "Crea Account",
+      "hasAccount": "Hai già un account?",
+      "signInLink": "Accedi qui"
+    },
+    "validation": {
+      "emailRequired": "Email è richiesta",
+      "emailInvalid": "Inserisci un'email valida",
+      "passwordRequired": "Password è richiesta",
+      "passwordMin": "La password deve essere di almeno 8 caratteri",
+      "passwordsMatch": "Le password devono corrispondere"
     }
   },
   "dashboard": {
