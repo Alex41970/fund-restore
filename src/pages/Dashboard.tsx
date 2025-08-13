@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CaseProgress } from "@/components/CaseProgress";
 import { CaseMessages } from "@/components/CaseMessages";
+import { InvoiceViewer } from "@/components/InvoiceViewer";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CaseStatusBadge } from "@/components/CaseStatusBadge";
@@ -426,7 +427,7 @@ const Dashboard: React.FC = () => {
 
             {/* Main Content Tabs */}
             <Tabs defaultValue="progress" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="progress" className="flex items-center gap-2">
                   <TrendingUp className="h-4 w-4" />
                   {t("dashboard.tabs.progress")}
@@ -434,6 +435,10 @@ const Dashboard: React.FC = () => {
                 <TabsTrigger value="messages" className="flex items-center gap-2">
                   <MessageSquare className="h-4 w-4" />
                   {t("dashboard.tabs.messages")}
+                </TabsTrigger>
+                <TabsTrigger value="payments" className="flex items-center gap-2">
+                  <FileText className="h-4 w-4" />
+                  Payments
                 </TabsTrigger>
               </TabsList>
 
@@ -453,6 +458,20 @@ const Dashboard: React.FC = () => {
                   messages={messages || []} 
                   isAdmin={false}
                 />
+              </TabsContent>
+
+              <TabsContent value="payments" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Invoices & Payments</CardTitle>
+                    <CardDescription>
+                      Manage payments for your case fees and services
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <InvoiceViewer caseId={userCase.id} />
+                  </CardContent>
+                </Card>
               </TabsContent>
 
             </Tabs>

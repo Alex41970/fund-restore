@@ -18,6 +18,7 @@ import AttachmentViewer from "@/components/AttachmentViewer";
 
 import { CaseStatusBadge } from "@/components/CaseStatusBadge";
 import { StatCard } from "@/components/StatCard";
+import { AdminInvoiceManager } from "@/components/AdminInvoiceManager";
 import { toast } from "@/components/ui/sonner";
 import { 
   Users, 
@@ -943,6 +944,10 @@ const AdminDashboard: React.FC = () => {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="invoices" className="space-y-6">
+            <AdminInvoiceManager />
           </TabsContent>
         </Tabs>
       </div>

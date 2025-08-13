@@ -221,6 +221,99 @@ export type Database = {
           },
         ]
       }
+      client_invoices: {
+        Row: {
+          amount_due: number
+          blockchain_network: string | null
+          case_id: string
+          created_at: string
+          currency: string
+          description: string
+          due_date: string
+          id: string
+          invoice_status: string
+          paid_at: string | null
+          payment_method: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_due: number
+          blockchain_network?: string | null
+          case_id: string
+          created_at?: string
+          currency?: string
+          description: string
+          due_date: string
+          id?: string
+          invoice_status?: string
+          paid_at?: string | null
+          payment_method?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_due?: number
+          blockchain_network?: string | null
+          case_id?: string
+          created_at?: string
+          currency?: string
+          description?: string
+          due_date?: string
+          id?: string
+          invoice_status?: string
+          paid_at?: string | null
+          payment_method?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      crypto_payments: {
+        Row: {
+          amount_paid: number
+          blockchain_network: string
+          confirmation_status: string
+          confirmed_at: string | null
+          created_at: string
+          exchange_rate_usd: number | null
+          gas_fees: number | null
+          id: string
+          invoice_id: string
+          token_address: string | null
+          token_symbol: string
+          transaction_hash: string
+          wallet_address: string
+        }
+        Insert: {
+          amount_paid: number
+          blockchain_network?: string
+          confirmation_status?: string
+          confirmed_at?: string | null
+          created_at?: string
+          exchange_rate_usd?: number | null
+          gas_fees?: number | null
+          id?: string
+          invoice_id: string
+          token_address?: string | null
+          token_symbol?: string
+          transaction_hash: string
+          wallet_address: string
+        }
+        Update: {
+          amount_paid?: number
+          blockchain_network?: string
+          confirmation_status?: string
+          confirmed_at?: string | null
+          created_at?: string
+          exchange_rate_usd?: number | null
+          gas_fees?: number | null
+          id?: string
+          invoice_id?: string
+          token_address?: string | null
+          token_symbol?: string
+          transaction_hash?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -275,6 +368,42 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      wallet_connections: {
+        Row: {
+          blockchain_network: string
+          created_at: string
+          id: string
+          last_used: string | null
+          preferred_payment_wallet: boolean
+          user_id: string
+          verification_status: string
+          wallet_address: string
+          wallet_type: string
+        }
+        Insert: {
+          blockchain_network?: string
+          created_at?: string
+          id?: string
+          last_used?: string | null
+          preferred_payment_wallet?: boolean
+          user_id: string
+          verification_status?: string
+          wallet_address: string
+          wallet_type: string
+        }
+        Update: {
+          blockchain_network?: string
+          created_at?: string
+          id?: string
+          last_used?: string | null
+          preferred_payment_wallet?: boolean
+          user_id?: string
+          verification_status?: string
+          wallet_address?: string
+          wallet_type?: string
         }
         Relationships: []
       }
