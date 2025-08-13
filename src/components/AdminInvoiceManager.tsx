@@ -60,6 +60,7 @@ export const AdminInvoiceManager = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const { toast } = useToast();
 
   const form = useForm<InvoiceFormData>({
@@ -190,16 +191,91 @@ export const AdminInvoiceManager = () => {
     }
   };
 
-  const getStatusBadge = (status: string) => {
+  const updateInvoiceStatus = async (invoiceId: string, newStatus: string) => {
+    if (updatingStatus === invoiceId) return;
+    
+    setUpdatingStatus(invoiceId);
+    
+    try {
+      const updateData: any = { 
+        invoice_status: newStatus 
+      };
+      
+      // Handle paid_at timestamp
+      if (newStatus === 'paid') {
+        updateData.paid_at = new Date().toISOString();
+      } else if (newStatus !== 'paid') {
+        updateData.paid_at = null;
+      }
+
+      const { error } = await supabase
+        .from('client_invoices')
+        .update(updateData)
+        .eq('id', invoiceId);
+
+      if (error) {
+        console.error('Error updating invoice status:', error);
+        toast({
+          title: "Error",
+          description: "Failed to update invoice status. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Status Updated",
+        description: `Invoice status changed to ${newStatus}.`,
+      });
+
+      loadData();
+    } catch (error) {
+      console.error('Error updating invoice status:', error);
+      toast({
+        title: "Error", 
+        description: "Failed to update invoice status. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingStatus(null);
+    }
+  };
+
+  const getStatusSelector = (invoice: Invoice) => {
+    const isUpdating = updatingStatus === invoice.id;
+    
+    return (
+      <Select 
+        value={invoice.invoice_status} 
+        onValueChange={(value) => updateInvoiceStatus(invoice.id, value)}
+        disabled={isUpdating}
+      >
+        <SelectTrigger className={`w-32 ${getStatusColor(invoice.invoice_status)} ${isUpdating ? 'opacity-50' : ''}`}>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="pending">Pending</SelectItem>
+          <SelectItem value="confirming">Confirming</SelectItem>
+          <SelectItem value="paid">Paid</SelectItem>
+          <SelectItem value="overdue">Overdue</SelectItem>
+          <SelectItem value="cancelled">Cancelled</SelectItem>
+        </SelectContent>
+      </Select>
+    );
+  };
+
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'paid':
-        return <Badge variant="secondary" className="bg-green-100 text-green-800">Paid</Badge>;
+        return 'text-green-700 border-green-300 bg-green-50';
       case 'overdue':
-        return <Badge variant="destructive">Overdue</Badge>;
-      case 'pending':
-        return <Badge variant="outline">Pending</Badge>;
+        return 'text-red-700 border-red-300 bg-red-50';
+      case 'confirming':
+        return 'text-blue-700 border-blue-300 bg-blue-50';
+      case 'cancelled':
+        return 'text-gray-700 border-gray-300 bg-gray-50';
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return 'text-yellow-700 border-yellow-300 bg-yellow-50';
     }
   };
 
@@ -371,7 +447,7 @@ export const AdminInvoiceManager = () => {
                       {invoice.cases?.title} - {invoice.profiles?.display_name || invoice.profiles?.email}
                     </CardDescription>
                   </div>
-                  {getStatusBadge(invoice.invoice_status)}
+                  {getStatusSelector(invoice)}
                 </div>
               </CardHeader>
               <CardContent>
