@@ -234,6 +234,7 @@ export type Database = {
           invoice_status: string
           paid_at: string | null
           payment_method: string | null
+          updated_at: string
           user_id: string
         }
         Insert: {
@@ -248,6 +249,7 @@ export type Database = {
           invoice_status?: string
           paid_at?: string | null
           payment_method?: string | null
+          updated_at?: string
           user_id: string
         }
         Update: {
@@ -262,6 +264,7 @@ export type Database = {
           invoice_status?: string
           paid_at?: string | null
           payment_method?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: [

@@ -37,6 +37,7 @@ interface Invoice {
   due_date: string;
   description: string;
   created_at: string;
+  updated_at: string;
   paid_at?: string;
   cases?: { title: string };
   profiles?: { display_name: string; email: string };
