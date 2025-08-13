@@ -5,3 +5,9 @@ verify_jwt = false
 
 [functions.delete-user]
 verify_jwt = true
+
+[functions.update-user-credentials]
+verify_jwt = true
+
+[functions.get-user-auth-details]
+verify_jwt = true

@@ -15,7 +15,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { CaseProgress } from "@/components/CaseProgress";
 import { CaseMessages } from "@/components/CaseMessages";
 import AttachmentViewer from "@/components/AttachmentViewer";
-
+import { UserDetailsModal } from "@/components/UserDetailsModal";
 import { CaseStatusBadge } from "@/components/CaseStatusBadge";
 import { StatCard } from "@/components/StatCard";
 import { AdminInvoiceManager } from "@/components/AdminInvoiceManager";
@@ -84,6 +84,8 @@ const AdminDashboard: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [userSearchTerm, setUserSearchTerm] = useState("");
+  const [selectedUser, setSelectedUser] = useState<UserWithRoles | null>(null);
+  const [userDetailsModalOpen, setUserDetailsModalOpen] = useState(false);
 
   // Fetch all cases with user profiles
   const { data: cases, isLoading, error } = useQuery({
@@ -895,111 +897,121 @@ const AdminDashboard: React.FC = () => {
                                 </div>
                               </td>
                                <td className="py-3 pr-4">
-                                <div className="flex gap-2">
-                                  {isAdmin ? (
-                                    <AlertDialog>
-                                      <AlertDialogTrigger asChild>
-                                        <Button
-                                          variant="outline"
-                                          size="sm"
-                                          disabled={isLastAdmin}
-                                          className="text-destructive hover:text-destructive"
-                                        >
-                                          <UserX className="h-4 w-4" />
-                                        </Button>
-                                      </AlertDialogTrigger>
-                                      <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                          <AlertDialogTitle>Remove Admin Role</AlertDialogTitle>
-                                          <AlertDialogDescription>
-                                            Are you sure you want to remove admin role from this user? 
-                                            They will lose access to admin functions.
-                                          </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                          <AlertDialogAction
-                                            onClick={() => handleRoleUpdate(user.id, 'remove')}
-                                            className="bg-destructive text-destructive-foreground hover:bg-destructive/80"
-                                          >
-                                            Remove Admin
-                                          </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                      </AlertDialogContent>
-                                    </AlertDialog>
-                                  ) : (
-                                    <AlertDialog>
-                                      <AlertDialogTrigger asChild>
-                                        <Button
-                                          variant="outline"
-                                          size="sm"
-                                          className="text-primary hover:text-primary"
-                                        >
-                                          <UserCheck className="h-4 w-4" />
-                                        </Button>
-                                      </AlertDialogTrigger>
-                                      <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                          <AlertDialogTitle>Promote to Admin</AlertDialogTitle>
-                                          <AlertDialogDescription>
-                                            Are you sure you want to grant admin privileges to this user? 
-                                            They will have access to all admin functions including user management.
-                                          </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                          <AlertDialogAction
-                                            onClick={() => handleRoleUpdate(user.id, 'add')}
-                                          >
-                                            Grant Admin Access
-                                          </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                      </AlertDialogContent>
-                                    </AlertDialog>
-                                  )}
-                                  
-                                  <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                      <Button
-                                        variant="outline"
-                                        size="sm"
-                                        disabled={isLastAdmin}
-                                        className="text-destructive hover:text-destructive"
-                                      >
-                                        <Trash2 className="h-4 w-4" />
-                                      </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                      <AlertDialogHeader>
-                                        <AlertDialogTitle>Delete User</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                          Are you sure you want to permanently delete this user? This action cannot be undone and will remove:
-                                          <ul className="list-disc list-inside mt-2 space-y-1">
-                                            <li>User profile and account data</li>
-                                            <li>All associated cases and messages</li>
-                                            <li>Payment history and invoices</li>
-                                            <li>Uploaded attachments</li>
-                                          </ul>
-                                          {isLastAdmin && (
-                                            <div className="mt-3 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
-                                              <strong>Cannot delete:</strong> This is the last admin user. At least one admin must remain in the system.
-                                            </div>
-                                          )}
-                                        </AlertDialogDescription>
-                                      </AlertDialogHeader>
-                                      <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction
-                                          onClick={() => handleUserDelete(user.id)}
-                                          disabled={isLastAdmin}
-                                          className="bg-destructive text-destructive-foreground hover:bg-destructive/80"
-                                        >
-                                          Delete User
-                                        </AlertDialogAction>
-                                      </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialog>
-                                </div>
+                                 <div className="flex gap-2">
+                                   <Button
+                                     variant="outline"
+                                     size="sm"
+                                     onClick={() => {
+                                       setSelectedUser(user);
+                                       setUserDetailsModalOpen(true);
+                                     }}
+                                   >
+                                     <Eye className="h-4 w-4" />
+                                   </Button>
+                                   {isAdmin ? (
+                                     <AlertDialog>
+                                       <AlertDialogTrigger asChild>
+                                         <Button
+                                           variant="outline"
+                                           size="sm"
+                                           disabled={isLastAdmin}
+                                           className="text-destructive hover:text-destructive"
+                                         >
+                                           <UserX className="h-4 w-4" />
+                                         </Button>
+                                       </AlertDialogTrigger>
+                                       <AlertDialogContent>
+                                         <AlertDialogHeader>
+                                           <AlertDialogTitle>Remove Admin Role</AlertDialogTitle>
+                                           <AlertDialogDescription>
+                                             Are you sure you want to remove admin role from this user? 
+                                             They will lose access to admin functions.
+                                           </AlertDialogDescription>
+                                         </AlertDialogHeader>
+                                         <AlertDialogFooter>
+                                           <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                           <AlertDialogAction
+                                             onClick={() => handleRoleUpdate(user.id, 'remove')}
+                                             className="bg-destructive text-destructive-foreground hover:bg-destructive/80"
+                                           >
+                                             Remove Admin
+                                           </AlertDialogAction>
+                                         </AlertDialogFooter>
+                                       </AlertDialogContent>
+                                     </AlertDialog>
+                                   ) : (
+                                     <AlertDialog>
+                                       <AlertDialogTrigger asChild>
+                                         <Button
+                                           variant="outline"
+                                           size="sm"
+                                           className="text-primary hover:text-primary"
+                                         >
+                                           <UserCheck className="h-4 w-4" />
+                                         </Button>
+                                       </AlertDialogTrigger>
+                                       <AlertDialogContent>
+                                         <AlertDialogHeader>
+                                           <AlertDialogTitle>Promote to Admin</AlertDialogTitle>
+                                           <AlertDialogDescription>
+                                             Are you sure you want to grant admin privileges to this user? 
+                                             They will have access to all admin functions including user management.
+                                           </AlertDialogDescription>
+                                         </AlertDialogHeader>
+                                         <AlertDialogFooter>
+                                           <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                           <AlertDialogAction
+                                             onClick={() => handleRoleUpdate(user.id, 'add')}
+                                           >
+                                             Grant Admin Access
+                                           </AlertDialogAction>
+                                         </AlertDialogFooter>
+                                       </AlertDialogContent>
+                                     </AlertDialog>
+                                   )}
+                                   
+                                   <AlertDialog>
+                                     <AlertDialogTrigger asChild>
+                                       <Button
+                                         variant="outline"
+                                         size="sm"
+                                         disabled={isLastAdmin}
+                                         className="text-destructive hover:text-destructive"
+                                       >
+                                         <Trash2 className="h-4 w-4" />
+                                       </Button>
+                                     </AlertDialogTrigger>
+                                     <AlertDialogContent>
+                                       <AlertDialogHeader>
+                                         <AlertDialogTitle>Delete User</AlertDialogTitle>
+                                         <AlertDialogDescription>
+                                           Are you sure you want to permanently delete this user? This action cannot be undone and will remove:
+                                           <ul className="list-disc list-inside mt-2 space-y-1">
+                                             <li>User profile and account data</li>
+                                             <li>All associated cases and messages</li>
+                                             <li>Payment history and invoices</li>
+                                             <li>Uploaded attachments</li>
+                                           </ul>
+                                           {isLastAdmin && (
+                                             <div className="mt-3 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
+                                               <strong>Cannot delete:</strong> This is the last admin user. At least one admin must remain in the system.
+                                             </div>
+                                           )}
+                                         </AlertDialogDescription>
+                                       </AlertDialogHeader>
+                                       <AlertDialogFooter>
+                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                         <AlertDialogAction
+                                           onClick={() => handleUserDelete(user.id)}
+                                           disabled={isLastAdmin}
+                                           className="bg-destructive text-destructive-foreground hover:bg-destructive/80"
+                                         >
+                                           Delete User
+                                         </AlertDialogAction>
+                                       </AlertDialogFooter>
+                                     </AlertDialogContent>
+                                   </AlertDialog>
+                                 </div>
                                 {isLastAdmin && (
                                   <div className="text-xs text-muted-foreground mt-1">
                                     Last admin
@@ -1018,6 +1030,18 @@ const AdminDashboard: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <UserDetailsModal
+        user={selectedUser}
+        isOpen={userDetailsModalOpen}
+        onClose={() => {
+          setUserDetailsModalOpen(false);
+          setSelectedUser(null);
+        }}
+        onUserUpdate={() => {
+          queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+        }}
+      />
     </main>
   );
 };
