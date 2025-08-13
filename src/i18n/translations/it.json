@@ -313,6 +313,7 @@
     "tabs": {
       "overview": "Panoramica Casi",
       "details": "Dettagli Caso",
+      "invoices": "Fatture",
       "users": "Gestione Utenti"
     },
     "filters": {

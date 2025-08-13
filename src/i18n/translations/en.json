@@ -313,6 +313,7 @@
     "tabs": {
       "overview": "Case Overview",
       "details": "Case Details",
+      "invoices": "Invoices",
       "users": "User Management"
     },
     "filters": {

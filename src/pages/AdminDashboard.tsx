@@ -37,7 +37,8 @@ import {
   Shield,
   UserCheck,
   UserX,
-  Settings
+  Settings,
+  CreditCard
 } from "lucide-react";
 
 interface CaseRow {
@@ -400,7 +401,7 @@ const AdminDashboard: React.FC = () => {
 
         {/* Main Content */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               {t("admin.tabs.overview")}
@@ -408,6 +409,10 @@ const AdminDashboard: React.FC = () => {
             <TabsTrigger value="details" className="flex items-center gap-2">
               <Eye className="h-4 w-4" />
               {t("admin.tabs.details")}
+            </TabsTrigger>
+            <TabsTrigger value="invoices" className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4" />
+              {t("admin.tabs.invoices")}
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
@@ -762,6 +767,11 @@ const AdminDashboard: React.FC = () => {
             )}
           </TabsContent>
 
+          {/* Invoice Management */}
+          <TabsContent value="invoices" className="space-y-6">
+            <AdminInvoiceManager />
+          </TabsContent>
+
           {/* User Management */}
           <TabsContent value="users" className="space-y-6">
             {/* User Search */}
@@ -944,10 +954,6 @@ const AdminDashboard: React.FC = () => {
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="invoices" className="space-y-6">
-            <AdminInvoiceManager />
           </TabsContent>
         </Tabs>
       </div>
