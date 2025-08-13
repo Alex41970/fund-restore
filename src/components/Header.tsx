@@ -39,21 +39,16 @@ export const Header: React.FC = () => {
     );
   }
 
-  // Marketing website header - full navigation
+  // Marketing website header - clean and minimal
   return (
-    <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
-        <NavLink to="/" className="font-semibold">{t('header.companyName')}</NavLink>
+    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 sticky top-0 z-50">
+      <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
+        <NavLink to="/" className="text-xl font-bold gradient-primary bg-clip-text text-transparent">
+          {t('header.companyName')}
+        </NavLink>
         <nav className="flex items-center gap-4">
-          <NavLink to="/" className={linkCls} end>{t('navigation.home')}</NavLink>
-          <NavLink to="/about" className={linkCls}>{t('navigation.about')}</NavLink>
-          <NavLink to="/services" className={linkCls}>{t('navigation.services')}</NavLink>
-          <NavLink to="/case-studies" className={linkCls}>{t('navigation.successStories')}</NavLink>
-          <NavLink to="/pricing" className={linkCls}>{t('navigation.pricing')}</NavLink>
-          <NavLink to="/start" className={linkCls}>{t('navigation.start')}</NavLink>
-          <NavLink to="/contact" className={linkCls}>{t('navigation.contact')}</NavLink>
           <LanguageSwitcher />
-          <Button asChild size="sm">
+          <Button asChild size="sm" className="gradient-primary text-white shadow-medium hover:shadow-large transition-all duration-300">
             <NavLink to="/auth">{t('navigation.signIn')}</NavLink>
           </Button>
         </nav>
