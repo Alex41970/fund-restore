@@ -444,5 +444,126 @@
       "compliance": "Conformità"
     },
     "disclaimer": "Lixington Capital Recovery è un servizio di recupero finanziario autorizzato. I tassi di successo variano per tipo di caso e circostanze. I risultati passati non garantiscono risultati futuri. Tutte le consulenze sono confidenziali e soggette alla nostra politica sulla privacy."
+  },
+  "about": {
+    "title": "Chi Siamo | Lixington Capital Recovery",
+    "description": "Scopri il nostro team di esperti, la missione e il track record comprovato nei servizi di recupero fondi.",
+    "hero": {
+      "title": "Chi è Lixington Capital Recovery",
+      "subtitle": "Il tuo partner di fiducia nel recupero finanziario"
+    },
+    "mission": {
+      "title": "La Nostra Missione",
+      "description": "Siamo dedicati ad aiutare individui e aziende a recuperare i loro fondi persi attraverso servizi di recupero professionali, etici ed efficaci. Il nostro team combina tecnologia all'avanguardia con strategie comprovate per massimizzare le possibilità di successo nel recupero.",
+      "cta": "Inizia il Tuo Recupero"
+    },
+    "team": {
+      "title": "Conosci il Nostro Team di Esperti",
+      "members": [
+        {
+          "name": "Marco Rossi",
+          "role": "Fondatore e Amministratore Delegato",
+          "experience": "15+ anni nel recupero finanziario",
+          "credentials": "Ex investigatore federale con competenza in casi di frode complessi"
+        },
+        {
+          "name": "Giulia Romano",
+          "role": "Responsabile Operazioni di Recupero",
+          "experience": "12+ anni in controversie bancarie",
+          "credentials": "Specializzata in recupero chargeback e bonifici"
+        },
+        {
+          "name": "Alessandro Chen",
+          "role": "Specialista Recupero Crypto",
+          "experience": "8+ anni in analisi blockchain",
+          "credentials": "Investigatore di criptovalute certificato"
+        },
+        {
+          "name": "Elena Bianchi",
+          "role": "Direttrice Relazioni Clienti",
+          "experience": "10+ anni nell'advocacy clienti",
+          "credentials": "Esperta in risoluzione controversie e comunicazione con i clienti"
+        }
+      ]
+    },
+    "achievements": [
+      {
+        "title": "€50M+ Recuperati",
+        "description": "Recuperati con successo per i nostri clienti"
+      },
+      {
+        "title": "95% Tasso di Successo",
+        "description": "Successo nel recupero leader del settore"
+      },
+      {
+        "title": "Supporto 24/7",
+        "description": "Sempre qui quando hai bisogno di noi"
+      }
+    ],
+    "values": {
+      "title": "I Nostri Valori Fondamentali",
+      "items": [
+        {
+          "title": "Trasparenza",
+          "description": "Manteniamo una comunicazione aperta durante tutto il processo di recupero"
+        },
+        {
+          "title": "Competenza",
+          "description": "Il nostro team porta decenni di esperienza combinata nel recupero finanziario"
+        },
+        {
+          "title": "Risultati",
+          "description": "Siamo impegnati a raggiungere il miglior risultato possibile per il tuo caso"
+        }
+      ]
+    },
+    "cta": {
+      "title": "Pronto a Iniziare il Tuo Recupero?",
+      "description": "Unisciti a migliaia di clienti soddisfatti che hanno recuperato con successo i loro fondi con il nostro aiuto.",
+      "primaryButton": "Inizia Processo di Recupero",
+      "secondaryButton": "Contatta il Nostro Team"
+    }
+  },
+  "services": {
+    "title": "Servizi | Lixington Capital Recovery",
+    "description": "Chargeback esperti, assistenza truffe crypto, richiami bonifici e servizi di controversie.",
+    "hero": {
+      "title": "I Nostri Servizi di Recupero",
+      "subtitle": "Soluzioni complete per il recupero fondi"
+    },
+    "items": [
+      {
+        "title": "Chargeback Carte",
+        "description": "Ti aiutiamo a preparare le prove e comunicare con la tua banca per presentare chargeback efficaci."
+      },
+      {
+        "title": "Recupero Truffe Crypto",
+        "description": "Tracciamo l'attività on-chain e coordiniamo con le piattaforme per potenziali blocchi degli asset."
+      },
+      {
+        "title": "Richiami Bonifici",
+        "description": "Contattiamo prontamente le banche destinatarie per richiedere il richiamo o la restituzione di fondi mal indirizzati."
+      },
+      {
+        "title": "Controversie Marketplace e Broker",
+        "description": "Assistenza con controversie di piattaforma e escalation."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Contattaci | Lixington Capital Recovery",
+    "description": "Mettiti in contatto con il nostro team di esperti per assistenza professionale nel recupero fondi.",
+    "hero": {
+      "title": "Contatta il Nostro Team di Esperti",
+      "subtitle": "Pronti ad aiutarti a recuperare i tuoi fondi"
+    }
+  },
+  "pricing": {
+    "title": "Prezzi | Lixington Capital Recovery",
+    "description": "Prezzi trasparenti per servizi professionali di recupero fondi senza commissioni anticipate.",
+    "hero": {
+      "title": "I Nostri Prezzi",
+      "subtitle": "Garanzia nessun successo, nessuna commissione"
+    }
   }
 }

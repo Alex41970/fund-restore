@@ -444,5 +444,126 @@
       "compliance": "Compliance"
     },
     "disclaimer": "Lixington Capital Recovery is a licensed financial recovery service. Success rates vary by case type and circumstances. Past results do not guarantee future outcomes. All consultations are confidential and subject to our privacy policy."
+  },
+  "about": {
+    "title": "About Us | Lixington Capital Recovery",
+    "description": "Learn about our expert team, mission, and proven track record in fund recovery services.",
+    "hero": {
+      "title": "About Lixington Capital Recovery",
+      "subtitle": "Your trusted partner in financial recovery"
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description": "We are dedicated to helping individuals and businesses recover their lost funds through professional, ethical, and effective recovery services. Our team combines cutting-edge technology with proven strategies to maximize your chances of successful recovery.",
+      "cta": "Start Your Recovery"
+    },
+    "team": {
+      "title": "Meet Our Expert Team",
+      "members": [
+        {
+          "name": "Michael Richardson",
+          "role": "Founder & CEO",
+          "experience": "15+ years in financial recovery",
+          "credentials": "Former federal investigator with expertise in complex fraud cases"
+        },
+        {
+          "name": "Sarah Thompson",
+          "role": "Head of Recovery Operations",
+          "experience": "12+ years in banking disputes",
+          "credentials": "Specialized in chargeback and wire transfer recovery"
+        },
+        {
+          "name": "David Chen",
+          "role": "Crypto Recovery Specialist",
+          "experience": "8+ years in blockchain analysis",
+          "credentials": "Certified cryptocurrency investigator"
+        },
+        {
+          "name": "Emma Wilson",
+          "role": "Client Relations Director",
+          "experience": "10+ years in client advocacy",
+          "credentials": "Expert in dispute resolution and client communication"
+        }
+      ]
+    },
+    "achievements": [
+      {
+        "title": "$50M+ Recovered",
+        "description": "Successfully recovered for our clients"
+      },
+      {
+        "title": "95% Success Rate",
+        "description": "Industry-leading recovery success"
+      },
+      {
+        "title": "24/7 Support",
+        "description": "Always here when you need us"
+      }
+    ],
+    "values": {
+      "title": "Our Core Values",
+      "items": [
+        {
+          "title": "Transparency",
+          "description": "We maintain open communication throughout your recovery process"
+        },
+        {
+          "title": "Expertise",
+          "description": "Our team brings decades of combined experience in financial recovery"
+        },
+        {
+          "title": "Results",
+          "description": "We're committed to achieving the best possible outcome for your case"
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to Start Your Recovery?",
+      "description": "Join thousands of satisfied clients who have successfully recovered their funds with our help.",
+      "primaryButton": "Start Recovery Process",
+      "secondaryButton": "Contact Our Team"
+    }
+  },
+  "services": {
+    "title": "Services | Lixington Capital Recovery",
+    "description": "Expert chargebacks, crypto scam assistance, wire recalls, and dispute services.",
+    "hero": {
+      "title": "Our Recovery Services",
+      "subtitle": "Comprehensive solutions for fund recovery"
+    },
+    "items": [
+      {
+        "title": "Card Chargebacks",
+        "description": "We help prepare evidence and communicate with your bank to file effective chargebacks."
+      },
+      {
+        "title": "Crypto Scam Recovery",
+        "description": "We trace on-chain activity and coordinate with platforms for potential asset freezes."
+      },
+      {
+        "title": "Wire Transfer Recalls",
+        "description": "We contact recipient banks promptly to request recall or return of misdirected funds."
+      },
+      {
+        "title": "Marketplace & Broker Disputes",
+        "description": "Assistance with platform disputes and escalations."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Contact Us | Lixington Capital Recovery",
+    "description": "Get in touch with our expert team for professional fund recovery assistance.",
+    "hero": {
+      "title": "Contact Our Expert Team",
+      "subtitle": "Ready to help you recover your funds"
+    }
+  },
+  "pricing": {
+    "title": "Pricing | Lixington Capital Recovery",
+    "description": "Transparent pricing for professional fund recovery services with no upfront fees.",
+    "hero": {
+      "title": "Our Pricing",
+      "subtitle": "No win, no fee guarantee"
+    }
   }
 }
