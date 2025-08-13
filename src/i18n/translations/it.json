@@ -234,26 +234,144 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "description": "Monitora i progressi del tuo caso e comunica con il nostro team",
     "createCase": {
-      "title": "Crea Nuovo Caso",
-      "caseTitle": "Titolo Caso",
-      "caseTitlePlaceholder": "Breve descrizione della tua situazione",
-      "description": "Descrizione",
-      "descriptionPlaceholder": "Fornisci informazioni dettagliate sul tuo caso...",
+      "title": "Dashboard | Crea il Tuo Caso",
+      "description": "Crea il tuo caso per iniziare con i nostri servizi di recupero",
+      "welcome": "Benvenuto nella Tua Dashboard",
+      "subtitle": "Crea il tuo caso per iniziare con i nostri servizi di recupero",
+      "cardTitle": "Crea il Tuo Caso",
+      "caseTitle": "Titolo del caso",
+      "caseDescription": "Descrivi la tua situazione (opzionale)",
       "attachments": "Allegati",
-      "attachmentsHint": "Carica documenti rilevanti, screenshot o prove",
       "button": "Crea Caso"
     },
     "caseDetails": {
+      "title": "Dashboard | Il Tuo Caso",
+      "loading": "Caricamento del tuo caso...",
+      "viewDetails": "Visualizza Dettagli Completi del Caso",
       "quickStats": "Statistiche Rapide",
       "progress": "Progresso",
-      "messages": "Messaggi",
+      "messages": "Messaggi"
+    },
+    "caseInfo": {
       "description": "Descrizione",
-      "caseInfo": "Informazioni Caso",
+      "information": "Informazioni del Caso",
+      "statistics": "Statistiche del Caso",
+      "caseId": "ID Caso",
       "status": "Stato",
       "created": "Creato",
       "lastUpdate": "Ultimo Aggiornamento",
-      "attachments": "Allegati"
+      "progressPercent": "Progresso",
+      "messagesCount": "Messaggi",
+      "progressUpdates": "Aggiornamenti del Progresso",
+      "attachmentsCount": "Allegati",
+      "uploaded": "Caricato"
+    },
+    "tabs": {
+      "progress": "Progresso",
+      "messages": "Messaggi"
+    },
+    "validation": {
+      "titleRequired": "Inserisci un titolo (min 3 caratteri)"
+    },
+    "notifications": {
+      "caseCreated": "Caso creato",
+      "uploadFailed": "Caricamento fallito"
+    }
+  },
+  "admin": {
+    "title": "Dashboard Amministratore",
+    "description": "Dashboard amministratore completa per gestire tutti i casi e le comunicazioni con i clienti",
+    "subtitle": "Gestisci tutti i casi e monitora i progressi nella tua organizzazione",
+    "stats": {
+      "totalCases": "Casi Totali",
+      "inProgress": "In Corso",
+      "resolved": "Risolti",
+      "avgProgress": "Progresso Medio",
+      "allCases": "Tutti i casi nel sistema",
+      "activeCases": "Casi attivi",
+      "completedCases": "Casi completati",
+      "averageCompletion": "Completamento medio dei casi"
+    },
+    "tabs": {
+      "overview": "Panoramica Casi",
+      "details": "Dettagli Caso",
+      "users": "Gestione Utenti"
+    },
+    "filters": {
+      "title": "Filtri e Ricerca",
+      "searchPlaceholder": "Cerca casi o clienti...",
+      "filterByStatus": "Filtra per stato",
+      "allStatuses": "Tutti gli Stati"
+    },
+    "table": {
+      "case": "Caso",
+      "client": "Cliente",
+      "status": "Stato",
+      "created": "Creato",
+      "actions": "Azioni",
+      "viewDetails": "Visualizza Dettagli",
+      "updateStatus": "Aggiorna Stato"
+    },
+    "status": {
+      "open": "Aperto",
+      "inProgress": "In Corso",
+      "pendingClient": "In Attesa Cliente",
+      "underReview": "In Revisione",
+      "resolved": "Risolto",
+      "closed": "Chiuso"
+    },
+    "caseDetails": {
+      "selectCase": "Seleziona un caso dalla panoramica per visualizzare informazioni dettagliate",
+      "loading": "Caricamento dettagli caso...",
+      "error": "Errore nel caricamento dei dettagli del caso",
+      "information": "Informazioni del Caso",
+      "clientInfo": "Informazioni Cliente",
+      "name": "Nome",
+      "email": "Email",
+      "phone": "Telefono",
+      "description": "Descrizione",
+      "created": "Creato",
+      "lastUpdate": "Ultimo Aggiornamento",
+      "currentStatus": "Stato Attuale",
+      "progressOverview": "Panoramica Progresso",
+      "recentMessages": "Messaggi Recenti",
+      "attachments": "Allegati",
+      "noAttachments": "Nessun allegato",
+      "progressUpdates": "Aggiornamenti del Progresso",
+      "noProgressUpdates": "Nessun aggiornamento del progresso",
+      "unknown": "Sconosciuto"
+    },
+    "users": {
+      "title": "Gestione Utenti",
+      "description": "Gestisci ruoli e permessi degli utenti",
+      "searchPlaceholder": "Cerca utenti...",
+      "allUsers": "Tutti gli Utenti",
+      "adminUsers": "Utenti Amministratori",
+      "regularUsers": "Utenti Normali",
+      "makeAdmin": "Rendi Amministratore",
+      "removeAdmin": "Rimuovi Amministratore",
+      "user": "Utente",
+      "role": "Ruolo",
+      "joinedDate": "Data di Iscrizione"
+    },
+    "loading": {
+      "cases": "Caricamento casi...",
+      "users": "Caricamento utenti..."
+    },
+    "error": {
+      "loadingCases": "Errore nel caricamento dei casi",
+      "noCases": "Nessun caso trovato",
+      "noUsers": "Nessun utente trovato"
+    },
+    "notifications": {
+      "statusUpdated": "Stato del caso aggiornato",
+      "statusUpdateFailed": "Aggiornamento dello stato del caso fallito",
+      "userPromoted": "Utente promosso ad amministratore",
+      "adminRemoved": "Ruolo amministratore rimosso dall'utente",
+      "roleUpdateFailed": "Aggiornamento del ruolo utente fallito",
+      "cannotRemoveLastAdmin": "Impossibile rimuovere l'ultimo amministratore"
     }
   },
   "footer": {

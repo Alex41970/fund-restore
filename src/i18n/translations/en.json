@@ -234,26 +234,144 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "description": "Track your case progress and communicate with our team",
     "createCase": {
-      "title": "Create New Case",
-      "caseTitle": "Case Title",
-      "caseTitlePlaceholder": "Brief description of your situation",
-      "description": "Description", 
-      "descriptionPlaceholder": "Provide detailed information about your case...",
+      "title": "Dashboard | Create Your Case",
+      "description": "Create your case to get started with our recovery services",
+      "welcome": "Welcome to Your Dashboard",
+      "subtitle": "Create your case to get started with our recovery services",
+      "cardTitle": "Create Your Case",
+      "caseTitle": "Case title",
+      "caseDescription": "Describe your situation (optional)",
       "attachments": "Attachments",
-      "attachmentsHint": "Upload relevant documents, screenshots, or evidence",
       "button": "Create Case"
     },
     "caseDetails": {
+      "title": "Dashboard | Your Case",
+      "loading": "Loading your case...",
+      "viewDetails": "View Full Case Details",
       "quickStats": "Quick Stats",
       "progress": "Progress",
-      "messages": "Messages",
+      "messages": "Messages"
+    },
+    "caseInfo": {
       "description": "Description",
-      "caseInfo": "Case Information",
+      "information": "Case Information",
+      "statistics": "Case Statistics",
+      "caseId": "Case ID",
       "status": "Status",
       "created": "Created",
       "lastUpdate": "Last Update",
-      "attachments": "Attachments"
+      "progressPercent": "Progress",
+      "messagesCount": "Messages",
+      "progressUpdates": "Progress Updates",
+      "attachmentsCount": "Attachments",
+      "uploaded": "Uploaded"
+    },
+    "tabs": {
+      "progress": "Progress",
+      "messages": "Messages"
+    },
+    "validation": {
+      "titleRequired": "Please enter a title (min 3 chars)"
+    },
+    "notifications": {
+      "caseCreated": "Case created",
+      "uploadFailed": "Upload failed"
+    }
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "description": "Comprehensive admin dashboard for managing all cases and client communications",
+    "subtitle": "Manage all cases and track progress across your organization",
+    "stats": {
+      "totalCases": "Total Cases",
+      "inProgress": "In Progress",
+      "resolved": "Resolved",
+      "avgProgress": "Avg Progress",
+      "allCases": "All cases in system",
+      "activeCases": "Active cases",
+      "completedCases": "Completed cases",
+      "averageCompletion": "Average case completion"
+    },
+    "tabs": {
+      "overview": "Case Overview",
+      "details": "Case Details",
+      "users": "User Management"
+    },
+    "filters": {
+      "title": "Filters & Search",
+      "searchPlaceholder": "Search cases or clients...",
+      "filterByStatus": "Filter by status",
+      "allStatuses": "All Statuses"
+    },
+    "table": {
+      "case": "Case",
+      "client": "Client",
+      "status": "Status",
+      "created": "Created",
+      "actions": "Actions",
+      "viewDetails": "View Details",
+      "updateStatus": "Update Status"
+    },
+    "status": {
+      "open": "Open",
+      "inProgress": "In Progress",
+      "pendingClient": "Pending Client",
+      "underReview": "Under Review",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "caseDetails": {
+      "selectCase": "Select a case from the overview to view detailed information",
+      "loading": "Loading case details...",
+      "error": "Error loading case details",
+      "information": "Case Information",
+      "clientInfo": "Client Information",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "description": "Description",
+      "created": "Created",
+      "lastUpdate": "Last Update",
+      "currentStatus": "Current Status",
+      "progressOverview": "Progress Overview",
+      "recentMessages": "Recent Messages",
+      "attachments": "Attachments",
+      "noAttachments": "No attachments",
+      "progressUpdates": "Progress Updates",
+      "noProgressUpdates": "No progress updates",
+      "unknown": "Unknown"
+    },
+    "users": {
+      "title": "User Management",
+      "description": "Manage user roles and permissions",
+      "searchPlaceholder": "Search users...",
+      "allUsers": "All Users",
+      "adminUsers": "Admin Users",
+      "regularUsers": "Regular Users",
+      "makeAdmin": "Make Admin",
+      "removeAdmin": "Remove Admin",
+      "user": "User",
+      "role": "Role",
+      "joinedDate": "Joined"
+    },
+    "loading": {
+      "cases": "Loading cases...",
+      "users": "Loading users..."
+    },
+    "error": {
+      "loadingCases": "Error loading cases",
+      "noCases": "No cases found",
+      "noUsers": "No users found"
+    },
+    "notifications": {
+      "statusUpdated": "Case status updated",
+      "statusUpdateFailed": "Failed to update case status",
+      "userPromoted": "User promoted to admin",
+      "adminRemoved": "Admin role removed from user",
+      "roleUpdateFailed": "Failed to update user role",
+      "cannotRemoveLastAdmin": "Cannot remove the last admin user"
     }
   },
   "footer": {

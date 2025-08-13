@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -75,6 +76,7 @@ interface UserWithRoles {
 
 const AdminDashboard: React.FC = () => {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const [selectedCase, setSelectedCase] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -288,7 +290,7 @@ const AdminDashboard: React.FC = () => {
 
       if (error) throw error;
       
-      toast.success("Case status updated");
+      toast.success(t("admin.notifications.statusUpdated"));
       
       // Invalidate queries to refresh data immediately
       queryClient.invalidateQueries({ queryKey: ["admin-cases"] });
@@ -299,7 +301,7 @@ const AdminDashboard: React.FC = () => {
       
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      toast.error(`Failed to update case status: ${errorMessage}`);
+      toast.error(`${t("admin.notifications.statusUpdateFailed")}: ${errorMessage}`);
       console.error("Error updating case status:", error);
     }
   };
@@ -313,7 +315,7 @@ const AdminDashboard: React.FC = () => {
         ).length || 0;
         
         if (adminCount <= 1) {
-          toast.error("Cannot remove the last admin user");
+          toast.error(t("admin.notifications.cannotRemoveLastAdmin"));
           return;
         }
       }
@@ -324,7 +326,7 @@ const AdminDashboard: React.FC = () => {
           .insert({ user_id: userId, role: 'admin' });
         
         if (error) throw error;
-        toast.success("User promoted to admin");
+        toast.success(t("admin.notifications.userPromoted"));
       } else {
         const { error } = await supabase
           .from("user_roles")
@@ -333,7 +335,7 @@ const AdminDashboard: React.FC = () => {
           .eq("role", "admin");
         
         if (error) throw error;
-        toast.success("Admin role removed from user");
+        toast.success(t("admin.notifications.adminRemoved"));
       }
       
       // Refresh users data
@@ -341,7 +343,7 @@ const AdminDashboard: React.FC = () => {
       
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      toast.error(`Failed to update user role: ${errorMessage}`);
+      toast.error(`${t("admin.notifications.roleUpdateFailed")}: ${errorMessage}`);
       console.error("Error updating user role:", error);
     }
   };
@@ -349,16 +351,16 @@ const AdminDashboard: React.FC = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>Admin Dashboard | Case Management</title>
-        <meta name="description" content="Comprehensive admin dashboard for managing all cases and client communications." />
+        <title>{t("admin.title")} | Case Management</title>
+        <meta name="description" content={t("admin.description")} />
         <link rel="canonical" href={window.location.origin + "/admin"} />
       </Helmet>
 
       <div className="mx-auto max-w-7xl px-4 py-8 space-y-8">
         {/* Header */}
         <div className="space-y-4">
-          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Manage all cases and track progress across your organization</p>
+          <h1 className="text-3xl font-bold">{t("admin.title")}</h1>
+          <p className="text-muted-foreground">{t("admin.subtitle")}</p>
         </div>
 
         {/* Statistics Cards */}
@@ -366,30 +368,30 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <StatCard
               icon={FileText}
-              title="Total Cases"
+              title={t("admin.stats.totalCases")}
               value={stats.total_cases.toString()}
-              description="All cases in system"
+              description={t("admin.stats.allCases")}
               gradient="gradient-primary"
             />
             <StatCard
               icon={Clock}
-              title="In Progress"
+              title={t("admin.stats.inProgress")}
               value={stats.in_progress.toString()}
-              description="Active cases"
+              description={t("admin.stats.activeCases")}
               gradient="gradient-success"
             />
             <StatCard
               icon={CheckCircle}
-              title="Resolved"
+              title={t("admin.stats.resolved")}
               value={stats.resolved.toString()}
-              description="Completed cases"
+              description={t("admin.stats.completedCases")}
               gradient="gradient-premium"
             />
             <StatCard
               icon={TrendingUp}
-              title="Avg Progress"
+              title={t("admin.stats.avgProgress")}
               value={`${Math.round(stats.avg_progress)}%`}
-              description="Average case completion"
+              description={t("admin.stats.averageCompletion")}
               gradient="gradient-primary"
             />
           </div>
@@ -400,15 +402,15 @@ const AdminDashboard: React.FC = () => {
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
-              Case Overview
+              {t("admin.tabs.overview")}
             </TabsTrigger>
             <TabsTrigger value="details" className="flex items-center gap-2">
               <Eye className="h-4 w-4" />
-              Case Details
+              {t("admin.tabs.details")}
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
-              User Management
+              {t("admin.tabs.users")}
             </TabsTrigger>
           </TabsList>
 
