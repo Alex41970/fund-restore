@@ -24,7 +24,7 @@ import {
 
 const Index = () => {
   const { user, isAdmin, loading } = useAuth();
-  const { t } = useTranslation();
+  const { t, translations } = useTranslation();
   
   // Redirect authenticated users to their appropriate dashboard
   if (!loading && user) {
@@ -73,13 +73,7 @@ const Index = () => {
     }
   ];
 
-  const testimonials = JSON.parse(t('home.testimonials.items')) as Array<{
-    quote: string;
-    author: string;
-    title: string;
-    recoveredAmount: string;
-    rating: number;
-  }>;
+  const testimonials = translations?.home?.testimonials?.items || [];
 
   const trustBadges = [
     { icon: Shield, title: t('home.trust.licensed.title'), description: t('home.trust.licensed.description') },

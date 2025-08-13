@@ -6,6 +6,7 @@ interface I18nContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string, fallback?: string) => string;
+  translations: Record<string, any>;
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
@@ -62,7 +63,7 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
   };
 
   return (
-    <I18nContext.Provider value={{ language, setLanguage, t }}>
+    <I18nContext.Provider value={{ language, setLanguage, t, translations }}>
       {children}
     </I18nContext.Provider>
   );
