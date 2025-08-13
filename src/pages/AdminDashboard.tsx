@@ -353,16 +353,19 @@ const AdminDashboard: React.FC = () => {
 
   const handleUserDelete = async (userId: string) => {
     try {
-      // Delete from auth.users which will cascade to profiles and other related tables
-      const { error } = await supabase.auth.admin.deleteUser(userId);
+      const { data, error } = await supabase.functions.invoke('delete-user', {
+        body: { userId }
+      });
       
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
       
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
       toast.success('User deleted successfully');
     } catch (error) {
       console.error('Error deleting user:', error);
-      toast.error('Failed to delete user');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete user';
+      toast.error(errorMessage);
     }
   };
 
