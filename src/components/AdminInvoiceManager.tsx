@@ -71,6 +71,14 @@ export const AdminInvoiceManager = () => {
     },
   });
 
+  // Watch for client selection to filter cases
+  const selectedClientId = form.watch("user_id");
+  
+  // Filter cases based on selected client
+  const filteredCases = selectedClientId 
+    ? cases.filter(case_ => case_.user_id === selectedClientId)
+    : [];
+
   useEffect(() => {
     loadData();
   }, []);
@@ -221,20 +229,27 @@ export const AdminInvoiceManager = () => {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="case_id"
+                  name="user_id"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Case</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormLabel>Client</FormLabel>
+                      <Select 
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          // Clear case selection when client changes
+                          form.setValue("case_id", "");
+                        }} 
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a case" />
+                            <SelectValue placeholder="Select a client first" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {cases.map((case_) => (
-                            <SelectItem key={case_.id} value={case_.id}>
-                              {case_.title}
+                          {profiles.map((profile) => (
+                            <SelectItem key={profile.id} value={profile.id}>
+                              {profile.display_name || profile.email}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -246,20 +261,26 @@ export const AdminInvoiceManager = () => {
 
                 <FormField
                   control={form.control}
-                  name="user_id"
+                  name="case_id"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Client</FormLabel>
+                      <FormLabel>Case</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a client" />
+                            <SelectValue placeholder={
+                              !selectedClientId 
+                                ? "Select a client first" 
+                                : filteredCases.length === 0 
+                                  ? "No cases found for this client"
+                                  : "Select a case"
+                            } />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {profiles.map((profile) => (
-                            <SelectItem key={profile.id} value={profile.id}>
-                              {profile.display_name || profile.email}
+                          {filteredCases.map((case_) => (
+                            <SelectItem key={case_.id} value={case_.id}>
+                              {case_.title}
                             </SelectItem>
                           ))}
                         </SelectContent>
