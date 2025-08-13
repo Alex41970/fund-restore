@@ -49,6 +49,28 @@ serve(async (req) => {
       });
     }
 
+    // Check if email already exists (if updating email)
+    if (email) {
+      const { data: existingUser, error: checkError } = await supabaseAdmin.auth.admin.listUsers();
+      
+      if (checkError) {
+        console.error('Error checking existing users:', checkError);
+        return new Response(JSON.stringify({ error: 'Failed to validate email uniqueness' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const emailExists = existingUser.users.some(u => u.email === email && u.id !== userId);
+      
+      if (emailExists) {
+        return new Response(JSON.stringify({ error: 'Email address is already in use by another account' }), {
+          status: 409,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
     const updateData: any = {};
     if (email) updateData.email = email;
     if (password) updateData.password = password;
