@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { StatCard } from "@/components/StatCard";
 import { ProcessStep } from "@/components/ProcessStep";
 import { TestimonialCard } from "@/components/TestimonialCard";
@@ -23,6 +24,7 @@ import {
 
 const Index = () => {
   const { user, isAdmin, loading } = useAuth();
+  const { t } = useTranslation();
   
   // Redirect authenticated users to their appropriate dashboard
   if (!loading && user) {
@@ -35,38 +37,38 @@ const Index = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">{t('common.loading')}</p>
         </div>
       </div>
     );
   }
   
   const stats = [
-    { icon: TrendingUp, title: "Success Rate", value: "94%", description: "Cases resolved successfully" },
-    { icon: Users, title: "Clients Served", value: "2,500+", description: "Satisfied customers worldwide" },
-    { icon: Shield, title: "Funds Recovered", value: "$50M+", description: "Total amount recovered" },
-    { icon: Clock, title: "Avg Resolution", value: "45 days", description: "Average case duration" }
+    { icon: TrendingUp, title: t('home.stats.successRate.title'), value: t('home.stats.successRate.value'), description: t('home.stats.successRate.description') },
+    { icon: Users, title: t('home.stats.clientsServed.title'), value: t('home.stats.clientsServed.value'), description: t('home.stats.clientsServed.description') },
+    { icon: Shield, title: t('home.stats.fundsRecovered.title'), value: t('home.stats.fundsRecovered.value'), description: t('home.stats.fundsRecovered.description') },
+    { icon: Clock, title: t('home.stats.avgResolution.title'), value: t('home.stats.avgResolution.value'), description: t('home.stats.avgResolution.description') }
   ];
 
   const processSteps = [
     {
-      title: "Free Case Evaluation",
-      description: "We analyze your situation at no cost and provide honest feedback about recovery prospects.",
+      title: t('home.process.steps.evaluation.title'),
+      description: t('home.process.steps.evaluation.description'),
       icon: FileSearch
     },
     {
-      title: "Evidence Collection",
-      description: "Our experts gather all necessary documentation and build a compelling case strategy.",
+      title: t('home.process.steps.evidence.title'),
+      description: t('home.process.steps.evidence.description'),
       icon: UserCheck
     },
     {
-      title: "Active Recovery",
-      description: "We engage with banks, platforms, and relevant parties to initiate the recovery process.",
+      title: t('home.process.steps.recovery.title'),
+      description: t('home.process.steps.recovery.description'),
       icon: Zap
     },
     {
-      title: "Successful Resolution",
-      description: "Track progress in real-time and receive your recovered funds through secure channels.",
+      title: t('home.process.steps.resolution.title'),
+      description: t('home.process.steps.resolution.description'),
       icon: CheckCircle
     }
   ];
@@ -89,17 +91,17 @@ const Index = () => {
   ];
 
   const trustBadges = [
-    { icon: Shield, title: "Licensed & Regulated", description: "Fully compliant operations" },
-    { icon: Award, title: "Industry Recognition", description: "Awards for excellence" },
-    { icon: Lock, title: "Data Security", description: "Bank-level encryption" },
-    { icon: Globe, title: "Global Reach", description: "Worldwide recovery network" }
+    { icon: Shield, title: t('home.trust.licensed.title'), description: t('home.trust.licensed.description') },
+    { icon: Award, title: t('home.trust.recognition.title'), description: t('home.trust.recognition.description') },
+    { icon: Lock, title: t('home.trust.security.title'), description: t('home.trust.security.description') },
+    { icon: Globe, title: t('home.trust.global.title'), description: t('home.trust.global.description') }
   ];
 
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>Lixington Capital Recovery | Professional Fund Recovery Services</title>
-        <meta name="description" content="Leading fund recovery specialists. 94% success rate recovering money from scams, chargebacks, and wire transfer recalls. Free consultation." />
+        <title>{t('nav.header.companyName')} | Professional Fund Recovery Services</title>
+        <meta name="description" content={t('home.hero.description')} />
         <link rel="canonical" href={window.location.origin + "/"} />
       </Helmet>
 
@@ -110,21 +112,21 @@ const Index = () => {
           <div className="mx-auto max-w-6xl text-center text-white">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm mb-8 animate-fade-in">
               <Star className="h-4 w-4 text-premium-gold" />
-              <span>Trusted by 2,500+ clients worldwide</span>
+              <span>{t('home.hero.badge')}</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-bold font-playfair mb-6 animate-slide-up">
-              Recover Your Lost Funds
-              <span className="block text-premium-gold">With Confidence</span>
+              {t('home.hero.title')}
+              <span className="block text-premium-gold">{t('home.hero.subtitle')}</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8 leading-relaxed animate-slide-up" style={{ animationDelay: "200ms" }}>
-              Professional money recovery specialists with a 94% success rate. We help recover funds from scams, chargebacks, and wire transfer errors.
+              {t('home.hero.description')}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: "400ms" }}>
               <Button asChild size="xl" variant="premium">
-                <Link to="/auth">Get Free Consultation</Link>
+                <Link to="/auth">{t('home.hero.cta')}</Link>
               </Button>
               <Button asChild size="xl" variant="outline-premium">
-                <Link to="/case-studies">View Success Stories</Link>
+                <Link to="/case-studies">{t('home.hero.ctaSecondary')}</Link>
               </Button>
             </div>
           </div>
@@ -135,9 +137,9 @@ const Index = () => {
       <section className="px-4 py-20 bg-background">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">Proven Track Record</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">{t('home.stats.title')}</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Our results speak for themselves. Join thousands of satisfied clients who've recovered their funds.
+              {t('home.stats.description')}
             </p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -159,9 +161,9 @@ const Index = () => {
       <section className="px-4 py-20 bg-muted/30">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">Our Recovery Services</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">{t('home.services.title')}</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive fund recovery solutions tailored to your specific situation.
+              {t('home.services.description')}
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -169,22 +171,22 @@ const Index = () => {
               <div className="gradient-primary inline-flex p-3 rounded-lg mb-6">
                 <Shield className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-4">Bank & Card Disputes</h3>
+              <h3 className="text-xl font-bold mb-4">{t('home.services.bankDisputes.title')}</h3>
               <p className="text-muted-foreground mb-6 leading-relaxed">
-                Expert assistance with chargebacks, unauthorized transactions, and payment disputes backed by comprehensive evidence.
+                {t('home.services.bankDisputes.description')}
               </p>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-success-green" />
-                  Chargeback preparation
+                  {t('home.services.bankDisputes.features.chargeback')}
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-success-green" />
-                  Evidence documentation
+                  {t('home.services.bankDisputes.features.evidence')}
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-success-green" />
-                  Bank communication
+                  {t('home.services.bankDisputes.features.bankComm')}
                 </li>
               </ul>
             </div>
@@ -193,22 +195,22 @@ const Index = () => {
               <div className="gradient-success inline-flex p-3 rounded-lg mb-6">
                 <TrendingUp className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-4">Crypto Scam Recovery</h3>
+              <h3 className="text-xl font-bold mb-4">{t('home.services.cryptoRecovery.title')}</h3>
               <p className="text-muted-foreground mb-6 leading-relaxed">
-                Advanced blockchain analysis and platform coordination to recover cryptocurrency from scammers and fraudulent schemes.
+                {t('home.services.cryptoRecovery.description')}
               </p>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-success-green" />
-                  Blockchain tracing
+                  {t('home.services.cryptoRecovery.features.tracing')}
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-success-green" />
-                  Platform escalations
+                  {t('home.services.cryptoRecovery.features.escalations')}
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-success-green" />
-                  Asset freezing
+                  {t('home.services.cryptoRecovery.features.freezing')}
                 </li>
               </ul>
             </div>
@@ -217,22 +219,22 @@ const Index = () => {
               <div className="gradient-premium inline-flex p-3 rounded-lg mb-6">
                 <Globe className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-4">Wire Transfer Recalls</h3>
+              <h3 className="text-xl font-bold mb-4">{t('home.services.wireRecalls.title')}</h3>
               <p className="text-muted-foreground mb-6 leading-relaxed">
-                Rapid response services for misdirected wire transfers and fraudulent international money transfers.
+                {t('home.services.wireRecalls.description')}
               </p>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-success-green" />
-                  SWIFT network coordination
+                  {t('home.services.wireRecalls.features.swift')}
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-success-green" />
-                  Bank-to-bank communication
+                  {t('home.services.wireRecalls.features.bankToBank')}
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-success-green" />
-                  Legal documentation
+                  {t('home.services.wireRecalls.features.legal')}
                 </li>
               </ul>
             </div>

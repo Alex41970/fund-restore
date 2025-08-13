@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/sonner";
 import { useAuth } from "@/hooks/use-auth";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -34,6 +35,7 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 const Auth: React.FC = () => {
   const { user, isAdmin, signIn, signUp } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation() as any;
   
@@ -60,8 +62,8 @@ const Auth: React.FC = () => {
 
   const onLogin = async (values: LoginFormValues) => {
     const { error } = await signIn(values.email, values.password) as any;
-    if (error) return toast.error(error.message || "Login failed");
-    toast.success("Welcome back!");
+    if (error) return toast.error(error.message || t('auth.messages.loginFailed'));
+    toast.success(t('auth.messages.welcome'));
     // Redirect will be handled by auth state change
   };
 
@@ -71,42 +73,42 @@ const Auth: React.FC = () => {
       lastName: values.lastName,
       phoneNumber: values.phoneNumber,
     }) as any;
-    if (error) return toast.error(error.message || "Sign up failed");
-    toast.success("Account created successfully! Welcome to your dashboard!");
+    if (error) return toast.error(error.message || t('auth.messages.signupFailed'));
+    toast.success(t('auth.messages.accountCreated'));
     // Redirect will be handled by auth state change
   };
 
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>Login or Sign Up | Case Manager</title>
-        <meta name="description" content="Login or create an account to manage your cases securely." />
+        <title>{t('auth.title')}</title>
+        <meta name="description" content={t('auth.description')} />
         <link rel="canonical" href={window.location.origin + "/auth"} />
       </Helmet>
 
       <div className="mx-auto max-w-md px-4 py-16">
         <Card>
           <CardHeader>
-            <CardTitle>Access your account</CardTitle>
-            <CardDescription>Sign in or create a new account</CardDescription>
+            <CardTitle>{t('auth.pageTitle')}</CardTitle>
+            <CardDescription>{t('auth.pageDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="login" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="signup">Sign up</TabsTrigger>
+                <TabsTrigger value="login">{t('auth.tabs.login')}</TabsTrigger>
+                <TabsTrigger value="signup">{t('auth.tabs.signup')}</TabsTrigger>
               </TabsList>
               <TabsContent value="login" className="mt-4">
                 <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="you@example.com" {...loginForm.register("email")}/>
+                    <Label htmlFor="email">{t('auth.fields.email')}</Label>
+                    <Input id="email" type="email" placeholder={t('auth.placeholders.email')} {...loginForm.register("email")}/>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">{t('auth.fields.password')}</Label>
                     <Input id="password" type="password" {...loginForm.register("password")} />
                   </div>
-                  <Button className="w-full" type="submit">Login</Button>
+                  <Button className="w-full" type="submit">{t('auth.buttons.login')}</Button>
                 </form>
               </TabsContent>
               <TabsContent value="signup" className="mt-4">
