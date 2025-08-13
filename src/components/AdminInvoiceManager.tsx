@@ -77,20 +77,40 @@ export const AdminInvoiceManager = () => {
 
   const loadData = async () => {
     try {
-      // Load invoices with related data
+      // Load invoices first
       const { data: invoicesData, error: invoicesError } = await supabase
         .from('client_invoices')
-        .select(`
-          *,
-          cases(title),
-          profiles(display_name, email)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (invoicesError) {
         console.error('Error loading invoices:', invoicesError);
+        setInvoices([]);
       } else {
-        setInvoices(invoicesData || []);
+        // Load related cases and profiles
+        const caseIds = [...new Set(invoicesData?.map(invoice => invoice.case_id) || [])];
+        const userIds = [...new Set(invoicesData?.map(invoice => invoice.user_id) || [])];
+
+        // Fetch cases
+        const { data: casesData } = await supabase
+          .from('cases')
+          .select('id, title')
+          .in('id', caseIds);
+
+        // Fetch profiles  
+        const { data: profilesData } = await supabase
+          .from('profiles')
+          .select('id, display_name, email')
+          .in('id', userIds);
+
+        // Manually join the data
+        const enrichedInvoices = invoicesData?.map(invoice => ({
+          ...invoice,
+          cases: casesData?.find(c => c.id === invoice.case_id),
+          profiles: profilesData?.find(p => p.id === invoice.user_id)
+        })) || [];
+
+        setInvoices(enrichedInvoices);
       }
 
       // Load cases for dropdown
