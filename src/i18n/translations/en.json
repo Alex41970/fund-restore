@@ -140,7 +140,23 @@
     "testimonials": {
       "title": "Client Success Stories",
       "description": "Real recoveries, real results. See what our clients say about their experience",
-      "viewAll": "View All Success Stories"
+      "viewAll": "View All Success Stories",
+      "items": [
+        {
+          "quote": "Lixington Capital Recovery helped me recover $25,000 from a crypto scam. Their professionalism and expertise exceeded my expectations.",
+          "author": "Sarah Johnson",
+          "title": "Business Owner",
+          "recoveredAmount": "$25,000",
+          "rating": 5
+        },
+        {
+          "quote": "After banks refused my chargeback, Lixington stepped in and got my money back within 30 days. Incredible service!",
+          "author": "Michael Chen",
+          "title": "Software Engineer",
+          "recoveredAmount": "$12,500",
+          "rating": 5
+        }
+      ]
     },
     "trust": {
       "title": "Why Trust Lixington Capital Recovery",

@@ -73,22 +73,13 @@ const Index = () => {
     }
   ];
 
-  const testimonials = [
-    {
-      quote: "Lixington Capital Recovery helped me recover $25,000 from a crypto scam. Their professionalism and expertise exceeded my expectations.",
-      author: "Sarah Johnson",
-      title: "Business Owner",
-      recoveredAmount: "$25,000",
-      rating: 5
-    },
-    {
-      quote: "After banks refused my chargeback, Lixington stepped in and got my money back within 30 days. Incredible service!",
-      author: "Michael Chen",
-      title: "Software Engineer", 
-      recoveredAmount: "$12,500",
-      rating: 5
-    }
-  ];
+  const testimonials = JSON.parse(t('home.testimonials.items')) as Array<{
+    quote: string;
+    author: string;
+    title: string;
+    recoveredAmount: string;
+    rating: number;
+  }>;
 
   const trustBadges = [
     { icon: Shield, title: t('home.trust.licensed.title'), description: t('home.trust.licensed.description') },
@@ -271,9 +262,9 @@ const Index = () => {
       <section className="px-4 py-20 bg-muted/30">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">Client Success Stories</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">{t('home.testimonials.title')}</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Real recoveries, real results. See what our clients say about their experience.
+              {t('home.testimonials.description')}
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2">
@@ -291,7 +282,7 @@ const Index = () => {
           </div>
           <div className="text-center mt-12">
             <Button asChild variant="trust" size="lg">
-              <Link to="/case-studies">View All Success Stories</Link>
+              <Link to="/case-studies">{t('home.testimonials.viewAll')}</Link>
             </Button>
           </div>
         </div>
