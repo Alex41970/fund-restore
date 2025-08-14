@@ -230,6 +230,9 @@ export type Database = {
           blockchain_network: string | null
           case_id: string
           created_at: string
+          crypto_currency: string | null
+          crypto_network: string | null
+          crypto_wallet_address: string | null
           currency: string
           description: string
           due_date: string
@@ -241,12 +244,21 @@ export type Database = {
           payment_method: string | null
           updated_at: string
           user_id: string
+          wire_account_holder: string | null
+          wire_account_number: string | null
+          wire_bank_address: string | null
+          wire_bank_name: string | null
+          wire_routing_number: string | null
+          wire_swift_code: string | null
         }
         Insert: {
           amount_due: number
           blockchain_network?: string | null
           case_id: string
           created_at?: string
+          crypto_currency?: string | null
+          crypto_network?: string | null
+          crypto_wallet_address?: string | null
           currency?: string
           description: string
           due_date: string
@@ -258,12 +270,21 @@ export type Database = {
           payment_method?: string | null
           updated_at?: string
           user_id: string
+          wire_account_holder?: string | null
+          wire_account_number?: string | null
+          wire_bank_address?: string | null
+          wire_bank_name?: string | null
+          wire_routing_number?: string | null
+          wire_swift_code?: string | null
         }
         Update: {
           amount_due?: number
           blockchain_network?: string | null
           case_id?: string
           created_at?: string
+          crypto_currency?: string | null
+          crypto_network?: string | null
+          crypto_wallet_address?: string | null
           currency?: string
           description?: string
           due_date?: string
@@ -275,6 +296,12 @@ export type Database = {
           payment_method?: string | null
           updated_at?: string
           user_id?: string
+          wire_account_holder?: string | null
+          wire_account_number?: string | null
+          wire_bank_address?: string | null
+          wire_bank_name?: string | null
+          wire_routing_number?: string | null
+          wire_swift_code?: string | null
         }
         Relationships: [
           {

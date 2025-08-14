@@ -22,7 +22,17 @@ const invoiceSchema = z.object({
   currency: z.string().default("USD"),
   description: z.string().min(1, "Description is required"),
   due_date: z.string().min(1, "Due date is required"),
-  payment_configuration_id: z.string().min(1, "Payment method is required"),
+  // Crypto payment fields (optional)
+  crypto_wallet_address: z.string().optional(),
+  crypto_currency: z.string().optional(),
+  crypto_network: z.string().optional(),
+  // Wire transfer fields (optional)
+  wire_bank_name: z.string().optional(),
+  wire_account_holder: z.string().optional(),
+  wire_account_number: z.string().optional(),
+  wire_routing_number: z.string().optional(),
+  wire_swift_code: z.string().optional(),
+  wire_bank_address: z.string().optional(),
 });
 
 type InvoiceFormData = z.infer<typeof invoiceSchema>;
@@ -57,6 +67,17 @@ interface Invoice {
   paid_at?: string;
   payment_configuration_id?: string;
   payment_instructions?: string;
+  // Direct crypto fields
+  crypto_wallet_address?: string;
+  crypto_currency?: string;
+  crypto_network?: string;
+  // Direct wire transfer fields
+  wire_bank_name?: string;
+  wire_account_holder?: string;
+  wire_account_number?: string;
+  wire_routing_number?: string;
+  wire_swift_code?: string;
+  wire_bank_address?: string;
   cases?: { title: string };
   profiles?: { display_name: string; email: string };
   payment_configurations?: PaymentConfiguration;
@@ -89,7 +110,8 @@ export const AdminInvoiceManager = () => {
     resolver: zodResolver(invoiceSchema),
     defaultValues: {
       currency: "USD",
-      payment_configuration_id: "",
+      crypto_currency: "ETH",
+      crypto_network: "ethereum",
     },
   });
 
@@ -112,18 +134,29 @@ export const AdminInvoiceManager = () => {
     }
   }, [selectedCase, form]);
 
-  const selectedPaymentConfig = paymentConfigurations.find(
-    pc => pc.id === form.watch('payment_configuration_id')
-  );
+  // Watch form for generating preview instructions
+  const formValues = form.watch();
 
-  const generatePaymentInstructions = (config: PaymentConfiguration | undefined): string => {
-    if (!config) return '';
+  const generatePaymentInstructions = (data: InvoiceFormData): string => {
+    const instructions: string[] = [];
     
-    if (config.payment_method === 'crypto') {
-      return `Pay with ${config.crypto_currency} on ${config.crypto_network} network to: ${config.crypto_wallet_address}`;
-    } else {
-      return `Wire transfer to:\nBank: ${config.wire_bank_name}\nAccount Holder: ${config.wire_account_holder}\nAccount Number: ${config.wire_account_number}${config.wire_routing_number ? `\nRouting Number: ${config.wire_routing_number}` : ''}${config.wire_swift_code ? `\nSWIFT Code: ${config.wire_swift_code}` : ''}${config.wire_bank_address ? `\nBank Address: ${config.wire_bank_address}` : ''}`;
+    // Generate crypto instructions if provided
+    if (data.crypto_wallet_address) {
+      instructions.push(`CRYPTOCURRENCY PAYMENT:\nPay with ${data.crypto_currency || 'ETH'} on ${data.crypto_network || 'Ethereum'} network\nWallet Address: ${data.crypto_wallet_address}`);
     }
+    
+    // Generate wire transfer instructions if provided
+    if (data.wire_bank_name) {
+      let wireInstructions = `WIRE TRANSFER:\nBank: ${data.wire_bank_name}`;
+      if (data.wire_account_holder) wireInstructions += `\nAccount Holder: ${data.wire_account_holder}`;
+      if (data.wire_account_number) wireInstructions += `\nAccount Number: ${data.wire_account_number}`;
+      if (data.wire_routing_number) wireInstructions += `\nRouting Number: ${data.wire_routing_number}`;
+      if (data.wire_swift_code) wireInstructions += `\nSWIFT Code: ${data.wire_swift_code}`;
+      if (data.wire_bank_address) wireInstructions += `\nBank Address: ${data.wire_bank_address}`;
+      instructions.push(wireInstructions);
+    }
+    
+    return instructions.join('\n\n');
   };
 
   useEffect(() => {
@@ -214,7 +247,20 @@ export const AdminInvoiceManager = () => {
 
   const onSubmit = async (data: InvoiceFormData) => {
     try {
-      const paymentInstructions = generatePaymentInstructions(selectedPaymentConfig);
+      // Validate that at least one payment method is provided
+      const hasCrypto = data.crypto_wallet_address;
+      const hasWire = data.wire_bank_name;
+      
+      if (!hasCrypto && !hasWire) {
+        toast({
+          title: "Payment Method Required",
+          description: "Please provide at least one payment method (crypto or wire transfer).",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const paymentInstructions = generatePaymentInstructions(data);
       
       const { error } = await supabase
         .from('client_invoices')
@@ -356,7 +402,7 @@ export const AdminInvoiceManager = () => {
           <DialogTrigger asChild>
             <Button>Create Invoice</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Create New Invoice</DialogTitle>
               <DialogDescription>
@@ -504,37 +550,180 @@ export const AdminInvoiceManager = () => {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="payment_configuration_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Payment Method</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select payment method" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {paymentConfigurations.map((config) => (
-                            <SelectItem key={config.id} value={config.id}>
-                              {config.name} ({config.payment_method === 'crypto' ? `${config.crypto_currency} - ${config.crypto_network}` : 'Wire Transfer'})
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Payment Options</h3>
+                  <p className="text-sm text-muted-foreground">Provide at least one payment method. You can offer both crypto and wire transfer options.</p>
+                  
+                  {/* Crypto Payment Section */}
+                  <div className="border rounded-lg p-4 space-y-4">
+                    <h4 className="font-medium text-sm text-blue-700">Cryptocurrency Payment</h4>
+                    
+                    <FormField
+                      control={form.control}
+                      name="crypto_wallet_address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Wallet Address (optional)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="0x..." {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                {selectedPaymentConfig && (
-                  <div className="p-4 border rounded-lg bg-muted/50">
-                    <h4 className="font-medium mb-2">Payment Instructions Preview:</h4>
-                    <pre className="text-sm whitespace-pre-wrap">{generatePaymentInstructions(selectedPaymentConfig)}</pre>
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="crypto_currency"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Currency</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select currency" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="ETH">ETH - Ethereum</SelectItem>
+                                <SelectItem value="USDC">USDC - USD Coin</SelectItem>
+                                <SelectItem value="USDT">USDT - Tether</SelectItem>
+                                <SelectItem value="BTC">BTC - Bitcoin</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="crypto_network"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Network</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select network" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="ethereum">Ethereum</SelectItem>
+                                <SelectItem value="polygon">Polygon</SelectItem>
+                                <SelectItem value="bsc">Binance Smart Chain</SelectItem>
+                                <SelectItem value="arbitrum">Arbitrum</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                )}
+
+                  {/* Wire Transfer Section */}
+                  <div className="border rounded-lg p-4 space-y-4">
+                    <h4 className="font-medium text-sm text-green-700">Wire Transfer</h4>
+                    
+                    <FormField
+                      control={form.control}
+                      name="wire_bank_name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Bank Name (optional)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Bank of America" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="wire_account_holder"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Account Holder</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Company Name" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="wire_account_number"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Account Number</FormLabel>
+                            <FormControl>
+                              <Input placeholder="1234567890" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="wire_routing_number"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Routing Number</FormLabel>
+                            <FormControl>
+                              <Input placeholder="026009593" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="wire_swift_code"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>SWIFT Code</FormLabel>
+                            <FormControl>
+                              <Input placeholder="BOFAUS3N" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="wire_bank_address"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Bank Address</FormLabel>
+                            <FormControl>
+                              <Input placeholder="100 N Tryon St, Charlotte, NC" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Payment Instructions Preview */}
+                  {(formValues.crypto_wallet_address || formValues.wire_bank_name) && (
+                    <div className="p-4 border rounded-lg bg-muted/50">
+                      <h4 className="font-medium mb-2">Payment Instructions Preview:</h4>
+                      <pre className="text-sm whitespace-pre-wrap">{generatePaymentInstructions(formValues)}</pre>
+                    </div>
+                  )}
+                </div>
 
                 <div className="flex gap-2">
                   <Button type="submit" className="flex-1">Create Invoice</Button>

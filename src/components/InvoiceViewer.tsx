@@ -21,13 +21,17 @@ interface Invoice {
   created_at: string;
   paid_at?: string;
   payment_instructions?: string;
-  payment_configurations?: {
-    id: string;
-    name: string;
-    payment_method: 'crypto' | 'wire_transfer';
-    crypto_wallet_address?: string;
-    crypto_currency?: string;
-  };
+  // Direct crypto fields
+  crypto_wallet_address?: string;
+  crypto_currency?: string;
+  crypto_network?: string;
+  // Direct wire transfer fields
+  wire_bank_name?: string;
+  wire_account_holder?: string;
+  wire_account_number?: string;
+  wire_routing_number?: string;
+  wire_swift_code?: string;
+  wire_bank_address?: string;
 }
 
 interface WalletConnection {
@@ -62,10 +66,7 @@ export const InvoiceViewer = ({ caseId }: InvoiceViewerProps) => {
     try {
       let query = supabase
         .from('client_invoices')
-        .select(`
-          *,
-          payment_configurations(id, name, payment_method, crypto_wallet_address, crypto_currency)
-        `)
+        .select('*')
         .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
 
@@ -133,12 +134,15 @@ export const InvoiceViewer = ({ caseId }: InvoiceViewerProps) => {
       const ethAmount = (invoice.amount_due / 3000).toFixed(6); // Assuming $3000 per ETH
       const weiAmount = BigInt(Math.floor(parseFloat(ethAmount) * 1e18)).toString(16);
 
+      // Use wallet address from invoice or fallback
+      const toAddress = invoice.crypto_wallet_address || '0x742DEA8b9B274B82C5E3c4d8Cf1fBF8e5Af8A3C1';
+
       // Request payment transaction
       const txHash = await window.ethereum.request({
         method: 'eth_sendTransaction',
         params: [{
           from: wallet.wallet_address,
-          to: '0x742DEA8b9B274B82C5E3c4d8Cf1fBF8e5Af8A3C1', // Company wallet address
+          to: toAddress,
           value: `0x${weiAmount}`,
           gas: '0x5208', // 21000 gas limit for simple transfer
         }],
@@ -272,28 +276,52 @@ export const InvoiceViewer = ({ caseId }: InvoiceViewerProps) => {
               {invoice.invoice_status === 'pending' && (
                 <>
                   <Separator />
-                  <div className="space-y-3">
-                    {invoice.payment_configurations?.payment_method === 'crypto' && (
-                      <>
-                        <Alert>
-                          <AlertDescription>
-                            Pay securely with cryptocurrency. Estimated cost: ~{(invoice.amount_due / 3000).toFixed(4)} {invoice.payment_configurations.crypto_currency || 'ETH'}
-                          </AlertDescription>
-                        </Alert>
+                  <div className="space-y-4">
+                    <h4 className="font-medium">Payment Options</h4>
+                    
+                    {/* Crypto Payment Option */}
+                    {invoice.crypto_wallet_address && (
+                      <div className="border rounded-lg p-4 space-y-3">
+                        <h5 className="font-medium text-blue-700">Cryptocurrency Payment</h5>
+                        <div className="text-sm space-y-1">
+                          <div><span className="text-muted-foreground">Currency:</span> {invoice.crypto_currency || 'ETH'}</div>
+                          <div><span className="text-muted-foreground">Network:</span> {invoice.crypto_network || 'Ethereum'}</div>
+                          <div><span className="text-muted-foreground">Estimated Cost:</span> ~{(invoice.amount_due / 3000).toFixed(4)} {invoice.crypto_currency || 'ETH'}</div>
+                        </div>
                         <Button 
                           onClick={() => handlePayInvoice(invoice)}
                           disabled={processing}
                           className="w-full"
+                          variant="default"
                         >
-                          {processing ? "Processing Payment..." : `Pay with Crypto (${invoice.payment_configurations.crypto_currency || 'ETH'})`}
+                          {processing ? "Processing Payment..." : `Pay with ${invoice.crypto_currency || 'ETH'}`}
                         </Button>
-                      </>
+                      </div>
                     )}
                     
-                    {invoice.payment_configurations?.payment_method === 'wire_transfer' && (
+                    {/* Wire Transfer Option */}
+                    {invoice.wire_bank_name && (
+                      <div className="border rounded-lg p-4 space-y-3">
+                        <h5 className="font-medium text-green-700">Wire Transfer</h5>
+                        <div className="text-sm space-y-1">
+                          <div><span className="text-muted-foreground">Bank:</span> {invoice.wire_bank_name}</div>
+                          {invoice.wire_account_holder && <div><span className="text-muted-foreground">Account Holder:</span> {invoice.wire_account_holder}</div>}
+                          {invoice.wire_account_number && <div><span className="text-muted-foreground">Account Number:</span> {invoice.wire_account_number}</div>}
+                          {invoice.wire_routing_number && <div><span className="text-muted-foreground">Routing Number:</span> {invoice.wire_routing_number}</div>}
+                          {invoice.wire_swift_code && <div><span className="text-muted-foreground">SWIFT Code:</span> {invoice.wire_swift_code}</div>}
+                        </div>
+                        <Alert>
+                          <AlertDescription>
+                            Use the bank details above for wire transfer. Contact support once payment is sent.
+                          </AlertDescription>
+                        </Alert>
+                      </div>
+                    )}
+                    
+                    {!invoice.crypto_wallet_address && !invoice.wire_bank_name && (
                       <Alert>
                         <AlertDescription>
-                          Please use the payment instructions above to send a wire transfer. Contact support once payment is sent.
+                          No payment options available. Please contact support for payment instructions.
                         </AlertDescription>
                       </Alert>
                     )}
