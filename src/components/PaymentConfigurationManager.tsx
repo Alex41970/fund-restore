@@ -42,7 +42,7 @@ const PaymentConfigurationManager: React.FC = () => {
     payment_method: 'crypto' as 'crypto' | 'wire_transfer',
     crypto_wallet_address: '',
     crypto_network: 'ethereum',
-    crypto_currency: 'ETH',
+    crypto_currency: 'USDT',
     wire_bank_name: '',
     wire_account_number: '',
     wire_routing_number: '',
@@ -79,7 +79,7 @@ const PaymentConfigurationManager: React.FC = () => {
       payment_method: 'crypto',
       crypto_wallet_address: '',
       crypto_network: 'ethereum',
-      crypto_currency: 'ETH',
+      crypto_currency: 'USDT',
       wire_bank_name: '',
       wire_account_number: '',
       wire_routing_number: '',
@@ -147,7 +147,7 @@ const PaymentConfigurationManager: React.FC = () => {
       payment_method: config.payment_method,
       crypto_wallet_address: config.crypto_wallet_address || '',
       crypto_network: config.crypto_network || 'ethereum',
-      crypto_currency: config.crypto_currency || 'ETH',
+      crypto_currency: config.crypto_currency || 'USDT',
       wire_bank_name: config.wire_bank_name || '',
       wire_account_number: config.wire_account_number || '',
       wire_routing_number: config.wire_routing_number || '',
@@ -225,13 +225,13 @@ const PaymentConfigurationManager: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="name">Configuration Name</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    placeholder="e.g. Main ETH Wallet"
-                    required
-                  />
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      placeholder="e.g. Main USDT ERC20 Wallet"
+                      required
+                    />
                 </div>
                 <div>
                   <Label htmlFor="payment_method">Payment Method</Label>
@@ -260,18 +260,23 @@ const PaymentConfigurationManager: React.FC = () => {
                   </h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="crypto_network">Network</Label>
+                      <Label htmlFor="crypto_network">USDT Network</Label>
                       <Select
                         value={formData.crypto_network}
-                        onValueChange={(value) => setFormData({...formData, crypto_network: value})}
+                        onValueChange={(value) => {
+                          setFormData({
+                            ...formData, 
+                            crypto_network: value,
+                            crypto_currency: 'USDT'
+                          });
+                        }}
                       >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="ethereum">Ethereum</SelectItem>
-                          <SelectItem value="polygon">Polygon</SelectItem>
-                          <SelectItem value="bsc">Binance Smart Chain</SelectItem>
+                          <SelectItem value="ethereum">Ethereum (ERC20)</SelectItem>
+                          <SelectItem value="tron">TRON (TRC20)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -279,10 +284,11 @@ const PaymentConfigurationManager: React.FC = () => {
                       <Label htmlFor="crypto_currency">Currency</Label>
                       <Input
                         id="crypto_currency"
-                        value={formData.crypto_currency}
-                        onChange={(e) => setFormData({...formData, crypto_currency: e.target.value})}
-                        placeholder="ETH, USDC, etc."
+                        value="USDT"
+                        disabled
+                        className="bg-muted"
                       />
+                      <p className="text-xs text-muted-foreground mt-1">Only USDT is supported for crypto payments</p>
                     </div>
                   </div>
                   <div>

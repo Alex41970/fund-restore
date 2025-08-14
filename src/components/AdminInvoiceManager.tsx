@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { SUPPORTED_CURRENCIES, formatCurrency } from "@/lib/currency";
+import { convertToUSDT, formatCurrencyConversion } from "@/lib/currency-converter";
 
 const invoiceSchema = z.object({
   case_id: z.string().min(1, "Case is required"),
@@ -110,7 +111,7 @@ export const AdminInvoiceManager = () => {
     resolver: zodResolver(invoiceSchema),
     defaultValues: {
       currency: "USD",
-      crypto_currency: "ETH",
+      crypto_currency: "USDT",
       crypto_network: "ethereum",
     },
   });
@@ -140,14 +141,19 @@ export const AdminInvoiceManager = () => {
   const generatePaymentInstructions = (data: InvoiceFormData): string => {
     const instructions: string[] = [];
     
+    // Calculate USDT amount from invoice currency
+    const usdtAmount = convertToUSDT(data.amount_due, data.currency);
+    
     // Generate crypto instructions if provided
     if (data.crypto_wallet_address) {
-      instructions.push(`CRYPTOCURRENCY PAYMENT:\nPay with ${data.crypto_currency || 'ETH'} on ${data.crypto_network || 'Ethereum'} network\nWallet Address: ${data.crypto_wallet_address}`);
+      const networkName = data.crypto_network === 'tron' ? 'TRON (TRC20)' : 'Ethereum (ERC20)';
+      const conversionText = formatCurrencyConversion(data.amount_due, data.currency, usdtAmount);
+      instructions.push(`CRYPTOCURRENCY PAYMENT:\nPay exactly ${usdtAmount.toFixed(2)} USDT on ${networkName} network\nConversion: ${conversionText}\nWallet Address: ${data.crypto_wallet_address}`);
     }
     
     // Generate wire transfer instructions if provided
     if (data.wire_bank_name) {
-      let wireInstructions = `WIRE TRANSFER:\nBank: ${data.wire_bank_name}`;
+      let wireInstructions = `WIRE TRANSFER:\nAmount: ${formatCurrency(data.amount_due, data.currency)}\nBank: ${data.wire_bank_name}`;
       if (data.wire_account_holder) wireInstructions += `\nAccount Holder: ${data.wire_account_holder}`;
       if (data.wire_account_number) wireInstructions += `\nAccount Number: ${data.wire_account_number}`;
       if (data.wire_routing_number) wireInstructions += `\nRouting Number: ${data.wire_routing_number}`;
@@ -579,19 +585,14 @@ export const AdminInvoiceManager = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Currency</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select currency" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="ETH">ETH - Ethereum</SelectItem>
-                                <SelectItem value="USDC">USDC - USD Coin</SelectItem>
-                                <SelectItem value="USDT">USDT - Tether</SelectItem>
-                                <SelectItem value="BTC">BTC - Bitcoin</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            <FormControl>
+                              <Input 
+                                value="USDT" 
+                                disabled 
+                                className="bg-muted"
+                              />
+                            </FormControl>
+                            <p className="text-xs text-muted-foreground">Only USDT is supported for crypto payments</p>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -602,18 +603,16 @@ export const AdminInvoiceManager = () => {
                         name="crypto_network"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Network</FormLabel>
+                            <FormLabel>USDT Network</FormLabel>
                             <Select onValueChange={field.onChange} value={field.value}>
                               <FormControl>
                                 <SelectTrigger>
-                                  <SelectValue placeholder="Select network" />
+                                  <SelectValue placeholder="Select USDT network" />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="ethereum">Ethereum</SelectItem>
-                                <SelectItem value="polygon">Polygon</SelectItem>
-                                <SelectItem value="bsc">Binance Smart Chain</SelectItem>
-                                <SelectItem value="arbitrum">Arbitrum</SelectItem>
+                                <SelectItem value="ethereum">Ethereum (ERC20)</SelectItem>
+                                <SelectItem value="tron">TRON (TRC20)</SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -621,6 +620,13 @@ export const AdminInvoiceManager = () => {
                         )}
                       />
                     </div>
+                    
+                    {/* Show USDT conversion preview */}
+                    {formValues.amount_due && formValues.currency && (
+                      <div className="text-sm text-muted-foreground bg-blue-50 dark:bg-blue-950 p-3 rounded">
+                        <strong>USDT Amount:</strong> {formatCurrencyConversion(formValues.amount_due, formValues.currency, convertToUSDT(formValues.amount_due, formValues.currency))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Wire Transfer Section */}

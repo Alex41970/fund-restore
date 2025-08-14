@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { WalletConnectionDialog } from "./WalletConnectionDialog";
 import { format } from "date-fns";
+import { convertToUSDT, formatCurrencyConversion } from "@/lib/currency-converter";
 
 interface Invoice {
   id: string;
@@ -130,66 +131,16 @@ export const InvoiceViewer = ({ caseId }: InvoiceViewerProps) => {
     try {
       setProcessing(true);
       
-      // Convert USD amount to ETH (simplified - in production, use real exchange rates)
-      const ethAmount = (invoice.amount_due / 3000).toFixed(6); // Assuming $3000 per ETH
-      const weiAmount = BigInt(Math.floor(parseFloat(ethAmount) * 1e18)).toString(16);
-
-      // Use wallet address from invoice or fallback
-      const toAddress = invoice.crypto_wallet_address || '0x742DEA8b9B274B82C5E3c4d8Cf1fBF8e5Af8A3C1';
-
-      // Request payment transaction
-      const txHash = await window.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [{
-          from: wallet.wallet_address,
-          to: toAddress,
-          value: `0x${weiAmount}`,
-          gas: '0x5208', // 21000 gas limit for simple transfer
-        }],
-      });
-
-      // Record payment in database
-      const { error: paymentError } = await supabase
-        .from('crypto_payments')
-        .insert({
-          invoice_id: invoice.id,
-          wallet_address: wallet.wallet_address,
-          transaction_hash: txHash,
-          amount_paid: parseFloat(ethAmount),
-          token_symbol: 'ETH',
-          blockchain_network: 'ethereum',
-          confirmation_status: 'pending'
-        });
-
-      if (paymentError) {
-        console.error('Error recording payment:', paymentError);
-        toast({
-          title: "Payment Recording Error",
-          description: "Transaction sent but failed to record. Contact support.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Update invoice status
-      const { error: invoiceError } = await supabase
-        .from('client_invoices')
-        .update({ 
-          invoice_status: 'paid',
-          paid_at: new Date().toISOString()
-        })
-        .eq('id', invoice.id);
-
-      if (invoiceError) {
-        console.error('Error updating invoice:', invoiceError);
-      }
-
+      // Convert invoice amount to USDT (1:1 with USD after currency conversion)
+      const usdtAmount = convertToUSDT(invoice.amount_due, invoice.currency);
+      
+      // For ERC20 tokens like USDT, we need proper contract interaction
+      // For now, we'll guide users to make manual payments
       toast({
-        title: "Payment Submitted",
-        description: `Transaction hash: ${txHash.slice(0, 10)}... Payment is being confirmed.`,
+        title: "Manual Payment Required",
+        description: `Please send exactly ${usdtAmount.toFixed(2)} USDT to the wallet address shown below and contact support to confirm payment.`,
+        variant: "default",
       });
-
-      loadInvoices(); // Refresh invoices
 
     } catch (error: any) {
       console.error('Payment error:', error);
@@ -289,9 +240,14 @@ export const InvoiceViewer = ({ caseId }: InvoiceViewerProps) => {
                         
                         <div className="space-y-3">
                           <div className="text-sm space-y-2">
-                            <div><span className="text-muted-foreground">Currency:</span> {invoice.crypto_currency || 'ETH'}</div>
-                            <div><span className="text-muted-foreground">Network:</span> {invoice.crypto_network || 'Ethereum'}</div>
-                            <div><span className="text-muted-foreground">Amount to Send:</span> ~{(invoice.amount_due / 3000).toFixed(6)} {invoice.crypto_currency || 'ETH'}</div>
+                            <div><span className="text-muted-foreground">Currency:</span> USDT</div>
+                            <div><span className="text-muted-foreground">Network:</span> {invoice.crypto_network === 'tron' ? 'TRON (TRC20)' : 'Ethereum (ERC20)'}</div>
+                            <div><span className="text-muted-foreground">Amount to Send:</span> {convertToUSDT(invoice.amount_due, invoice.currency).toFixed(2)} USDT</div>
+                            {invoice.currency !== 'USD' && (
+                              <div className="text-xs text-muted-foreground">
+                                {formatCurrencyConversion(invoice.amount_due, invoice.currency, convertToUSDT(invoice.amount_due, invoice.currency))}
+                              </div>
+                            )}
                           </div>
                           
                           <div className="bg-muted/50 rounded p-3 space-y-2">
@@ -319,15 +275,15 @@ export const InvoiceViewer = ({ caseId }: InvoiceViewerProps) => {
                             onClick={() => handlePayInvoice(invoice)}
                             disabled={processing}
                             className="w-full"
-                            variant="default"
+                            variant="outline"
                           >
-                            <span className="mr-2">🦊</span>
-                            {processing ? "Processing Payment..." : `Pay with MetaMask`}
+                            <span className="mr-2">💳</span>
+                            {processing ? "Processing Payment..." : `Connect Wallet`}
                           </Button>
                           
                           <Alert>
                             <AlertDescription className="text-xs">
-                              <strong>Manual Payment:</strong> Copy the wallet address above and send the exact amount from your crypto wallet. 
+                              <strong>Manual Payment:</strong> Copy the wallet address above and send exactly {convertToUSDT(invoice.amount_due, invoice.currency).toFixed(2)} USDT from your crypto wallet. 
                               Contact support after sending to confirm payment.
                             </AlertDescription>
                           </Alert>
