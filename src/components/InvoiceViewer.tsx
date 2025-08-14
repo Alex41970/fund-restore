@@ -281,21 +281,57 @@ export const InvoiceViewer = ({ caseId }: InvoiceViewerProps) => {
                     
                     {/* Crypto Payment Option */}
                     {invoice.crypto_wallet_address && (
-                      <div className="border rounded-lg p-4 space-y-3">
-                        <h5 className="font-medium text-blue-700">Cryptocurrency Payment</h5>
-                        <div className="text-sm space-y-1">
-                          <div><span className="text-muted-foreground">Currency:</span> {invoice.crypto_currency || 'ETH'}</div>
-                          <div><span className="text-muted-foreground">Network:</span> {invoice.crypto_network || 'Ethereum'}</div>
-                          <div><span className="text-muted-foreground">Estimated Cost:</span> ~{(invoice.amount_due / 3000).toFixed(4)} {invoice.crypto_currency || 'ETH'}</div>
+                      <div className="border rounded-lg p-4 space-y-4">
+                        <h5 className="font-medium text-blue-700 flex items-center gap-2">
+                          <span className="text-lg">₿</span>
+                          Cryptocurrency Payment
+                        </h5>
+                        
+                        <div className="space-y-3">
+                          <div className="text-sm space-y-2">
+                            <div><span className="text-muted-foreground">Currency:</span> {invoice.crypto_currency || 'ETH'}</div>
+                            <div><span className="text-muted-foreground">Network:</span> {invoice.crypto_network || 'Ethereum'}</div>
+                            <div><span className="text-muted-foreground">Amount to Send:</span> ~{(invoice.amount_due / 3000).toFixed(6)} {invoice.crypto_currency || 'ETH'}</div>
+                          </div>
+                          
+                          <div className="bg-muted/50 rounded p-3 space-y-2">
+                            <div className="text-sm font-medium">Wallet Address:</div>
+                            <div className="flex items-center gap-2">
+                              <code className="text-xs bg-background px-2 py-1 rounded flex-1 break-all">
+                                {invoice.crypto_wallet_address}
+                              </code>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(invoice.crypto_wallet_address!);
+                                  toast({ title: "Copied!", description: "Wallet address copied to clipboard" });
+                                }}
+                              >
+                                Copy
+                              </Button>
+                            </div>
+                          </div>
                         </div>
-                        <Button 
-                          onClick={() => handlePayInvoice(invoice)}
-                          disabled={processing}
-                          className="w-full"
-                          variant="default"
-                        >
-                          {processing ? "Processing Payment..." : `Pay with ${invoice.crypto_currency || 'ETH'}`}
-                        </Button>
+                        
+                        <div className="space-y-2">
+                          <Button 
+                            onClick={() => handlePayInvoice(invoice)}
+                            disabled={processing}
+                            className="w-full"
+                            variant="default"
+                          >
+                            <span className="mr-2">🦊</span>
+                            {processing ? "Processing Payment..." : `Pay with MetaMask`}
+                          </Button>
+                          
+                          <Alert>
+                            <AlertDescription className="text-xs">
+                              <strong>Manual Payment:</strong> Copy the wallet address above and send the exact amount from your crypto wallet. 
+                              Contact support after sending to confirm payment.
+                            </AlertDescription>
+                          </Alert>
+                        </div>
                       </div>
                     )}
                     
