@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { WalletConnectionDialog } from "./WalletConnectionDialog";
 import { format } from "date-fns";
 import { formatCurrency } from "@/lib/currency";
+import { processMetaMaskPayment, waitForTransaction, checkNetworkAndSwitch, PaymentParams } from "@/lib/crypto-payment";
 
 interface Invoice {
   id: string;
@@ -115,14 +116,100 @@ export const InvoiceViewer = ({ caseId }: InvoiceViewerProps) => {
   };
 
   const processPayment = async (invoice: Invoice) => {
+    if (!invoice.crypto_wallet_address || !invoice.crypto_amount_usdt) {
+      toast({
+        title: "Payment Error",
+        description: "Missing crypto payment information.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsProcessingPayment(true);
       
+      const network = invoice.crypto_network === 'tron' ? 'tron' : 'ethereum';
+      
+      // Check and switch network if needed
+      const networkReady = await checkNetworkAndSwitch(network);
+      if (!networkReady) {
+        throw new Error('Failed to switch to the required network');
+      }
+
       toast({
-        title: "Manual Payment Required",
-        description: "Please send the payment using the instructions below and contact support to confirm.",
-        variant: "default",
+        title: "Processing Payment",
+        description: "Please confirm the transaction in MetaMask...",
       });
+
+      const paymentParams: PaymentParams = {
+        amount: invoice.crypto_amount_usdt,
+        recipientAddress: invoice.crypto_wallet_address,
+        network,
+        invoiceId: invoice.id
+      };
+
+      const result = await processMetaMaskPayment(paymentParams);
+      
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+
+      // Update invoice status to confirming
+      await supabase
+        .from('client_invoices')
+        .update({ 
+          invoice_status: 'confirming',
+          payment_method: 'crypto'
+        })
+        .eq('id', invoice.id);
+
+      // Store transaction hash
+      await supabase
+        .from('crypto_payments')
+        .insert({
+          invoice_id: invoice.id,
+          user_id: user?.id,
+          transaction_hash: result.transactionHash,
+          amount: invoice.crypto_amount_usdt,
+          currency: 'USDT',
+          network: network,
+          wallet_address: invoice.crypto_wallet_address,
+          status: 'confirming'
+        });
+
+      toast({
+        title: "Transaction Submitted",
+        description: `Transaction hash: ${result.transactionHash?.slice(0, 10)}... Waiting for confirmation.`,
+      });
+
+      // Wait for transaction confirmation
+      if (result.transactionHash) {
+        const confirmed = await waitForTransaction(result.transactionHash);
+        if (confirmed) {
+          // Update both invoice and payment status
+          await Promise.all([
+            supabase
+              .from('client_invoices')
+              .update({ 
+                invoice_status: 'paid',
+                paid_at: new Date().toISOString()
+              })
+              .eq('id', invoice.id),
+            supabase
+              .from('crypto_payments')
+              .update({ status: 'confirmed' })
+              .eq('transaction_hash', result.transactionHash)
+          ]);
+
+          toast({
+            title: "Payment Confirmed",
+            description: "Your payment has been confirmed on the blockchain!",
+          });
+
+          // Reload invoices to show updated status
+          loadInvoices();
+        }
+      }
 
     } catch (error: any) {
       console.error('Payment error:', error);
@@ -217,13 +304,15 @@ export const InvoiceViewer = ({ caseId }: InvoiceViewerProps) => {
                         Send exactly {invoice.crypto_amount_usdt || invoice.amount_due} USDT to the above address
                       </p>
                     </div>
-                    {walletConnections.length > 0 && (
+                    {invoice.invoice_status !== 'paid' && (
                       <Button 
                         onClick={() => handlePayInvoice(invoice)} 
                         className="w-full mt-3"
-                        disabled={isProcessingPayment}
+                        disabled={isProcessingPayment || invoice.invoice_status === 'confirming'}
                       >
-                        {isProcessingPayment ? 'Processing...' : 'Connect Wallet'}
+                        {isProcessingPayment ? 'Processing...' : 
+                         invoice.invoice_status === 'confirming' ? 'Confirming...' :
+                         walletConnections.length > 0 ? 'Pay with MetaMask' : 'Connect Wallet & Pay'}
                       </Button>
                     )}
                   </div>
