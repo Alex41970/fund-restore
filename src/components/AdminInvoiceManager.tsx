@@ -14,26 +14,39 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { SUPPORTED_CURRENCIES, formatCurrency } from "@/lib/currency";
-import { convertToUSDT, formatCurrencyConversion } from "@/lib/currency-converter";
 
 const invoiceSchema = z.object({
+  client_id: z.string().min(1, "Client is required"),
   case_id: z.string().min(1, "Case is required"),
-  user_id: z.string().min(1, "Client is required"),
-  amount_due: z.number().min(0.01, "Amount must be greater than 0"),
-  currency: z.string().default("USD"),
+  crypto_amount_usdt: z.number().min(0, "Crypto amount must be 0 or greater").optional(),
+  wire_amount: z.number().min(0, "Wire amount must be 0 or greater").optional(),
+  wire_currency: z.string().optional(),
   description: z.string().min(1, "Description is required"),
   due_date: z.string().min(1, "Due date is required"),
-  // Crypto payment fields (optional)
+  payment_method: z.enum(["crypto", "wire", "both"]),
+  // Crypto payment fields
   crypto_wallet_address: z.string().optional(),
-  crypto_currency: z.string().optional(),
-  crypto_network: z.string().optional(),
-  // Wire transfer fields (optional)
+  crypto_network: z.enum(["ethereum", "tron"]).optional(),
+  // Wire transfer fields
   wire_bank_name: z.string().optional(),
-  wire_account_holder: z.string().optional(),
   wire_account_number: z.string().optional(),
   wire_routing_number: z.string().optional(),
   wire_swift_code: z.string().optional(),
+  wire_account_holder: z.string().optional(),
   wire_bank_address: z.string().optional(),
+}).refine((data) => {
+  if (data.payment_method === "crypto" && (!data.crypto_amount_usdt || data.crypto_amount_usdt <= 0)) {
+    return false;
+  }
+  if (data.payment_method === "wire" && (!data.wire_amount || data.wire_amount <= 0)) {
+    return false;
+  }
+  if (data.payment_method === "both" && ((!data.crypto_amount_usdt || data.crypto_amount_usdt <= 0) || (!data.wire_amount || data.wire_amount <= 0))) {
+    return false;
+  }
+  return true;
+}, {
+  message: "At least one payment amount must be provided based on selected payment method",
 });
 
 type InvoiceFormData = z.infer<typeof invoiceSchema>;
@@ -56,32 +69,29 @@ interface PaymentConfiguration {
 
 interface Invoice {
   id: string;
-  case_id: string;
-  user_id: string;
   amount_due: number;
   currency: string;
-  invoice_status: string;
-  due_date: string;
+  crypto_amount_usdt?: number;
+  wire_amount?: number;
+  wire_currency?: string;
   description: string;
+  due_date: string;
+  invoice_status: string;
   created_at: string;
-  updated_at: string;
   paid_at?: string;
-  payment_configuration_id?: string;
   payment_instructions?: string;
-  // Direct crypto fields
-  crypto_wallet_address?: string;
+  payment_method?: string;
   crypto_currency?: string;
+  crypto_wallet_address?: string;
   crypto_network?: string;
-  // Direct wire transfer fields
   wire_bank_name?: string;
-  wire_account_holder?: string;
   wire_account_number?: string;
   wire_routing_number?: string;
   wire_swift_code?: string;
+  wire_account_holder?: string;
   wire_bank_address?: string;
-  cases?: { title: string };
-  profiles?: { display_name: string; email: string };
-  payment_configurations?: PaymentConfiguration;
+  case: Case;
+  profile: Profile;
 }
 
 interface Case {
@@ -103,57 +113,40 @@ export const AdminInvoiceManager = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [paymentConfigurations, setPaymentConfigurations] = useState<PaymentConfiguration[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<InvoiceFormData>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: {
-      currency: "USD",
-      crypto_currency: "USDT",
+      payment_method: "crypto",
       crypto_network: "ethereum",
+      wire_currency: "USD",
     },
   });
 
   // Watch for client selection to filter cases
-  const selectedClientId = form.watch("user_id");
-  const selectedCaseId = form.watch("case_id");
+  const selectedClientId = form.watch("client_id");
+  const paymentMethod = form.watch("payment_method");
   
   // Filter cases based on selected client
   const filteredCases = selectedClientId 
     ? cases.filter(case_ => case_.user_id === selectedClientId)
     : [];
 
-  // Get selected case to auto-populate currency
-  const selectedCase = filteredCases.find(c => c.id === selectedCaseId);
-
-  // Auto-populate currency when case is selected and generate payment instructions
-  useEffect(() => {
-    if (selectedCase?.preferred_currency) {
-      form.setValue("currency", selectedCase.preferred_currency);
-    }
-  }, [selectedCase, form]);
-
-  // Watch form for generating preview instructions
-  const formValues = form.watch();
-
   const generatePaymentInstructions = (data: InvoiceFormData): string => {
     const instructions: string[] = [];
     
-    // Calculate USDT amount from invoice currency
-    const usdtAmount = convertToUSDT(data.amount_due, data.currency);
-    
     // Generate crypto instructions if provided
-    if (data.crypto_wallet_address) {
+    if (data.crypto_wallet_address && data.crypto_amount_usdt) {
       const networkName = data.crypto_network === 'tron' ? 'TRON (TRC20)' : 'Ethereum (ERC20)';
-      const conversionText = formatCurrencyConversion(data.amount_due, data.currency, usdtAmount);
-      instructions.push(`CRYPTOCURRENCY PAYMENT:\nPay exactly ${usdtAmount.toFixed(2)} USDT on ${networkName} network\nConversion: ${conversionText}\nWallet Address: ${data.crypto_wallet_address}`);
+      instructions.push(`CRYPTOCURRENCY PAYMENT:\nPay exactly ${data.crypto_amount_usdt} USDT on ${networkName} network\nWallet Address: ${data.crypto_wallet_address}`);
     }
     
     // Generate wire transfer instructions if provided
-    if (data.wire_bank_name) {
-      let wireInstructions = `WIRE TRANSFER:\nAmount: ${formatCurrency(data.amount_due, data.currency)}\nBank: ${data.wire_bank_name}`;
+    if (data.wire_bank_name && data.wire_amount) {
+      let wireInstructions = `WIRE TRANSFER:\nAmount: ${formatCurrency(data.wire_amount, data.wire_currency || 'USD')}\nBank: ${data.wire_bank_name}`;
       if (data.wire_account_holder) wireInstructions += `\nAccount Holder: ${data.wire_account_holder}`;
       if (data.wire_account_number) wireInstructions += `\nAccount Number: ${data.wire_account_number}`;
       if (data.wire_routing_number) wireInstructions += `\nRouting Number: ${data.wire_routing_number}`;
@@ -171,41 +164,18 @@ export const AdminInvoiceManager = () => {
 
   const loadData = async () => {
     try {
-      // Load invoices first
+      // Load invoices with related case and profile data
       const { data: invoicesData, error: invoicesError } = await supabase
         .from('client_invoices')
-        .select('*')
+        .select(`
+          *,
+          case:cases(title),
+          profile:profiles(display_name, email)
+        `)
         .order('created_at', { ascending: false });
 
-      if (invoicesError) {
-        console.error('Error loading invoices:', invoicesError);
-        setInvoices([]);
-      } else {
-        // Load related cases and profiles
-        const caseIds = [...new Set(invoicesData?.map(invoice => invoice.case_id) || [])];
-        const userIds = [...new Set(invoicesData?.map(invoice => invoice.user_id) || [])];
-
-        // Fetch cases
-        const { data: casesData } = await supabase
-          .from('cases')
-          .select('id, title')
-          .in('id', caseIds);
-
-        // Fetch profiles  
-        const { data: profilesData } = await supabase
-          .from('profiles')
-          .select('id, display_name, email')
-          .in('id', userIds);
-
-        // Manually join the data
-        const enrichedInvoices = invoicesData?.map(invoice => ({
-          ...invoice,
-          cases: casesData?.find(c => c.id === invoice.case_id),
-          profiles: profilesData?.find(p => p.id === invoice.user_id)
-        })) || [];
-
-        setInvoices(enrichedInvoices);
-      }
+      if (invoicesError) throw invoicesError;
+      setInvoices(invoicesData || []);
 
       // Load cases for dropdown
       const { data: casesData, error: casesError } = await supabase
@@ -213,11 +183,8 @@ export const AdminInvoiceManager = () => {
         .select('id, title, user_id, preferred_currency')
         .order('created_at', { ascending: false });
 
-      if (casesError) {
-        console.error('Error loading cases:', casesError);
-      } else {
-        setCases(casesData || []);
-      }
+      if (casesError) throw casesError;
+      setCases(casesData || []);
 
       // Load profiles for dropdown
       const { data: profilesData, error: profilesError } = await supabase
@@ -225,27 +192,26 @@ export const AdminInvoiceManager = () => {
         .select('id, display_name, email')
         .order('display_name');
 
-      if (profilesError) {
-        console.error('Error loading profiles:', profilesError);
-      } else {
-        setProfiles(profilesData || []);
-      }
+      if (profilesError) throw profilesError;
+      setProfiles(profilesData || []);
 
-      // Load active payment configurations for dropdown
+      // Load active payment configurations
       const { data: paymentConfigsData, error: paymentConfigsError } = await supabase
         .from('payment_configurations')
         .select('*')
         .eq('is_active', true)
         .order('name');
 
-      if (paymentConfigsError) {
-        console.error('Error loading payment configurations:', paymentConfigsError);
-      } else {
-        setPaymentConfigurations(paymentConfigsData || []);
-      }
+      if (paymentConfigsError) throw paymentConfigsError;
+      setPaymentConfigurations(paymentConfigsData || []);
 
     } catch (error) {
       console.error('Error loading data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load data",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -253,72 +219,88 @@ export const AdminInvoiceManager = () => {
 
   const onSubmit = async (data: InvoiceFormData) => {
     try {
-      // Validate that at least one payment method is provided
-      const hasCrypto = data.crypto_wallet_address;
-      const hasWire = data.wire_bank_name;
-      
-      if (!hasCrypto && !hasWire) {
-        toast({
-          title: "Payment Method Required",
-          description: "Please provide at least one payment method (crypto or wire transfer).",
-          variant: "destructive",
-        });
-        return;
+      setIsSubmitting(true);
+
+      // Validate payment methods
+      if (data.payment_method === "crypto" || data.payment_method === "both") {
+        if (!data.crypto_wallet_address) {
+          toast({
+            title: "Error",
+            description: "Crypto wallet address is required for crypto payments",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+
+      if (data.payment_method === "wire" || data.payment_method === "both") {
+        if (!data.wire_bank_name || !data.wire_account_number) {
+          toast({
+            title: "Error", 
+            description: "Wire transfer details are required for wire payments",
+            variant: "destructive",
+          });
+          return;
+        }
       }
 
       const paymentInstructions = generatePaymentInstructions(data);
-      
+
       const { error } = await supabase
         .from('client_invoices')
         .insert({
-          ...data,
-          due_date: new Date(data.due_date).toISOString(),
+          user_id: data.client_id,
+          case_id: data.case_id,
+          amount_due: data.crypto_amount_usdt || data.wire_amount || 0, // Keep for backward compatibility
+          currency: data.wire_currency || 'USD', // Keep for backward compatibility
+          crypto_amount_usdt: data.crypto_amount_usdt,
+          wire_amount: data.wire_amount,
+          wire_currency: data.wire_currency,
+          description: data.description,
+          due_date: data.due_date,
           payment_instructions: paymentInstructions,
+          payment_method: data.payment_method,
+          crypto_currency: 'USDT',
+          crypto_wallet_address: data.crypto_wallet_address,
+          crypto_network: data.crypto_network,
+          wire_bank_name: data.wire_bank_name,
+          wire_account_number: data.wire_account_number,
+          wire_routing_number: data.wire_routing_number,
+          wire_swift_code: data.wire_swift_code,
+          wire_account_holder: data.wire_account_holder,
+          wire_bank_address: data.wire_bank_address,
         });
 
-      if (error) {
-        console.error('Error creating invoice:', error);
-        toast({
-          title: "Error",
-          description: "Failed to create invoice. Please try again.",
-          variant: "destructive",
-        });
-        return;
-      }
+      if (error) throw error;
 
       toast({
-        title: "Invoice Created",
-        description: "Invoice has been successfully created and sent to client.",
+        title: "Success",
+        description: "Invoice created successfully!",
       });
-
-      setShowCreateDialog(false);
+      setIsDialogOpen(false);
       form.reset();
       loadData();
-
     } catch (error) {
       console.error('Error creating invoice:', error);
       toast({
         title: "Error",
-        description: "Failed to create invoice. Please try again.",
+        description: "Failed to create invoice",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const updateInvoiceStatus = async (invoiceId: string, newStatus: string) => {
-    if (updatingStatus === invoiceId) return;
-    
-    setUpdatingStatus(invoiceId);
-    
     try {
       const updateData: any = { 
         invoice_status: newStatus 
       };
       
-      // Handle paid_at timestamp
       if (newStatus === 'paid') {
         updateData.paid_at = new Date().toISOString();
-      } else if (newStatus !== 'paid') {
+      } else {
         updateData.paid_at = null;
       }
 
@@ -327,71 +309,40 @@ export const AdminInvoiceManager = () => {
         .update(updateData)
         .eq('id', invoiceId);
 
-      if (error) {
-        console.error('Error updating invoice status:', error);
-        toast({
-          title: "Error",
-          description: "Failed to update invoice status. Please try again.",
-          variant: "destructive",
-        });
-        return;
-      }
+      if (error) throw error;
 
       toast({
-        title: "Status Updated",
-        description: `Invoice status changed to ${newStatus}.`,
+        title: "Success",
+        description: `Invoice status updated to ${newStatus}`,
       });
-
       loadData();
     } catch (error) {
       console.error('Error updating invoice status:', error);
       toast({
-        title: "Error", 
-        description: "Failed to update invoice status. Please try again.",
+        title: "Error",
+        description: "Failed to update invoice status",
         variant: "destructive",
       });
-    } finally {
-      setUpdatingStatus(null);
     }
   };
 
-  const getStatusSelector = (invoice: Invoice) => {
-    const isUpdating = updatingStatus === invoice.id;
-    
-    return (
-      <Select 
-        value={invoice.invoice_status} 
-        onValueChange={(value) => updateInvoiceStatus(invoice.id, value)}
-        disabled={isUpdating}
-      >
-        <SelectTrigger className={`w-32 ${getStatusColor(invoice.invoice_status)} ${isUpdating ? 'opacity-50' : ''}`}>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="pending">Pending</SelectItem>
-          <SelectItem value="confirming">Confirming</SelectItem>
-          <SelectItem value="paid">Paid</SelectItem>
-          <SelectItem value="overdue">Overdue</SelectItem>
-          <SelectItem value="cancelled">Cancelled</SelectItem>
-        </SelectContent>
-      </Select>
-    );
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'paid':
-        return 'text-green-700 border-green-300 bg-green-50';
-      case 'overdue':
-        return 'text-red-700 border-red-300 bg-red-50';
-      case 'confirming':
-        return 'text-blue-700 border-blue-300 bg-blue-50';
-      case 'cancelled':
-        return 'text-gray-700 border-gray-300 bg-gray-50';
-      default:
-        return 'text-yellow-700 border-yellow-300 bg-yellow-50';
-    }
-  };
+  const getStatusSelector = (invoice: Invoice) => (
+    <Select 
+      value={invoice.invoice_status} 
+      onValueChange={(value) => updateInvoiceStatus(invoice.id, value)}
+    >
+      <SelectTrigger className="w-32">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="pending">Pending</SelectItem>
+        <SelectItem value="confirming">Confirming</SelectItem>
+        <SelectItem value="paid">Paid</SelectItem>
+        <SelectItem value="overdue">Overdue</SelectItem>
+        <SelectItem value="cancelled">Cancelled</SelectItem>
+      </SelectContent>
+    </Select>
+  );
 
   if (loading) {
     return <div className="text-center py-8">Loading invoices...</div>;
@@ -402,128 +353,75 @@ export const AdminInvoiceManager = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Invoice Management</h2>
-          <p className="text-muted-foreground">Create and manage client invoices for case fees</p>
+          <p className="text-muted-foreground">Create and manage client invoices</p>
         </div>
-        <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>Create Invoice</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Create New Invoice</DialogTitle>
               <DialogDescription>
-                Generate a professional invoice for client payment
+                Generate an invoice with separate amounts for crypto and wire payments
               </DialogDescription>
             </DialogHeader>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="user_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Client</FormLabel>
-                      <Select 
-                        onValueChange={(value) => {
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="client_id"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Client</FormLabel>
+                        <Select onValueChange={(value) => {
                           field.onChange(value);
-                          // Clear case selection when client changes
                           form.setValue("case_id", "");
-                        }} 
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a client first" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {profiles.map((profile) => (
-                            <SelectItem key={profile.id} value={profile.id}>
-                              {profile.display_name || profile.email}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        }} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select client" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {profiles.map((profile) => (
+                              <SelectItem key={profile.id} value={profile.id}>
+                                {profile.display_name || profile.email}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="case_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Case</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder={
-                              !selectedClientId 
-                                ? "Select a client first" 
-                                : filteredCases.length === 0 
-                                  ? "No cases found for this client"
-                                  : "Select a case"
-                            } />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {filteredCases.map((case_) => (
-                            <SelectItem key={case_.id} value={case_.id}>
-                              {case_.title}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="amount_due"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Amount Due</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number" 
-                          step="0.01" 
-                          placeholder="0.00"
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="currency"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Currency</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select currency" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {SUPPORTED_CURRENCIES.map((currency) => (
-                            <SelectItem key={currency.code} value={currency.code}>
-                              {currency.symbol} {currency.code} - {currency.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="case_id"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Case</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value} disabled={!selectedClientId}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder={!selectedClientId ? "Select client first" : "Select case"} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {filteredCases.map((case_) => (
+                              <SelectItem key={case_.id} value={case_.id}>
+                                {case_.title}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 <FormField
                   control={form.control}
@@ -532,10 +430,7 @@ export const AdminInvoiceManager = () => {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Legal consultation and case review fees"
-                          {...field}
-                        />
+                        <Textarea placeholder="Invoice description" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -556,58 +451,135 @@ export const AdminInvoiceManager = () => {
                   )}
                 />
 
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Payment Options</h3>
-                  <p className="text-sm text-muted-foreground">Provide at least one payment method. You can offer both crypto and wire transfer options.</p>
-                  
-                  {/* Crypto Payment Section */}
-                  <div className="border rounded-lg p-4 space-y-4">
-                    <h4 className="font-medium text-sm text-blue-700">Cryptocurrency Payment</h4>
-                    
+                <FormField
+                  control={form.control}
+                  name="payment_method"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Payment Method</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="crypto">Crypto Only</SelectItem>
+                          <SelectItem value="wire">Wire Transfer Only</SelectItem>
+                          <SelectItem value="both">Both Methods</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Crypto Payment Amount */}
+                {(paymentMethod === "crypto" || paymentMethod === "both") && (
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium mb-3">Crypto Payment (USDT)</h4>
                     <FormField
                       control={form.control}
-                      name="crypto_wallet_address"
+                      name="crypto_amount_usdt"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Wallet Address (optional)</FormLabel>
+                          <FormLabel>Amount (USDT)</FormLabel>
                           <FormControl>
-                            <Input placeholder="0x..." {...field} />
+                            <Input
+                              type="number"
+                              step="0.01"
+                              placeholder="0.00"
+                              {...field}
+                              onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                  </div>
+                )}
 
+                {/* Wire Transfer Amount */}
+                {(paymentMethod === "wire" || paymentMethod === "both") && (
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium mb-3">Wire Transfer</h4>
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
-                        name="crypto_currency"
+                        name="wire_amount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Currency</FormLabel>
+                            <FormLabel>Amount</FormLabel>
                             <FormControl>
-                              <Input 
-                                value="USDT" 
-                                disabled 
-                                className="bg-muted"
+                              <Input
+                                type="number"
+                                step="0.01"
+                                placeholder="0.00"
+                                {...field}
+                                onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
                               />
                             </FormControl>
-                            <p className="text-xs text-muted-foreground">Only USDT is supported for crypto payments</p>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+                      <FormField
+                        control={form.control}
+                        name="wire_currency"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Currency</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value || "USD"}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select currency" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {SUPPORTED_CURRENCIES.map((currency) => (
+                                  <SelectItem key={currency.code} value={currency.code}>
+                                    {currency.symbol} {currency.name} ({currency.code})
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                )}
 
+                {/* Crypto Configuration */}
+                {(paymentMethod === "crypto" || paymentMethod === "both") && (
+                  <div className="space-y-4">
+                    <h4 className="font-medium">Crypto Payment Configuration</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="crypto_wallet_address"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Wallet Address</FormLabel>
+                            <FormControl>
+                              <Input placeholder="0x..." {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                       <FormField
                         control={form.control}
                         name="crypto_network"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>USDT Network</FormLabel>
+                            <FormLabel>Network</FormLabel>
                             <Select onValueChange={field.onChange} value={field.value}>
                               <FormControl>
                                 <SelectTrigger>
-                                  <SelectValue placeholder="Select USDT network" />
+                                  <SelectValue />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
@@ -620,48 +592,40 @@ export const AdminInvoiceManager = () => {
                         )}
                       />
                     </div>
-                    
-                    {/* Show USDT conversion preview */}
-                    {formValues.amount_due && formValues.currency && (
-                      <div className="text-sm text-muted-foreground bg-blue-50 dark:bg-blue-950 p-3 rounded">
-                        <strong>USDT Amount:</strong> {formatCurrencyConversion(formValues.amount_due, formValues.currency, convertToUSDT(formValues.amount_due, formValues.currency))}
-                      </div>
-                    )}
                   </div>
+                )}
 
-                  {/* Wire Transfer Section */}
-                  <div className="border rounded-lg p-4 space-y-4">
-                    <h4 className="font-medium text-sm text-green-700">Wire Transfer</h4>
-                    
-                    <FormField
-                      control={form.control}
-                      name="wire_bank_name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Bank Name (optional)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Bank of America" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="wire_account_holder"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Account Holder</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Company Name" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
+                {/* Wire Transfer Configuration */}
+                {(paymentMethod === "wire" || paymentMethod === "both") && (
+                  <div className="space-y-4">
+                    <h4 className="font-medium">Wire Transfer Configuration</h4>
                     <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="wire_bank_name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Bank Name</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Bank name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="wire_account_holder"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Account Holder</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Account holder name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                       <FormField
                         control={form.control}
                         name="wire_account_number"
@@ -669,13 +633,12 @@ export const AdminInvoiceManager = () => {
                           <FormItem>
                             <FormLabel>Account Number</FormLabel>
                             <FormControl>
-                              <Input placeholder="1234567890" {...field} />
+                              <Input placeholder="Account number" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-
                       <FormField
                         control={form.control}
                         name="wire_routing_number"
@@ -683,15 +646,12 @@ export const AdminInvoiceManager = () => {
                           <FormItem>
                             <FormLabel>Routing Number</FormLabel>
                             <FormControl>
-                              <Input placeholder="026009593" {...field} />
+                              <Input placeholder="Routing number" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
                         name="wire_swift_code"
@@ -699,13 +659,12 @@ export const AdminInvoiceManager = () => {
                           <FormItem>
                             <FormLabel>SWIFT Code</FormLabel>
                             <FormControl>
-                              <Input placeholder="BOFAUS3N" {...field} />
+                              <Input placeholder="SWIFT code" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-
                       <FormField
                         control={form.control}
                         name="wire_bank_address"
@@ -713,7 +672,7 @@ export const AdminInvoiceManager = () => {
                           <FormItem>
                             <FormLabel>Bank Address</FormLabel>
                             <FormControl>
-                              <Input placeholder="100 N Tryon St, Charlotte, NC" {...field} />
+                              <Input placeholder="Bank address" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -721,20 +680,14 @@ export const AdminInvoiceManager = () => {
                       />
                     </div>
                   </div>
+                )}
 
-                  {/* Payment Instructions Preview */}
-                  {(formValues.crypto_wallet_address || formValues.wire_bank_name) && (
-                    <div className="p-4 border rounded-lg bg-muted/50">
-                      <h4 className="font-medium mb-2">Payment Instructions Preview:</h4>
-                      <pre className="text-sm whitespace-pre-wrap">{generatePaymentInstructions(formValues)}</pre>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex gap-2">
-                  <Button type="submit" className="flex-1">Create Invoice</Button>
-                  <Button type="button" variant="outline" onClick={() => setShowCreateDialog(false)}>
+                <div className="flex justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Cancel
+                  </Button>
+                  <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Creating..." : "Create Invoice"}
                   </Button>
                 </div>
               </form>
@@ -743,56 +696,38 @@ export const AdminInvoiceManager = () => {
         </Dialog>
       </div>
 
+      {/* Invoices List */}
       <div className="grid gap-4">
-        {invoices.length === 0 ? (
-          <Card>
-            <CardContent className="py-8 text-center text-muted-foreground">
-              No invoices found. Create your first invoice to get started.
+        {invoices.map((invoice) => (
+          <Card key={invoice.id}>
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <div>
+                  <CardTitle className="text-lg">Invoice #{invoice.id.slice(0, 8)}</CardTitle>
+                  <CardDescription>{invoice.description}</CardDescription>
+                </div>
+                {getStatusSelector(invoice)}
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {invoice.crypto_amount_usdt && (
+                  <p><strong>Crypto Amount:</strong> {invoice.crypto_amount_usdt} USDT</p>
+                )}
+                {invoice.wire_amount && (
+                  <p><strong>Wire Amount:</strong> {formatCurrency(invoice.wire_amount, invoice.wire_currency || 'USD')}</p>
+                )}
+                {!invoice.crypto_amount_usdt && !invoice.wire_amount && (
+                  <p><strong>Amount:</strong> {formatCurrency(invoice.amount_due, invoice.currency)}</p>
+                )}
+                <p><strong>Case:</strong> {invoice.case?.title || 'N/A'}</p>
+                <p><strong>Client:</strong> {invoice.profile?.display_name || invoice.profile?.email || 'N/A'}</p>
+                <p><strong>Due Date:</strong> {new Date(invoice.due_date).toLocaleDateString()}</p>
+                <p><strong>Payment Method:</strong> {invoice.payment_method || 'crypto'}</p>
+              </div>
             </CardContent>
           </Card>
-        ) : (
-          invoices.map((invoice) => (
-            <Card key={invoice.id}>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-lg">Invoice #{invoice.id.slice(0, 8)}</CardTitle>
-                    <CardDescription>
-                      {invoice.cases?.title} - {invoice.profiles?.display_name || invoice.profiles?.email}
-                    </CardDescription>
-                  </div>
-                  {getStatusSelector(invoice)}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">Amount:</span>
-                    <div className="font-semibold">{formatCurrency(invoice.amount_due, invoice.currency)}</div>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Due Date:</span>
-                    <div>{format(new Date(invoice.due_date), 'MMM dd, yyyy')}</div>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Created:</span>
-                    <div>{format(new Date(invoice.created_at), 'MMM dd, yyyy')}</div>
-                  </div>
-                  {invoice.paid_at && (
-                    <div>
-                      <span className="text-muted-foreground">Paid:</span>
-                      <div>{format(new Date(invoice.paid_at), 'MMM dd, yyyy')}</div>
-                    </div>
-                  )}
-                </div>
-                <div className="mt-3">
-                  <span className="text-muted-foreground">Description:</span>
-                  <div className="text-sm">{invoice.description}</div>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
+        ))}
       </div>
     </div>
   );

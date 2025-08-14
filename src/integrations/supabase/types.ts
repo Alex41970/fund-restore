@@ -230,6 +230,7 @@ export type Database = {
           blockchain_network: string | null
           case_id: string
           created_at: string
+          crypto_amount_usdt: number | null
           crypto_currency: string | null
           crypto_network: string | null
           crypto_wallet_address: string | null
@@ -246,8 +247,10 @@ export type Database = {
           user_id: string
           wire_account_holder: string | null
           wire_account_number: string | null
+          wire_amount: number | null
           wire_bank_address: string | null
           wire_bank_name: string | null
+          wire_currency: string | null
           wire_routing_number: string | null
           wire_swift_code: string | null
         }
@@ -256,6 +259,7 @@ export type Database = {
           blockchain_network?: string | null
           case_id: string
           created_at?: string
+          crypto_amount_usdt?: number | null
           crypto_currency?: string | null
           crypto_network?: string | null
           crypto_wallet_address?: string | null
@@ -272,8 +276,10 @@ export type Database = {
           user_id: string
           wire_account_holder?: string | null
           wire_account_number?: string | null
+          wire_amount?: number | null
           wire_bank_address?: string | null
           wire_bank_name?: string | null
+          wire_currency?: string | null
           wire_routing_number?: string | null
           wire_swift_code?: string | null
         }
@@ -282,6 +288,7 @@ export type Database = {
           blockchain_network?: string | null
           case_id?: string
           created_at?: string
+          crypto_amount_usdt?: number | null
           crypto_currency?: string | null
           crypto_network?: string | null
           crypto_wallet_address?: string | null
@@ -298,8 +305,10 @@ export type Database = {
           user_id?: string
           wire_account_holder?: string | null
           wire_account_number?: string | null
+          wire_amount?: number | null
           wire_bank_address?: string | null
           wire_bank_name?: string | null
+          wire_currency?: string | null
           wire_routing_number?: string | null
           wire_swift_code?: string | null
         }
