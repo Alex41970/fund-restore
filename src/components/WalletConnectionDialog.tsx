@@ -84,7 +84,7 @@ export const WalletConnectionDialog = ({ open, onOpenChange, onWalletConnected }
       const address = accounts[0];
       
       // Verify ownership by requesting a signature
-      const message = `Verify wallet ownership for Lixington Capital Recovery - ${Date.now()}`;
+      const message = `Verify wallet ownership for Lexington Capital Recovery - ${Date.now()}`;
       const signature = await window.ethereum.request({
         method: 'personal_sign',
         params: [message, address],

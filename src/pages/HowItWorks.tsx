@@ -59,7 +59,7 @@ const HowItWorks = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>How It Works | Lixington Capital Recovery</title>
+        <title>How It Works | Lexington Capital Recovery</title>
         <meta name="description" content="Learn our proven 4-step fund recovery process with 94% success rate. From free evaluation to full recovery." />
         <link rel="canonical" href={window.location.origin + "/how-it-works"} />
       </Helmet>

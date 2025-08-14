@@ -5,8 +5,8 @@ const PaymentSuccess = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>Payment Success | Lixington Capital Recovery</title>
-        <meta name="description" content="Your payment to Lixington Capital Recovery was successful." />
+        <title>Payment Success | Lexington Capital Recovery</title>
+        <meta name="description" content="Your payment to Lexington Capital Recovery was successful." />
         <link rel="canonical" href={window.location.origin + "/payment-success"} />
       </Helmet>
       <div className="mx-auto max-w-xl px-4 py-12 space-y-6 text-center">

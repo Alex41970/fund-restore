@@ -107,7 +107,7 @@ const FAQ = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>FAQ | Frequently Asked Questions - Lixington Capital Recovery</title>
+        <title>FAQ | Frequently Asked Questions - Lexington Capital Recovery</title>
         <meta name="description" content="Get answers to common questions about fund recovery, our process, fees, and success rates. Expert help for fraud victims." />
         <link rel="canonical" href={window.location.origin + "/faq"} />
       </Helmet>

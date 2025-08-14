@@ -29,7 +29,7 @@
     "admin": "Admin"
   },
   "header": {
-    "companyName": "Lixington Capital Recovery"
+    "companyName": "Lexington Capital Recovery"
   },
   "home": {
     "hero": {
@@ -143,14 +143,14 @@
       "viewAll": "View All Success Stories",
       "items": [
         {
-          "quote": "Lixington Capital Recovery helped me recover $25,000 from a crypto scam. Their professionalism and expertise exceeded my expectations.",
+          "quote": "Lexington Capital Recovery helped me recover $25,000 from a crypto scam. Their professionalism and expertise exceeded my expectations.",
           "author": "Sarah Johnson",
           "title": "Business Owner",
           "recoveredAmount": "$25,000",
           "rating": 5
         },
         {
-          "quote": "After banks refused my chargeback, Lixington stepped in and got my money back within 30 days. Incredible service!",
+          "quote": "After banks refused my chargeback, Lexington stepped in and got my money back within 30 days. Incredible service!",
           "author": "Michael Chen",
           "title": "Software Engineer",
           "recoveredAmount": "$12,500",
@@ -159,7 +159,7 @@
       ]
     },
     "trust": {
-      "title": "Why Trust Lixington Capital Recovery",
+      "title": "Why Trust Lexington Capital Recovery",
       "description": "Industry-leading credentials and security standards protect your interests",
       "licensed": {
         "title": "Licensed & Regulated",
@@ -186,9 +186,9 @@
     }
   },
   "auth": {
-    "title": "Authentication - Lixington Capital Recovery",
+    "title": "Authentication - Lexington Capital Recovery",
     "description": "Sign in to your account or create a new one to access our fund recovery services",
-    "pageTitle": "Welcome to Lixington Capital Recovery",
+    "pageTitle": "Welcome to Lexington Capital Recovery",
     "pageDescription": "Sign in to your account or create a new one to get started with our expert fund recovery services",
     "tabs": {
       "login": "Sign In",
@@ -218,7 +218,7 @@
       "loginFailed": "Login failed. Please check your credentials.",
       "welcome": "Welcome back!",
       "signupFailed": "Account creation failed. Please try again.",
-      "accountCreated": "Account created successfully! Welcome to Lixington Capital Recovery."
+      "accountCreated": "Account created successfully! Welcome to Lexington Capital Recovery."
     },
     "signIn": {
       "title": "Welcome Back",
@@ -419,7 +419,7 @@
     },
     "contact": {
       "title": "Get in Touch",
-      "email": "support@lixington.com",
+      "email": "support@lexington.com",
       "emailHours": "24/7 Support",
       "phone": "+1 (555) 123-4567",
       "phoneHours": "Mon-Fri 9AM-6PM EST",
@@ -438,19 +438,19 @@
       "contactUs": "Contact Expert"
     },
     "bottom": {
-      "copyright": "© 2024 Lixington Capital Recovery. All rights reserved.",
+      "copyright": "© 2024 Lexington Capital Recovery. All rights reserved.",
       "privacy": "Privacy Policy",
       "terms": "Terms of Service", 
       "security": "Security Policy",
       "compliance": "Compliance"
     },
-    "disclaimer": "Lixington Capital Recovery is a licensed financial recovery service. Success rates vary by case type and circumstances. Past results do not guarantee future outcomes. All consultations are confidential and subject to our privacy policy."
+    "disclaimer": "Lexington Capital Recovery is a licensed financial recovery service. Success rates vary by case type and circumstances. Past results do not guarantee future outcomes. All consultations are confidential and subject to our privacy policy."
   },
   "about": {
-    "title": "About Us | Lixington Capital Recovery",
+    "title": "About Us | Lexington Capital Recovery",
     "description": "Learn about our expert team, mission, and proven track record in fund recovery services.",
     "hero": {
-      "title": "About Lixington Capital Recovery",
+      "title": "About Lexington Capital Recovery",
       "subtitle": "Your trusted partner in financial recovery"
     },
     "mission": {
@@ -526,7 +526,7 @@
     }
   },
   "services": {
-    "title": "Services | Lixington Capital Recovery",
+    "title": "Services | Lexington Capital Recovery",
     "description": "Expert chargebacks, crypto scam assistance, wire recalls, and dispute services.",
     "hero": {
       "title": "Our Recovery Services",
@@ -552,7 +552,7 @@
     ]
   },
   "contact": {
-    "title": "Contact Us | Lixington Capital Recovery",
+    "title": "Contact Us | Lexington Capital Recovery",
     "description": "Get in touch with our expert team for professional fund recovery assistance.",
     "hero": {
       "title": "Contact Our Expert Team",
@@ -560,7 +560,7 @@
     }
   },
   "pricing": {
-    "title": "Pricing | Lixington Capital Recovery",
+    "title": "Pricing | Lexington Capital Recovery",
     "description": "Transparent pricing for professional fund recovery services with no upfront fees.",
     "hero": {
       "title": "Our Pricing",

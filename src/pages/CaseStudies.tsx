@@ -20,7 +20,7 @@ const CaseStudies = () => {
       duration: "42 days",
       description: "Client fell victim to a fake crypto investment platform. Through blockchain analysis and platform coordination, we successfully traced and recovered the majority of funds.",
       testimonial: {
-        quote: "I thought my money was gone forever. Lixington's team worked tirelessly and recovered $125,000 from what seemed like an impossible situation.",
+        quote: "I thought my money was gone forever. Lexington's team worked tirelessly and recovered $125,000 from what seemed like an impossible situation.",
         author: "Robert Martinez",
         title: "Tech Entrepreneur",
         recoveredAmount: "$125,000",
@@ -36,7 +36,7 @@ const CaseStudies = () => {
       duration: "28 days",
       description: "Business owner's wire transfer was intercepted by fraudsters. Our rapid response team coordinated with international banks to freeze and recover funds.",
       testimonial: {
-        quote: "The speed and professionalism of Lixington's response was incredible. They recovered our entire wire transfer in less than a month.",
+        quote: "The speed and professionalism of Lexington's response was incredible. They recovered our entire wire transfer in less than a month.",
         author: "Lisa Thompson",
         title: "Business Owner",
         recoveredAmount: "$85,000",
@@ -52,7 +52,7 @@ const CaseStudies = () => {
       duration: "35 days",
       description: "Victim of an elaborate romance scam sent multiple payments. We compiled evidence and successfully obtained chargebacks from all payment processors.",
       testimonial: {
-        quote: "I was embarrassed and devastated. Lixington handled everything with sensitivity and got every penny back through chargebacks.",
+        quote: "I was embarrassed and devastated. Lexington handled everything with sensitivity and got every penny back through chargebacks.",
         author: "Margaret Wilson",
         title: "Retired Teacher",
         recoveredAmount: "$45,000",
@@ -68,7 +68,7 @@ const CaseStudies = () => {
       duration: "52 days",
       description: "Client lost funds to a fraudulent binary options platform. We traced funds through multiple accounts and negotiated a settlement with the broker.",
       testimonial: {
-        quote: "The binary options broker refused to return my funds. Lixington's legal pressure and negotiation skills got me a full refund.",
+        quote: "The binary options broker refused to return my funds. Lexington's legal pressure and negotiation skills got me a full refund.",
         author: "James Anderson",
         title: "Financial Advisor",
         recoveredAmount: "$67,500",
@@ -89,8 +89,8 @@ const CaseStudies = () => {
   return (
     <main className="min-h-screen bg-background">
       <Helmet>
-        <title>Case Studies | Lixington Capital Recovery Success Stories</title>
-        <meta name="description" content="Real fund recovery success stories. See how Lixington Capital Recovery helped clients recover millions from scams, fraud, and disputes." />
+        <title>Case Studies | Lexington Capital Recovery Success Stories</title>
+        <meta name="description" content="Real fund recovery success stories. See how Lexington Capital Recovery helped clients recover millions from scams, fraud, and disputes." />
         <link rel="canonical" href={window.location.origin + "/case-studies"} />
       </Helmet>
 
