@@ -21,12 +21,7 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     rollupOptions: {
-      external: ['ethers'],
-      output: {
-        globals: {
-          ethers: 'ethers'
-        }
-      }
+      external: [],
     },
   },
   optimizeDeps: {

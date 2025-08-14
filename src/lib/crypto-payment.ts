@@ -1,8 +1,4 @@
-// Dynamic import for ethers to avoid build issues
-const getEthers = async () => {
-  const { ethers } = await import('ethers');
-  return ethers;
-};
+import { ethers } from 'ethers';
 
 // USDT Contract addresses
 const USDT_CONTRACTS = {
@@ -40,7 +36,6 @@ export const processMetaMaskPayment = async (params: PaymentParams): Promise<Pay
       throw new Error('MetaMask is not installed');
     }
 
-    const ethers = await getEthers();
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const userAddress = await signer.getAddress();
@@ -83,7 +78,6 @@ export const waitForTransaction = async (transactionHash: string): Promise<boole
   try {
     if (!window.ethereum) return false;
     
-    const ethers = await getEthers();
     const provider = new ethers.BrowserProvider(window.ethereum);
     const receipt = await provider.waitForTransaction(transactionHash);
     
