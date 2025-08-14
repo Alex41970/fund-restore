@@ -51,21 +51,6 @@ const invoiceSchema = z.object({
 
 type InvoiceFormData = z.infer<typeof invoiceSchema>;
 
-interface PaymentConfiguration {
-  id: string;
-  name: string;
-  payment_method: 'crypto' | 'wire_transfer';
-  crypto_wallet_address?: string;
-  crypto_network?: string;
-  crypto_currency?: string;
-  wire_bank_name?: string;
-  wire_account_number?: string;
-  wire_routing_number?: string;
-  wire_swift_code?: string;
-  wire_account_holder?: string;
-  wire_bank_address?: string;
-  is_active: boolean;
-}
 
 interface Invoice {
   id: string;
@@ -111,7 +96,7 @@ export const AdminInvoiceManager = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [cases, setCases] = useState<Case[]>([]);
   const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [paymentConfigurations, setPaymentConfigurations] = useState<PaymentConfiguration[]>([]);
+  
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -195,15 +180,6 @@ export const AdminInvoiceManager = () => {
       if (profilesError) throw profilesError;
       setProfiles(profilesData || []);
 
-      // Load active payment configurations
-      const { data: paymentConfigsData, error: paymentConfigsError } = await supabase
-        .from('payment_configurations')
-        .select('*')
-        .eq('is_active', true)
-        .order('name');
-
-      if (paymentConfigsError) throw paymentConfigsError;
-      setPaymentConfigurations(paymentConfigsData || []);
 
     } catch (error) {
       console.error('Error loading data:', error);
