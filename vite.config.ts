@@ -14,18 +14,31 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
+  define: {
+    global: 'globalThis',
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "ethers": "ethers",
     },
   },
   build: {
+    target: 'es2020',
     rollupOptions: {
       external: [],
+    },
+    commonjsOptions: {
+      include: [/ethers/, /node_modules/],
+      transformMixedEsModules: true,
     },
   },
   optimizeDeps: {
     include: ['ethers'],
+    exclude: [],
+    esbuildOptions: {
+      target: 'es2020',
+    },
     force: true
   },
 }));

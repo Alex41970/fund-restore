@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import * as ethers from 'ethers';
 
 // USDT Contract addresses
 const USDT_CONTRACTS = {
